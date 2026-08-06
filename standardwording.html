@@ -1,0 +1,3945 @@
+```html
+<!doctype html>
+<html
+    lang="en"
+    data-density="cozy"
+    data-accent="ember"
+    data-radius="soft"
+    data-textsize="m"
+    data-motion="full"
+>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <title>Standard Wording — QC Tool</title>
+        <meta
+            name="description"
+            content="QC Standard Wording lookup, copy & batch tool. Offline-ready."
+        />
+        <meta name="theme-color" id="metaTheme" content="#f3f2ee" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="QC Wording" />
+        <style>
+            :root {
+                color-scheme: light;
+                --bg: #f3f2ee;
+                --surface: #fbfaf7;
+                --surface2: #edebe4;
+                --text: #181816;
+                --muted: #6e6a60;
+                --border: #ddd8cd;
+                --success: #2f9e44;
+                --danger: #d6336c;
+                --amber: #e8930c;
+                --shadow: 0 10px 32px -12px rgba(30, 25, 15, 0.22);
+                --mono:
+                    ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono",
+                    Menlo, monospace;
+                --r1: 6px;
+                --r2: 9px;
+                --r3: 14px;
+                --fs: 15px;
+                --accent-base: #e8590c;
+                --accent: var(--accent-base);
+                --accent-soft: color-mix(
+                    in srgb,
+                    var(--accent) 12%,
+                    transparent
+                );
+            }
+            :root[data-accent="teal"] {
+                --accent-base: #0ca678;
+            }
+            :root[data-accent="ocean"] {
+                --accent-base: #1971c2;
+            }
+            :root[data-accent="violet"] {
+                --accent-base: #7048e8;
+            }
+            :root[data-accent="leaf"] {
+                --accent-base: #2f9e44;
+            }
+            :root[data-accent="ruby"] {
+                --accent-base: #e03131;
+            }
+            :root[data-accent="rose"] {
+                --accent-base: #c2255c;
+            }
+            :root[data-radius="sharp"] {
+                --r1: 2px;
+                --r2: 4px;
+                --r3: 8px;
+            }
+            :root[data-radius="round"] {
+                --r1: 10px;
+                --r2: 16px;
+                --r3: 24px;
+            }
+            :root[data-textsize="s"] {
+                --fs: 13.5px;
+            }
+            :root[data-textsize="l"] {
+                --fs: 16.5px;
+            }
+            [data-theme="dark"] {
+                color-scheme: dark;
+                --bg: #141412;
+                --surface: #1b1b19;
+                --surface2: #262521;
+                --text: #eceae3;
+                --muted: #9d998d;
+                --border: #2e2d28;
+                --success: #51cf66;
+                --danger: #ff6b9d;
+                --amber: #ffc078;
+                --shadow: 0 10px 32px -12px rgba(0, 0, 0, 0.7);
+                --accent: color-mix(in srgb, var(--accent-base) 76%, #fff);
+                --accent-soft: color-mix(
+                    in srgb,
+                    var(--accent) 15%,
+                    transparent
+                );
+            }
+            :root[data-motion="reduced"] * {
+                animation: none !important;
+                transition: none !important;
+            }
+            * {
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+            }
+            html,
+            body {
+                overflow-x: clip;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font:
+                    400 var(--fs)/1.45 system-ui,
+                    -apple-system,
+                    "Segoe UI",
+                    Roboto,
+                    "Helvetica Neue",
+                    Arial,
+                    sans-serif;
+                transition:
+                    background 0.25s,
+                    color 0.25s;
+                overscroll-behavior-y: contain;
+            }
+            button {
+                font-family: inherit;
+                color: inherit;
+                touch-action: manipulation;
+            }
+            :focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+                border-radius: var(--r1);
+            }
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .mono {
+                font-family: var(--mono);
+            }
+            .app {
+                display: flex;
+                min-height: 100dvh;
+            }
+
+            @keyframes rise {
+                from {
+                    opacity: 0;
+                    transform: translateY(7px);
+                }
+            }
+            @keyframes rip {
+                to {
+                    transform: scale(1);
+                    opacity: 0;
+                }
+            }
+            @keyframes pulse {
+                50% {
+                    transform: scale(1.3);
+                }
+            }
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: color-mix(in srgb, currentColor 16%, transparent);
+                transform: scale(0);
+                animation: rip 0.5s ease-out forwards;
+                pointer-events: none;
+            }
+
+            .tico {
+                width: 26px;
+                height: 26px;
+                border-radius: var(--r1);
+                display: grid;
+                place-items: center;
+                flex: none;
+                background: color-mix(in srgb, var(--cc) 15%, transparent);
+                color: var(--cc);
+            }
+            .tico svg {
+                width: 14px;
+                height: 14px;
+            }
+            .tico.xs {
+                width: 19px;
+                height: 19px;
+            }
+            .tico.xs svg {
+                width: 11px;
+                height: 11px;
+            }
+            .tico.sm {
+                width: 23px;
+                height: 23px;
+            }
+            .tico.sm svg {
+                width: 12px;
+                height: 12px;
+            }
+            .tico.md {
+                width: 30px;
+                height: 30px;
+            }
+            .tico.md svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            /* ================= Sidebar ================= */
+            .side {
+                width: 252px;
+                flex: none;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                height: 100dvh;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                background: var(--surface);
+                border-right: 1px solid var(--border);
+                display: flex;
+                flex-direction: column;
+                padding: 16px 12px 14px;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                padding: 0 8px 14px;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 10px;
+            }
+            .mark {
+                width: 30px;
+                height: 30px;
+                flex: none;
+                background: var(--accent);
+                border-radius: var(--r1);
+                display: grid;
+                place-items: center;
+                color: #fff;
+                transition: background 0.25s;
+            }
+            .mark svg {
+                width: 16px;
+                height: 16px;
+            }
+            .brand h1 {
+                font-size: 15.5px;
+                margin: 0;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1.15;
+            }
+            .brand small {
+                display: block;
+                color: var(--muted);
+                font-size: 9.5px;
+                font-weight: 700;
+                letter-spacing: 0.14em;
+            }
+            .slabel {
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.14em;
+                color: var(--muted);
+                padding: 6px 10px;
+                text-transform: uppercase;
+            }
+            .nav {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                padding: 8px 10px;
+                border: none;
+                background: none;
+                border-radius: var(--r1);
+                color: var(--muted);
+                font-weight: 600;
+                font-size: 13.5px;
+                cursor: pointer;
+                text-align: left;
+                transition: 0.12s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .nav .nname {
+                flex: 1;
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .nav .ncnt {
+                font-family: var(--mono);
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--muted);
+            }
+            .nav.active {
+                background: color-mix(in srgb, var(--cc) 11%, var(--surface));
+                color: var(--text);
+                box-shadow: inset 2.5px 0 0 var(--cc);
+            }
+            .nav.active .ncnt {
+                color: var(--cc);
+            }
+            .nav.sub {
+                padding-left: 33px;
+                font-family: var(--mono);
+                font-size: 12px;
+            }
+            .side-foot {
+                margin-top: auto;
+                padding: 12px 10px 0;
+                border-top: 1px solid var(--border);
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+            }
+            @media (hover: hover) {
+                .nav:hover {
+                    background: var(--surface2);
+                    color: var(--text);
+                }
+            }
+
+            /* ================= Header ================= */
+            .main {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+            }
+            .hdr {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: var(--surface);
+                border-top: 3px solid var(--accent);
+                border-bottom: 1px solid var(--border);
+            }
+            .topbar {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 20px;
+                padding-top: calc(10px + env(safe-area-inset-top));
+            }
+            .brandmini {
+                display: none;
+                align-items: center;
+                gap: 8px;
+                font-weight: 800;
+                font-size: 14px;
+            }
+            .brandmini .mark {
+                width: 26px;
+                height: 26px;
+            }
+            .brandmini .mark svg {
+                width: 14px;
+                height: 14px;
+            }
+            .searchwrap {
+                flex: 1;
+                max-width: 560px;
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+            .searchwrap .sicon {
+                position: absolute;
+                left: 11px;
+                color: var(--muted);
+                pointer-events: none;
+                display: flex;
+                transition: color 0.15s;
+            }
+            .searchwrap:focus-within .sicon {
+                color: var(--accent);
+            }
+            .searchwrap .sicon svg {
+                width: 16px;
+                height: 16px;
+            }
+            #search {
+                width: 100%;
+                height: 42px;
+                border-radius: var(--r2);
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--text);
+                padding: 0 40px 0 36px;
+                font-size: 1em;
+                transition:
+                    border 0.15s,
+                    box-shadow 0.15s;
+            }
+            #search:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px var(--accent-soft);
+            }
+            #search::placeholder {
+                color: var(--muted);
+            }
+            #clearBtn {
+                position: absolute;
+                right: 5px;
+                display: none;
+            }
+            #clearBtn.show {
+                display: grid;
+            }
+            .sdrop {
+                position: absolute;
+                top: calc(100% + 6px);
+                left: 0;
+                right: 0;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--r2);
+                box-shadow: var(--shadow);
+                max-height: 300px;
+                overflow-y: auto;
+                display: none;
+                padding: 5px;
+                z-index: 95;
+            }
+            .sdrop.open {
+                display: block;
+                animation: rise 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+            }
+            .dhead {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 7px 9px 5px;
+                color: var(--muted);
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+            .linky {
+                border: none;
+                background: none;
+                color: var(--accent);
+                font-weight: 700;
+                font-size: 11.5px;
+                cursor: pointer;
+                padding: 2px 4px;
+            }
+            .drow {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                padding: 10px 9px;
+                border-radius: var(--r1);
+                cursor: pointer;
+            }
+            .dtxt {
+                flex: 1;
+                font-weight: 600;
+                font-size: 13.5px;
+                min-width: 0;
+                word-break: break-word;
+            }
+            .dico {
+                color: var(--muted);
+                display: flex;
+                flex: none;
+            }
+            .dico svg {
+                width: 14px;
+                height: 14px;
+            }
+            .dmini {
+                width: 30px;
+                height: 30px;
+                border-radius: var(--r1);
+                border: none;
+                background: transparent;
+                color: var(--muted);
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                flex: none;
+            }
+            .dmini svg {
+                width: 14px;
+                height: 14px;
+            }
+            .dmini:hover {
+                color: var(--danger);
+                background: var(--surface2);
+            }
+            .actions {
+                display: flex;
+                gap: 6px;
+                margin-left: auto;
+                align-items: center;
+            }
+            .sep {
+                width: 1px;
+                height: 22px;
+                background: var(--border);
+                margin: 0 3px;
+                flex: none;
+            }
+            .ibtn {
+                width: 40px;
+                height: 40px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--muted);
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                transition: 0.12s;
+                flex: none;
+                padding: 0;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .ibtn svg {
+                width: 17px;
+                height: 17px;
+            }
+            .ibtn:active {
+                transform: scale(0.92);
+            }
+            .ibtn.on {
+                color: var(--accent);
+                border-color: var(--accent);
+                background: var(--accent-soft);
+            }
+            @media (hover: hover) {
+                .ibtn:hover {
+                    color: var(--text);
+                    border-color: var(--muted);
+                }
+            }
+            select.ibtn {
+                width: auto;
+                padding: 0 26px 0 12px;
+                height: 40px;
+                font-size: 12.5px;
+                font-weight: 700;
+                color: var(--text);
+                appearance: none;
+                overflow: visible;
+                background-image:
+                    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+                background-position:
+                    calc(100% - 14px) 50%,
+                    calc(100% - 10px) 50%;
+                background-size: 4px 4px;
+                background-repeat: no-repeat;
+                cursor: pointer;
+            }
+            [data-theme="dark"] .only-light {
+                display: none;
+            }
+            [data-theme="light"] .only-dark {
+                display: none;
+            }
+            #installBtn {
+                display: none;
+            }
+            #installBtn.show {
+                display: grid;
+            }
+            .batchbtn {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                height: 40px;
+                padding: 0 14px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--surface);
+                font-weight: 800;
+                font-size: 12.5px;
+                cursor: pointer;
+                transition: 0.12s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .batchbtn svg {
+                width: 16px;
+                height: 16px;
+                color: var(--accent);
+            }
+            .batchbtn .bb-count {
+                font-family: var(--mono);
+                background: var(--accent-soft);
+                color: var(--accent);
+                border-radius: 5px;
+                padding: 1px 8px;
+                font-size: 11px;
+                font-weight: 800;
+            }
+            .batchbtn .bb-count.pulse {
+                animation: pulse 0.3s;
+            }
+            .batchbtn:active {
+                transform: scale(0.95);
+            }
+            @media (hover: hover) {
+                .batchbtn:hover {
+                    border-color: var(--muted);
+                }
+            }
+
+            .chipsbar {
+                display: none;
+                padding: 0 16px calc(8px + env(safe-area-inset-top));
+                padding-top: 0;
+            }
+            .chips {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                scrollbar-width: none;
+            }
+            .chips::-webkit-scrollbar {
+                display: none;
+            }
+            .chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                padding: 8px 12px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--muted);
+                font-weight: 700;
+                font-size: 12.5px;
+                cursor: pointer;
+                white-space: nowrap;
+                transition: 0.12s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .chip .cnum {
+                font-size: 10px;
+                font-weight: 800;
+            }
+            .chip.active {
+                background: var(--cc);
+                border-color: var(--cc);
+                color: #fff;
+            }
+            .chip.active .tico {
+                background: rgba(255, 255, 255, 0.25);
+                color: #fff;
+            }
+            .chip.active .cnum {
+                color: #fff;
+            }
+            .subchips {
+                display: none;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            .subchips.show {
+                display: flex;
+            }
+            .subchips .chip {
+                font-family: var(--mono);
+                font-size: 11.5px;
+            }
+
+            .layout {
+                padding: 16px 20px calc(30px + env(safe-area-inset-bottom));
+                max-width: 1400px;
+                width: 100%;
+                margin: 0 auto;
+            }
+
+            /* slim section header */
+            .sechead {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin: 0 0 12px;
+                min-width: 0;
+            }
+            .sechead .shinfo {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                align-items: baseline;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .sechead h2 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 800;
+                letter-spacing: -0.015em;
+            }
+            .sechead p {
+                margin: 0;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--muted);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .sechead .shcount {
+                font-family: var(--mono);
+                font-weight: 800;
+                font-size: 11.5px;
+                color: var(--cc);
+                background: color-mix(in srgb, var(--cc) 12%, transparent);
+                padding: 3px 9px;
+                border-radius: var(--r1);
+                flex: none;
+            }
+            .sechead.swap {
+                animation: rise 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+            }
+
+            .toolbar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 0 0 10px;
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 700;
+            }
+            .toolbar .grow {
+                flex: 1;
+            }
+            .kbd-hint {
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--muted);
+            }
+            .kbd-hint b {
+                font-family: var(--mono);
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-size: 10.5px;
+            }
+
+            .editstrip {
+                display: none;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                border: 1px dashed var(--accent);
+                background: var(--accent-soft);
+                border-radius: var(--r2);
+                padding: 9px 12px;
+                margin-bottom: 12px;
+            }
+            .editstrip.show {
+                display: flex;
+            }
+            .editstrip .elabel {
+                font-family: var(--mono);
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+            }
+            .editstrip .grow {
+                flex: 1;
+            }
+            .sbtn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                height: 36px;
+                padding: 0 13px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--surface);
+                font-weight: 700;
+                font-size: 12px;
+                cursor: pointer;
+                transition: 0.12s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .sbtn svg {
+                width: 13px;
+                height: 13px;
+            }
+            .sbtn:active {
+                transform: scale(0.95);
+            }
+            .sbtn.accent {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff;
+            }
+            .sbtn.danger {
+                color: var(--danger);
+            }
+            .sbtn.danger:hover {
+                border-color: var(--danger);
+            }
+            .sbtn.arm {
+                background: var(--danger);
+                border-color: var(--danger);
+                color: #fff;
+            }
+            @media (hover: hover) {
+                .sbtn:hover {
+                    border-color: var(--muted);
+                }
+            }
+
+            .histbar {
+                margin: 0 0 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .hhead {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                color: var(--muted);
+                font-size: 10px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.13em;
+            }
+            .hhead svg {
+                width: 12px;
+                height: 12px;
+            }
+            .hhead .grow {
+                flex: 1;
+            }
+            .hchips {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                scrollbar-width: none;
+            }
+            .hchips::-webkit-scrollbar {
+                display: none;
+            }
+            .hchip {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                padding: 8px 12px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--surface);
+                font-weight: 600;
+                font-size: 12.5px;
+                cursor: pointer;
+                transition: 0.12s;
+                flex: none;
+                max-width: 260px;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .hchip svg {
+                width: 12px;
+                height: 12px;
+                flex: none;
+                color: var(--success);
+            }
+            .hchip .htxt {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .hchip:active {
+                transform: scale(0.96);
+            }
+            @media (hover: hover) {
+                .hchip:hover {
+                    border-color: var(--success);
+                    transform: translateY(-1px);
+                }
+            }
+
+            /* ---------- LIST ---------- */
+            .listwrap {
+                border: 1px solid var(--border);
+                border-radius: var(--r2);
+                background: var(--surface);
+                overflow: hidden;
+            }
+            .row {
+                display: grid;
+                grid-template-columns: 40px 26px minmax(0, 1fr) auto auto;
+                gap: 12px;
+                align-items: center;
+                padding: 11px 14px;
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                transition: background 0.12s;
+                border-left: 3px solid
+                    color-mix(in srgb, var(--cc) 60%, transparent);
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .row + .row {
+                border-top: 1px solid var(--border);
+            }
+            .row.flash,
+            .gcard.flash,
+            .trow.flash {
+                background: color-mix(in srgb, var(--success) 14%, transparent);
+            }
+            @media (hover: hover) {
+                .row:hover {
+                    background: color-mix(
+                        in srgb,
+                        var(--cc) 5%,
+                        var(--surface2)
+                    );
+                }
+            }
+            .rnum {
+                font-family: var(--mono);
+                font-size: 11.5px;
+                font-weight: 700;
+                color: var(--muted);
+                text-align: right;
+                transition: color 0.15s;
+            }
+            .rnum.ok {
+                color: var(--success);
+            }
+            .rnum.ok svg {
+                width: 12px;
+                height: 12px;
+            }
+            .rtxt {
+                font-weight: 600;
+                font-size: 14.5px;
+                letter-spacing: -0.01em;
+                word-break: break-word;
+            }
+            .rtxt.code {
+                font-family: var(--mono);
+                font-weight: 700;
+                font-size: 13.5px;
+            }
+            .rtxt mark {
+                background: var(--accent-soft);
+                color: var(--accent);
+                border-radius: 3px;
+                padding: 0 1px;
+                font-weight: 700;
+            }
+            .rmeta {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .rpill {
+                display: inline-flex;
+                align-items: center;
+                font-size: 9.5px;
+                font-weight: 800;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                color: var(--cc);
+                background: color-mix(in srgb, var(--cc) 12%, transparent);
+                padding: 3px 8px;
+                border-radius: var(--r1);
+                white-space: nowrap;
+            }
+            .fz {
+                font-family: var(--mono);
+                color: var(--accent);
+                font-weight: 800;
+                font-size: 11px;
+                border: 1px solid var(--accent);
+                border-radius: 5px;
+                padding: 0 5px;
+            }
+            .racts {
+                display: flex;
+                gap: 2px;
+            }
+            .racts .ibtn {
+                width: 34px;
+                height: 34px;
+                border: none;
+                background: transparent;
+                border-radius: var(--r1);
+            }
+            .racts .ibtn svg {
+                width: 16px;
+                height: 16px;
+            }
+            @media (hover: hover) {
+                .racts {
+                    opacity: 0.45;
+                }
+                .row:hover .racts,
+                .trow:hover .racts,
+                .gcard:hover .racts {
+                    opacity: 1;
+                }
+                .racts .ibtn:hover {
+                    background: var(--border);
+                    color: var(--text);
+                }
+            }
+            .racts .ibtn.pinned {
+                color: var(--amber);
+            }
+            .racts .ibtn[data-act="pin"] svg:last-child {
+                display: none;
+            }
+            .racts .ibtn[data-act="pin"].pinned svg:first-child {
+                display: none;
+            }
+            .racts .ibtn[data-act="pin"].pinned svg:last-child {
+                display: block;
+            }
+            .racts .ibtn[data-act="del"]:hover {
+                color: var(--danger);
+            }
+            @media (hover: none) {
+                .racts .ibtn {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+
+            /* ---------- GRID ---------- */
+            #listwrap.grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 10px;
+                background: transparent;
+                border: none;
+            }
+            .gcard {
+                display: flex;
+                flex-direction: column;
+                gap: 9px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-top: 3px solid
+                    color-mix(in srgb, var(--cc) 65%, transparent);
+                border-radius: var(--r2);
+                padding: 12px;
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                transition:
+                    transform 0.16s,
+                    box-shadow 0.16s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .gcard:active {
+                transform: scale(0.98);
+            }
+            @media (hover: hover) {
+                .gcard:hover {
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow);
+                }
+            }
+            .chead {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+            }
+            .gcard .rtxt {
+                min-height: 2.6em;
+            }
+            .cfoot {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: auto;
+            }
+            .cfoot .rpill {
+                margin-right: auto;
+            }
+
+            /* ---------- TABLE ---------- */
+            .thead {
+                display: grid;
+                grid-template-columns: 48px 22px minmax(0, 1fr) 130px 128px;
+                gap: 10px;
+                align-items: center;
+                padding: 7px 14px;
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.11em;
+                color: var(--muted);
+                text-transform: uppercase;
+                background: var(--surface2);
+                border-bottom: 1px solid var(--border);
+            }
+            .trow {
+                display: grid;
+                grid-template-columns: 48px 22px minmax(0, 1fr) 130px 128px;
+                gap: 10px;
+                align-items: center;
+                padding: 5px 14px;
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                transition: background 0.12s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .trow + .trow {
+                border-top: 1px solid
+                    color-mix(in srgb, var(--border) 55%, transparent);
+            }
+            .trow .rtxt {
+                font-size: 13.5px;
+            }
+            .trow .racts {
+                justify-content: end;
+            }
+            @media (hover: hover) {
+                .trow:hover {
+                    background: color-mix(
+                        in srgb,
+                        var(--cc) 5%,
+                        var(--surface2)
+                    );
+                }
+            }
+
+            .anim .row,
+            .anim .gcard,
+            .anim .trow {
+                animation: rise 0.3s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+            }
+            html[data-density="compact"] .row {
+                padding: 5px 14px;
+                gap: 10px;
+            }
+            html[data-density="compact"] .rtxt {
+                font-size: 13.5px;
+            }
+            html[data-density="compact"] .rpill {
+                display: none;
+            }
+            html[data-density="compact"] .row .tico {
+                width: 22px;
+                height: 22px;
+            }
+            html[data-density="compact"] .trow {
+                padding: 2px 14px;
+            }
+            .empty {
+                padding: 56px 20px;
+                text-align: center;
+                color: var(--muted);
+            }
+            .empty h3 {
+                margin: 0 0 4px;
+                color: var(--text);
+                font-size: 15px;
+            }
+            .foot {
+                padding: 16px 0 0;
+                text-align: center;
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            /* ================= Batch drawer ================= */
+            aside.sheet {
+                position: fixed;
+                z-index: 80;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: min(420px, 94vw);
+                transform: translateX(112%);
+                transition: transform 0.34s cubic-bezier(0.25, 0.9, 0.3, 1.08);
+                border-radius: var(--r3) 0 0 var(--r3);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-right: none;
+                box-shadow: var(--shadow);
+            }
+            body.sheet-open aside.sheet {
+                transform: none;
+            }
+            .bhead {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 13px 12px 13px 16px;
+                border-bottom: 1px solid var(--border);
+            }
+            .bhead h2 {
+                font-size: 14px;
+                margin: 0;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .bhead h2 svg {
+                width: 15px;
+                height: 15px;
+                color: var(--accent);
+            }
+            .bcount {
+                font-family: var(--mono);
+                background: var(--accent-soft);
+                color: var(--accent);
+                border-radius: 5px;
+                padding: 1px 8px;
+                font-size: 11px;
+                font-weight: 800;
+            }
+            .bhead .spacer {
+                flex: 1;
+            }
+            .bhint {
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 600;
+                padding: 8px 16px 0;
+            }
+            .blist {
+                flex: 1;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                padding: 10px 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-height: 110px;
+            }
+            .bitem {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: var(--r1);
+                padding: 9px 8px 9px 11px;
+                cursor: pointer;
+                transition: border-color 0.12s;
+                animation: rise 0.2s both;
+                touch-action: manipulation;
+            }
+            .bitem:hover {
+                border-color: var(--success);
+            }
+            .bitem .bi {
+                font-family: var(--mono);
+                color: var(--muted);
+                font-size: 10.5px;
+                font-weight: 800;
+                width: 18px;
+                text-align: right;
+                flex: none;
+            }
+            .bitem .bt {
+                flex: 1;
+                font-size: 13px;
+                font-weight: 600;
+                word-break: break-word;
+            }
+            .bitem .bcopy1 {
+                width: 30px;
+                height: 30px;
+                border-radius: var(--r1);
+                border: none;
+                background: var(--accent-soft);
+                color: var(--accent);
+                display: grid;
+                place-items: center;
+                flex: none;
+            }
+            .bitem .bcopy1 svg {
+                width: 14px;
+                height: 14px;
+            }
+            .bitem .ibtn {
+                width: 30px;
+                height: 30px;
+                border-radius: var(--r1);
+                border: none;
+                background: transparent;
+            }
+            .bitem .ibtn svg {
+                width: 14px;
+                height: 14px;
+            }
+            .bitem .ibtn:hover {
+                color: var(--danger);
+                background: var(--surface2);
+            }
+            .bempty {
+                color: var(--muted);
+                text-align: center;
+                padding: 24px 14px;
+                font-size: 12.5px;
+                font-weight: 600;
+            }
+            .bfoot {
+                padding: 12px;
+                padding-bottom: calc(12px + env(safe-area-inset-bottom));
+                border-top: 1px solid var(--border);
+                display: flex;
+                flex-direction: column;
+                gap: 9px;
+                background: var(--surface);
+            }
+            .joinrow {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 11.5px;
+                font-weight: 700;
+                color: var(--muted);
+            }
+            .joinrow select {
+                flex: 1;
+                height: 36px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--text);
+                font-size: 12.5px;
+                font-weight: 600;
+                padding: 0 8px;
+            }
+            .switchrow {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 12px;
+                font-weight: 700;
+                color: var(--muted);
+            }
+            .switch {
+                position: relative;
+                width: 42px;
+                height: 24px;
+                flex: none;
+            }
+            .switch input {
+                opacity: 0;
+                position: absolute;
+                inset: 0;
+                margin: 0;
+                cursor: pointer;
+                z-index: 2;
+            }
+            .knob {
+                position: absolute;
+                inset: 0;
+                border-radius: 999px;
+                background: var(--border);
+                transition: 0.2s;
+            }
+            .knob:before {
+                content: "";
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: var(--surface);
+                transition: 0.2s;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            }
+            .switch input:checked + .knob {
+                background: var(--accent);
+            }
+            .switch input:checked + .knob:before {
+                transform: translateX(18px);
+            }
+            .bbtns {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .btn {
+                height: 44px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--surface2);
+                color: var(--text);
+                font-weight: 800;
+                font-size: 13px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: 0.12s;
+                position: relative;
+                overflow: hidden;
+                touch-action: manipulation;
+            }
+            .btn svg {
+                width: 15px;
+                height: 15px;
+            }
+            .btn:active {
+                transform: scale(0.97);
+            }
+            .btn.accent {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff;
+            }
+            .btn.danger:hover {
+                color: var(--danger);
+                border-color: var(--danger);
+            }
+            .btn.wide {
+                grid-column: 1/-1;
+            }
+
+            .backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 8, 4, 0.45);
+                z-index: 70;
+                opacity: 0;
+                pointer-events: none;
+                transition: 0.25s;
+            }
+            body.sheet-open .backdrop {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .totop {
+                position: fixed;
+                right: 18px;
+                bottom: calc(18px + env(safe-area-inset-bottom));
+                z-index: 60;
+                width: 44px;
+                height: 44px;
+                border-radius: var(--r2);
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--muted);
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                opacity: 0;
+                pointer-events: none;
+                transition: 0.2s;
+                box-shadow: var(--shadow);
+            }
+            .totop svg {
+                width: 17px;
+                height: 17px;
+            }
+            .totop.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .totop:hover {
+                color: var(--accent);
+                border-color: var(--accent);
+            }
+            .toasts {
+                position: fixed;
+                top: calc(12px + env(safe-area-inset-top));
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 120;
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+                align-items: center;
+                pointer-events: none;
+                max-width: 92vw;
+            }
+            .toast {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                background: var(--text);
+                color: var(--bg);
+                border-radius: var(--r2);
+                padding: 10px 16px;
+                font-weight: 700;
+                font-size: 13px;
+                box-shadow: var(--shadow);
+                max-width: 92vw;
+                animation: tin 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+                pointer-events: auto;
+            }
+            .toast svg {
+                width: 14px;
+                height: 14px;
+                color: var(--success);
+                flex: none;
+            }
+            .toast.warn svg {
+                color: var(--amber);
+            }
+            .toast .tact {
+                border: none;
+                background: none;
+                color: var(--bg);
+                font-weight: 800;
+                font-size: 12px;
+                cursor: pointer;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                padding: 0 2px;
+                opacity: 0.9;
+            }
+            @keyframes tin {
+                from {
+                    transform: translateY(-14px) scale(0.94);
+                    opacity: 0;
+                }
+            }
+            .toast.out {
+                opacity: 0;
+                transform: translateY(-6px);
+                transition: 0.2s;
+            }
+
+            /* modals */
+            .modal {
+                position: fixed;
+                inset: 0;
+                z-index: 110;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                background: rgba(10, 8, 4, 0.45);
+                padding: 16px;
+            }
+            .modal.open {
+                display: flex;
+            }
+            .mpanel {
+                width: min(460px, 94vw);
+                max-height: 86dvh;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--r3);
+                padding: 20px;
+                box-shadow: var(--shadow);
+                animation: rise 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+            }
+            .mpanel h3 {
+                margin: 0 0 14px;
+                font-size: 15px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .mpanel h3 svg {
+                width: 15px;
+                height: 15px;
+                color: var(--accent);
+            }
+            .frow {
+                margin-bottom: 12px;
+            }
+            .frow label {
+                display: block;
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--muted);
+                margin-bottom: 5px;
+            }
+            .frow input,
+            .frow select {
+                width: 100%;
+                height: 44px;
+                border-radius: var(--r1);
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--text);
+                font-size: 15px;
+                font-weight: 600;
+                padding: 0 12px;
+            }
+            .frow input:focus,
+            .frow select:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px var(--accent-soft);
+            }
+            .fgrid {
+                display: grid;
+                grid-template-columns: 1fr 110px;
+                gap: 10px;
+            }
+            .mbtns {
+                display: flex;
+                gap: 8px;
+                justify-content: flex-end;
+                margin-top: 16px;
+            }
+            .setsec {
+                margin-bottom: 16px;
+            }
+            .setlabel {
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--muted);
+                margin-bottom: 6px;
+            }
+            .seg {
+                display: flex;
+                border: 1px solid var(--border);
+                border-radius: var(--r1);
+                overflow: hidden;
+                background: var(--bg);
+            }
+            .seg button {
+                flex: 1;
+                padding: 10px 4px;
+                border: none;
+                background: transparent;
+                font-weight: 700;
+                font-size: 12px;
+                color: var(--muted);
+                cursor: pointer;
+                transition: 0.15s;
+            }
+            .seg button + button {
+                border-left: 1px solid var(--border);
+            }
+            .seg button.on {
+                background: var(--accent);
+                color: #fff;
+            }
+            .swatches {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .swatch {
+                width: 32px;
+                height: 32px;
+                border-radius: var(--r1);
+                background: var(--sw);
+                border: none;
+                cursor: pointer;
+                transition: 0.15s;
+            }
+            .swatch.on {
+                box-shadow:
+                    0 0 0 2px var(--surface),
+                    0 0 0 4px var(--text);
+            }
+
+            @media (max-width: 900px) {
+                .side {
+                    display: none;
+                }
+                .brandmini {
+                    display: flex;
+                }
+                .chipsbar {
+                    display: block;
+                }
+                .layout {
+                    padding: 12px 14px calc(26px + env(safe-area-inset-bottom));
+                }
+                .topbar {
+                    padding-left: 14px;
+                    padding-right: 14px;
+                }
+                .kbd-hint {
+                    display: none;
+                }
+                .row {
+                    grid-template-columns: 34px 24px minmax(0, 1fr) auto;
+                }
+                .rmeta {
+                    display: none;
+                }
+                .thead {
+                    display: none;
+                }
+                .trow {
+                    grid-template-columns: 34px 22px minmax(0, 1fr) auto;
+                }
+                .trow .rpill {
+                    display: none;
+                }
+                aside.sheet {
+                    top: auto;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: auto;
+                    max-height: 80dvh;
+                    transform: translateY(112%);
+                    border-radius: var(--r3) var(--r3) 0 0;
+                    border: 1px solid var(--border);
+                    border-bottom: none;
+                }
+                body.sheet-open aside.sheet {
+                    transform: none;
+                }
+            }
+            @media (max-width: 640px) {
+                .batchbtn .blabel {
+                    display: none;
+                }
+                .batchbtn {
+                    padding: 0 11px;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="toasts" id="toasts"></div>
+
+        <div class="app">
+            <aside class="side">
+                <div class="brand">
+                    <span class="mark"
+                        ><svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M4 12.5l5 5L20 6.5" /></svg
+                    ></span>
+                    <div>
+                        <h1>Standard Wording</h1>
+                        <small>QC COPY TOOL</small>
+                    </div>
+                </div>
+                <div class="slabel">Categories</div>
+                <nav id="nav"></nav>
+                <nav id="subnav"></nav>
+                <div class="side-foot">
+                    <span id="footCount"></span><span class="mono">v7</span>
+                </div>
+            </aside>
+
+            <div class="main">
+                <header class="hdr">
+                    <div class="topbar">
+                        <div class="brandmini">
+                            <span class="mark"
+                                ><svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M4 12.5l5 5L20 6.5" /></svg></span
+                            >QC
+                        </div>
+                        <div class="searchwrap">
+                            <span class="sicon"
+                                ><svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                >
+                                    <circle cx="11" cy="11" r="7" />
+                                    <path d="M21 21l-4.3-4.3" /></svg
+                            ></span>
+                            <input
+                                id="search"
+                                type="text"
+                                placeholder="Search wording or code — typo-safe"
+                                autocomplete="off"
+                                enterkeyhint="search"
+                            />
+                            <button
+                                class="ibtn"
+                                id="clearBtn"
+                                aria-label="Clear search"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                >
+                                    <path d="M18 6L6 18M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <div class="sdrop" id="sdrop"></div>
+                        </div>
+                        <div class="actions">
+                            <select
+                                class="ibtn"
+                                id="sortSel"
+                                aria-label="Sort order"
+                                title="Sort"
+                            >
+                                <option value="num"># asc</option>
+                                <option value="num-desc"># desc</option>
+                                <option value="az">A–Z</option>
+                                <option value="za">Z–A</option>
+                            </select>
+                            <button
+                                class="batchbtn"
+                                id="batchBtn"
+                                aria-label="Open batch"
+                                title="Batch"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                >
+                                    <path
+                                        d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"
+                                    />
+                                    <rect
+                                        x="8"
+                                        y="2"
+                                        width="8"
+                                        height="4"
+                                        rx="1"
+                                    />
+                                </svg>
+                                <span class="blabel">Batch</span
+                                ><span class="bb-count" id="bbcount">0</span>
+                            </button>
+                            <span class="sep"></span>
+                            <button
+                                class="ibtn"
+                                id="setBtn"
+                                aria-label="Appearance settings"
+                                title="Appearance & layout"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                >
+                                    <path d="M4 6h16M4 12h16M4 18h16" />
+                                    <circle
+                                        cx="9"
+                                        cy="6"
+                                        r="2.2"
+                                        fill="currentColor"
+                                        stroke="none"
+                                    />
+                                    <circle
+                                        cx="15"
+                                        cy="12"
+                                        r="2.2"
+                                        fill="currentColor"
+                                        stroke="none"
+                                    />
+                                    <circle
+                                        cx="7"
+                                        cy="18"
+                                        r="2.2"
+                                        fill="currentColor"
+                                        stroke="none"
+                                    />
+                                </svg>
+                            </button>
+                            <button
+                                class="ibtn"
+                                id="editBtn"
+                                aria-label="Edit mode"
+                                title="Edit mode (add / edit / delete)"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M12 20h9" />
+                                    <path
+                                        d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"
+                                    />
+                                </svg>
+                            </button>
+                            <button
+                                class="ibtn"
+                                id="themeBtn"
+                                aria-label="Toggle dark mode"
+                                title="Theme"
+                            >
+                                <svg
+                                    class="only-light"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path
+                                        d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"
+                                    />
+                                </svg>
+                                <svg
+                                    class="only-dark"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                >
+                                    <circle cx="12" cy="12" r="4" />
+                                    <path
+                                        d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+                                    />
+                                </svg>
+                            </button>
+                            <button
+                                class="ibtn"
+                                id="dlBtn"
+                                aria-label="Download offline copy"
+                                title="Download offline copy"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path
+                                        d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"
+                                    />
+                                    <path d="M7 10l5 5 5-5" />
+                                    <path d="M12 15V3" />
+                                </svg>
+                            </button>
+                            <button
+                                class="ibtn"
+                                id="installBtn"
+                                aria-label="Install app"
+                                title="Add to Home screen"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M12 3v10" />
+                                    <path d="M8 9l4 4 4-4" />
+                                    <path
+                                        d="M4 17h16v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chipsbar">
+                        <div class="chips" id="chips"></div>
+                        <div class="subchips" id="subchips"></div>
+                    </div>
+                </header>
+
+                <div class="layout">
+                    <div class="sechead" id="cathead"></div>
+                    <div class="toolbar">
+                        <span id="countLabel"></span>
+                        <span class="grow"></span>
+                        <span class="kbd-hint"
+                            ><b>/</b> search · <b>Enter</b> copy top ·
+                            <b>Esc</b> clear</span
+                        >
+                    </div>
+
+                    <div class="editstrip" id="editstrip">
+                        <span class="elabel">EDIT MODE</span>
+                        <button class="sbtn accent" id="addBtn">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                            >
+                                <path d="M12 5v14M5 12h14" /></svg
+                            >Add wording
+                        </button>
+                        <button class="sbtn" id="exportBtn">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"
+                                />
+                                <path d="M7 10l5 5 5-5" />
+                                <path d="M12 15V3" /></svg
+                            >Export
+                        </button>
+                        <button class="sbtn" id="importBtn">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"
+                                />
+                                <path d="M17 8l-5-5-5 5" />
+                                <path d="M12 3v12" /></svg
+                            >Import
+                        </button>
+                        <span class="grow"></span>
+                        <button class="sbtn danger" id="resetBtn">
+                            Reset all changes
+                        </button>
+                    </div>
+                    <input
+                        type="file"
+                        id="importFile"
+                        accept=".json,application/json"
+                        style="display: none"
+                    />
+
+                    <div class="histbar" id="histbar" style="display: none">
+                        <div class="hhead">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            >
+                                <circle cx="12" cy="12" r="9" />
+                                <path d="M12 7v5l3 3" />
+                            </svg>
+                            <span>History — tap to copy again</span>
+                            <span class="grow"></span>
+                            <button class="linky" id="hclearAll">Clear</button>
+                        </div>
+                        <div class="hchips" id="hchips"></div>
+                    </div>
+
+                    <div class="listwrap list" id="listwrap"></div>
+                    <div class="empty" id="empty" style="display: none">
+                        <h3>No matches</h3>
+                        <div>
+                            Try another search or category — typos are handled.
+                        </div>
+                    </div>
+                    <footer class="foot">
+                        Tap a row to copy · + queues into batch · changes stay
+                        on this device
+                    </footer>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sheet" id="batchSheet" aria-label="Batch clipboard">
+            <div class="bhead">
+                <h2>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    >
+                        <path
+                            d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"
+                        />
+                        <rect x="8" y="2" width="8" height="4" rx="1" /></svg
+                    >Batch <span class="bcount" id="bcount">0</span>
+                </h2>
+                <span class="spacer"></span>
+                <button
+                    class="ibtn"
+                    id="bclearTop"
+                    aria-label="Clear batch"
+                    title="Clear batch"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                    </svg>
+                </button>
+                <button
+                    class="ibtn"
+                    id="bclose"
+                    aria-label="Close batch"
+                    title="Close"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    >
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="bhint">Tap an item to copy it on its own.</div>
+            <div class="blist" id="blist"></div>
+            <div class="bfoot">
+                <div class="joinrow">
+                    <span>Join with</span>
+                    <select id="joinSel">
+                        <option value="nl">New line</option>
+                        <option value="comma">, comma</option>
+                        <option value="semi">; semicolon</option>
+                        <option value="space">Space</option>
+                    </select>
+                </div>
+                <div class="switchrow">
+                    <span>Auto-clear after copy all</span>
+                    <label class="switch"
+                        ><input type="checkbox" id="autoclear" /><span
+                            class="knob"
+                        ></span
+                    ></label>
+                </div>
+                <div class="bbtns">
+                    <button class="btn" id="bpaste">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        >
+                            <path
+                                d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"
+                            />
+                            <rect
+                                x="8"
+                                y="2"
+                                width="8"
+                                height="4"
+                                rx="1"
+                            /></svg
+                        >Paste in
+                    </button>
+                    <button class="btn danger" id="bclear">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M3 6h18" />
+                            <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                            <path
+                                d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"
+                            /></svg
+                        >Clear
+                    </button>
+                    <button class="btn accent wide" id="bcopy">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        >
+                            <rect x="9" y="9" width="12" height="12" rx="2" />
+                            <path
+                                d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"
+                            /></svg
+                        >Copy all (<span id="bcopycount">0</span>)
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <div class="backdrop" id="backdrop"></div>
+        <button class="totop" id="toTop" aria-label="Back to top">
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M12 19V5" />
+                <path d="M5 12l7-7 7 7" />
+            </svg>
+        </button>
+
+        <div class="modal" id="modal">
+            <div class="mpanel">
+                <h3 id="mtitle">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M12 20h9" />
+                        <path
+                            d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"
+                        /></svg
+                    ><span>Add wording</span>
+                </h3>
+                <div class="frow">
+                    <label>Wording text</label
+                    ><input
+                        id="mtext"
+                        type="text"
+                        placeholder="e.g. Screen Crease"
+                        maxlength="80"
+                    />
+                </div>
+                <div class="fgrid">
+                    <div class="frow">
+                        <label>Category</label
+                        ><select id="mcat"></select>
+                    </div>
+                    <div class="frow">
+                        <label>Number</label
+                        ><input
+                            id="mnum"
+                            type="number"
+                            min="1"
+                            max="9999"
+                            inputmode="numeric"
+                        />
+                    </div>
+                </div>
+                <div class="mbtns">
+                    <button class="sbtn" id="mcancel">Cancel</button>
+                    <button class="sbtn accent" id="msave">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="setmodal">
+            <div class="mpanel">
+                <h3>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    >
+                        <path d="M4 6h16M4 12h16M4 18h16" />
+                        <circle
+                            cx="9"
+                            cy="6"
+                            r="2.2"
+                            fill="currentColor"
+                            stroke="none"
+                        />
+                        <circle
+                            cx="15"
+                            cy="12"
+                            r="2.2"
+                            fill="currentColor"
+                            stroke="none"
+                        />
+                        <circle
+                            cx="7"
+                            cy="18"
+                            r="2.2"
+                            fill="currentColor"
+                            stroke="none"
+                        /></svg
+                    ><span>Appearance</span>
+                </h3>
+                <div class="setsec">
+                    <div class="setlabel">Layout</div>
+                    <div class="seg" id="setLayout">
+                        <button data-v="list">List</button
+                        ><button data-v="grid">Cards</button
+                        ><button data-v="table">Table</button>
+                    </div>
+                </div>
+                <div class="setsec">
+                    <div class="setlabel">Accent color</div>
+                    <div class="swatches" id="setAccent"></div>
+                </div>
+                <div class="setsec">
+                    <div class="setlabel">Corners</div>
+                    <div class="seg" id="setRadius">
+                        <button data-v="sharp">Sharp</button
+                        ><button data-v="soft">Soft</button
+                        ><button data-v="round">Round</button>
+                    </div>
+                </div>
+                <div class="setsec">
+                    <div class="setlabel">Row density</div>
+                    <div class="seg" id="setDensity">
+                        <button data-v="cozy">Cozy</button
+                        ><button data-v="compact">Compact</button>
+                    </div>
+                </div>
+                <div class="setsec">
+                    <div class="setlabel">Text size</div>
+                    <div class="seg" id="setText">
+                        <button data-v="s">S</button
+                        ><button data-v="m">M</button
+                        ><button data-v="l">L</button>
+                    </div>
+                </div>
+                <div class="setsec">
+                    <div class="setlabel">Motion</div>
+                    <div class="seg" id="setMotion">
+                        <button data-v="full">Full</button
+                        ><button data-v="reduced">Reduced</button>
+                    </div>
+                </div>
+                <div class="mbtns">
+                    <button class="sbtn accent" id="setdone">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            /* ============ BASE DATA (OCR-verified rows 2–140 · 124–128 RCPC · 129–133 FCPC) ============ */
+            const BASE = [
+                [2, "Symbol B", "body"],
+                [3, "Fake Back Cover", "backcover"],
+                [4, "Bubble In Back Cover", "backcover"],
+                [5, "Back Cover Fell off", "backcover"],
+                [6, "Back Cover Missing", "backcover"],
+                [7, "Fake Battery", "battery"],
+                [8, "Battery Has Been Changed By Apple", "battery"],
+                [9, "Home Button Not Functional", "buttons"],
+                [10, "Home Button Missing", "buttons"],
+                [11, "Home Button Wrong Color", "buttons"],
+                [12, "Home Button Crack", "buttons"],
+                [13, "Bixby Button Not Functional", "buttons"],
+                [14, "Bixby Button Missing", "buttons"],
+                [15, "Bixby Button Wrong Color", "buttons"],
+                [16, "Bixby Button Crack", "buttons"],
+                [17, "Mute Button Wrong Color", "buttons"],
+                [18, "Mute Button Crack", "buttons"],
+                [19, "On Off Button Wrong Color", "buttons"],
+                [20, "On Off Button Crack", "buttons"],
+                [21, "Volume Button Wrong Color", "buttons"],
+                [22, "Volume Button Crack", "buttons"],
+                [23, "Camera Control Button Not Functional", "buttons"],
+                [24, "Camera Control Button Missing", "buttons"],
+                [25, "Camera Control Button Wrong Color", "buttons"],
+                [26, "Camera Control Button Crack", "buttons"],
+                [27, "Front Camera Blur", "camera"],
+                [28, "Front Camera Shadow", "camera"],
+                [29, "Rear Camera Blur", "camera"],
+                [30, "Rear Camera Shadow", "camera"],
+                [31, "FCPB1", "codes"],
+                [32, "FCPB21", "codes"],
+                [33, "FCPB22", "codes"],
+                [34, "FCPB3", "codes"],
+                [35, "FCPB4", "codes"],
+                [36, "FCPW1", "codes"],
+                [37, "FCPW21", "codes"],
+                [38, "FCPW22", "codes"],
+                [39, "FCPW3", "codes"],
+                [40, "FCPW4", "codes"],
+                [41, "RCPB1", "codes"],
+                [42, "RCPB21", "codes"],
+                [43, "RCPB22", "codes"],
+                [44, "RCPB3", "codes"],
+                [45, "RCPB4", "codes"],
+                [46, "RCPW1", "codes"],
+                [47, "RCPW21", "codes"],
+                [48, "RCPW22", "codes"],
+                [49, "RCPW3", "codes"],
+                [50, "RCPW4", "codes"],
+                [51, "Camera Edge Missing", "camera"],
+                [52, "Fake Front Camera", "camera"],
+                [53, "Fake Rear Camera", "camera"],
+                [54, "Fake Rear Camera Glass", "camera"],
+                [55, "Camera Has Been Changed By Apple", "camera"],
+                [56, "Screw Missing", "body"],
+                [57, "In Parts Only Body", "body"],
+                [58, "In Parts Only Screen", "body"],
+                [59, "Jailbreak", "locks"],
+                [60, "Cannot Remove Magnetic Holder", "body"],
+                [61, "Passcode Lock", "locks"],
+                [62, "icloud Lock", "locks"],
+                [63, "Corporate Lock", "locks"],
+                [64, "Google Account Lock", "locks"],
+                [65, "Samsung Account Lock", "locks"],
+                [66, "Huawei Account Lock", "locks"],
+                [67, "Xiaomi Account Lock", "locks"],
+                [68, "Payment Service Lock", "locks"],
+                [69, "Random Restart", "system"],
+                [70, "Turn Off When Fold", "system"],
+                [71, "Mainboard Missing", "body"],
+                [72, "Mic", "audio"],
+                [73, "Mic Shock", "audio"],
+                [74, "Rubber Screen Crack", "body"],
+                [75, "Rubber Screen Missing", "body"],
+                [76, "Rubber Feet Crack", "body"],
+                [77, "Rubber Feet Missing", "body"],
+                [78, "Pen Crack", "pen"],
+                [79, "Pen Wrong Color", "pen"],
+                [80, "Pen Cannot Take Photo", "pen"],
+                [81, "Pen Cannot Pullout", "pen"],
+                [82, "Pen Cannot Plugin", "pen"],
+                [83, "Screen Crease", "screen"],
+                [84, "Film Crease", "screen"],
+                [85, "Color Leak", "screen"],
+                [86, "Screen No Response", "screen"],
+                [87, "Bubble In Screen", "screen"],
+                [88, "Screen Ajar", "screen"],
+                [89, "Screen No Response When Fold", "screen"],
+                [90, "B7 Red Burn", "screen"],
+                [91, "Screen Bruise", "screen"],
+                [92, "Dust in Screen", "screen"],
+                [93, "Screen Has Been Changed By Apple", "screen"],
+                [94, "Bubble Under Film", "screen"],
+                [95, "Sensor", "body"],
+                [96, "Sim Tray Missing", "body"],
+                [97, "Sim Tray Crack", "body"],
+                [98, "Fake Sim Tray", "body"],
+                [99, "Speaker Audio Shock", "audio"],
+                [100, "Speaker Receiver Audio Shock", "audio"],
+                [101, "Receiver Speaker Mesh Crack", "audio"],
+                [102, "Vibration", "body"],
+                [103, "No Strap", "body"],
+                [104, "Fake Strap", "body"],
+                [105, "Water Damage In Screen", "water"],
+                [106, "Water Damage In Back Cover", "water"],
+                [107, "Water Damage In Rear Camera", "water"],
+                [108, "Unable to Activate", "system"],
+                [109, "Used Screen", "screen"],
+                [110, "Used Battery", "battery"],
+                [111, "Used Camera", "camera"],
+                [112, "Screen Locked by Owner", "locks"],
+                [113, "Battery Locked by Owner", "locks"],
+                [114, "Camera Locked by Owner", "locks"],
+                [115, "Demo Lock", "locks"],
+                [116, "Payment Service Not Lock", "locks"],
+                [117, "System Lag", "system"],
+                [118, "FCDS1", "codes"],
+                [119, "FCDS2", "codes"],
+                [120, "RCDS1", "codes"],
+                [121, "RCDS2", "codes"],
+                [122, "Back Cover Has Been Changed By Apple", "backcover"],
+                [123, "Mainboard Has Been Changed By Apple", "body"],
+                [124, "RCPC 1", "codes"],
+                [125, "RCPC 21", "codes"],
+                [126, "RCPC 22", "codes"],
+                [127, "RCPC 3", "codes"],
+                [128, "RCPC 4", "codes"],
+                [129, "FCPC 1", "codes"],
+                [130, "FCPC 21", "codes"],
+                [131, "FCPC 22", "codes"],
+                [132, "FCPC 3", "codes"],
+                [133, "FCPC 4", "codes"],
+                [134, "PC1", "codes"],
+                [135, "PC21", "codes"],
+                [136, "PC22", "codes"],
+                [137, "PC3", "codes"],
+                [138, "PC4", "codes"],
+                [139, "Fake screen", "screen"],
+                [140, "HINGE", "body"],
+            ].map((d) => ({ id: "b" + d[0], n: d[0], t: d[1], c: d[2] }));
+
+            const CATS = [
+                {
+                    id: "all",
+                    name: "All",
+                    color: "#8a8577",
+                    desc: "Every standard wording, numbered and searchable.",
+                },
+                {
+                    id: "codes",
+                    name: "Codes",
+                    color: "#7048e8",
+                    desc: "Panel & part codes — FC / RC / PC groups.",
+                },
+                {
+                    id: "screen",
+                    name: "Screen",
+                    color: "#1971c2",
+                    desc: "Display, film, crease, bubble & response issues.",
+                },
+                {
+                    id: "camera",
+                    name: "Camera",
+                    color: "#15aabf",
+                    desc: "Front & rear camera condition.",
+                },
+                {
+                    id: "buttons",
+                    name: "Buttons",
+                    color: "#f59f00",
+                    desc: "Home, Bixby, mute, volume & camera-control keys.",
+                },
+                {
+                    id: "battery",
+                    name: "Battery",
+                    color: "#2f9e44",
+                    desc: "Battery authenticity & replacements.",
+                },
+                {
+                    id: "backcover",
+                    name: "Back Cover",
+                    color: "#b08020",
+                    desc: "Back cover condition & Apple replacements.",
+                },
+                {
+                    id: "locks",
+                    name: "Locks",
+                    color: "#e03131",
+                    desc: "Account locks & security states.",
+                },
+                {
+                    id: "pen",
+                    name: "Pen",
+                    color: "#c2255c",
+                    desc: "S Pen condition & function.",
+                },
+                {
+                    id: "water",
+                    name: "Water Damage",
+                    color: "#0b7285",
+                    desc: "Liquid damage indicators.",
+                },
+                {
+                    id: "audio",
+                    name: "Audio & Mic",
+                    color: "#0ca678",
+                    desc: "Mic, speaker & receiver.",
+                },
+                {
+                    id: "body",
+                    name: "Body & Parts",
+                    color: "#64748b",
+                    desc: "Housing, straps, sim tray, mainboard & parts.",
+                },
+                {
+                    id: "system",
+                    name: "System",
+                    color: "#e8590c",
+                    desc: "Power, software & behaviour.",
+                },
+                {
+                    id: "pinned",
+                    name: "Pinned",
+                    color: "#e8930c",
+                    desc: "Wordings you starred for quick access.",
+                },
+                {
+                    id: "recent",
+                    name: "Recent",
+                    color: "#8a8577",
+                    desc: "Your most recently copied wordings.",
+                },
+            ];
+            const CODE_SUBS = [
+                "ALL",
+                "FCPB",
+                "FCPW",
+                "FCPC",
+                "RCPB",
+                "RCPW",
+                "RCPC",
+                "FCDS",
+                "RCDS",
+                "PC",
+            ];
+            const EDIT_CATS = CATS.filter(
+                (c) => !["all", "pinned", "recent"].includes(c.id),
+            );
+            const ACCENTS = [
+                ["ember", "#e8590c"],
+                ["teal", "#0ca678"],
+                ["ocean", "#1971c2"],
+                ["violet", "#7048e8"],
+                ["leaf", "#2f9e44"],
+                ["ruby", "#e03131"],
+                ["rose", "#c2255c"],
+            ];
+
+            const sv = (p) =>
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                p +
+                "</svg>";
+            const I = {
+                copy: sv(
+                    '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>',
+                ),
+                plus: sv('<path d="M12 5v14M5 12h14"/>'),
+                pin: sv(
+                    '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+                ),
+                pinFill:
+                    '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+                x: sv('<path d="M18 6L6 18M6 6l12 12"/>'),
+                check: sv('<path d="M20 6L9 17l-5-5"/>'),
+                clock: sv(
+                    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+                ),
+                edit: sv(
+                    '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>',
+                ),
+                trash: sv(
+                    '<path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>',
+                ),
+            };
+            const CATICON = {
+                all: sv(
+                    '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+                ),
+                codes: sv('<path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/>'),
+                screen: sv(
+                    '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M12 18h.01"/>',
+                ),
+                camera: sv(
+                    '<path d="M4 7h3l2-3h6l2 3h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z"/><circle cx="12" cy="13" r="4"/>',
+                ),
+                buttons: sv(
+                    '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/>',
+                ),
+                battery: sv(
+                    '<rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 10v4"/><path d="M6 10.5v3M10 10.5v3"/>',
+                ),
+                backcover: sv(
+                    '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M9 6h6"/>',
+                ),
+                locks: sv(
+                    '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+                ),
+                pen: sv(
+                    '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>',
+                ),
+                water: sv(
+                    '<path d="M12 2.7s6.5 7 6.5 11.3a6.5 6.5 0 01-13 0C5.5 9.7 12 2.7 12 2.7z"/>',
+                ),
+                audio: sv(
+                    '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0014 0v-1"/><path d="M12 18v4"/>',
+                ),
+                body: sv(
+                    '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>',
+                ),
+                system: sv(
+                    '<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="10" y="10" width="4" height="4"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+                ),
+                pinned: sv(
+                    '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+                ),
+                recent: sv(
+                    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+                ),
+            };
+
+            /* ============ State ============ */
+            const $ = (s) => document.querySelector(s);
+            const store = {
+                get(k, d) {
+                    try {
+                        const v = localStorage.getItem(k);
+                        return v == null ? d : JSON.parse(v);
+                    } catch (e) {
+                        return d;
+                    }
+                },
+                set(k, v) {
+                    try {
+                        localStorage.setItem(k, JSON.stringify(v));
+                    } catch (e) {}
+                },
+            };
+            let state = {
+                q: "",
+                cat: "all",
+                sub: "ALL",
+                edit: false,
+                layout: "list",
+                appearance: store.get("qc-appearance", {
+                    layout: "list",
+                    accent: "ember",
+                    radius: "soft",
+                    textsize: "m",
+                    motion: "full",
+                }),
+                sort: store.get("qc-sort", "num"),
+                theme: store.get(
+                    "qc-theme",
+                    matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "dark"
+                        : "light",
+                ),
+                density: store.get("qc-density", "cozy"),
+                pins: new Set(store.get("qc-pins", [])),
+                recents: store.get("qc-recents", []),
+                history: store.get("qc-history", []),
+                batch: store.get("qc-batch", []),
+                join: store.get("qc-join", "nl"),
+                autoclear: store.get("qc-autoclear", false),
+            };
+            state.layout = state.appearance.layout;
+            const catOf = (id) => CATS.find((c) => c.id === id) || CATS[0];
+            const norm = (s) => s.toLowerCase().replace(/\s+/g, "");
+            const esc = (s) =>
+                String(s)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            const escAttr = (s) => esc(s).replace(/"/g, "&quot;");
+
+            /* ============ Editable data ============ */
+            function buildData() {
+                const dels = new Set(store.get("qc-dels", []));
+                const edits = store.get("qc-edits", {});
+                const customs = store.get("qc-custom", []);
+                const list = BASE.filter((e) => !dels.has(e.id)).map((e) =>
+                    edits[e.id] ? Object.assign({}, e, edits[e.id]) : e,
+                );
+                return list.concat(customs);
+            }
+            let DATA = buildData();
+            const CATKEY = {
+                screen: "display lcd panel",
+                camera: "cam photo",
+                pen: "stylus spen",
+                water: "liquid moisture",
+                audio: "sound speaker mic microphone",
+                locks: "lock account icloud passcode",
+                body: "parts housing frame mainboard",
+                battery: "batt",
+                buttons: "key switch",
+                backcover: "housing cover",
+                system: "software reboot restart lag",
+                codes: "code",
+            };
+            function enrichAll() {
+                DATA.forEach((e) => {
+                    const hay = (e.t + " " + (CATKEY[e.c] || "")).toLowerCase();
+                    e.hay = hay;
+                    e.norm = norm(hay);
+                    e.words = hay.split(/[^a-z0-9]+/).filter(Boolean);
+                });
+            }
+            enrichAll();
+            function refreshData() {
+                DATA = buildData();
+                enrichAll();
+            }
+
+            /* ============ Search engine ============ */
+            const ALIAS = {
+                display: "screen",
+                monitor: "screen",
+                lcd: "screen",
+                stylus: "pen",
+                spen: "pen",
+                batt: "battery",
+                cam: "camera",
+                mic: "audio",
+                speaker: "audio",
+                sound: "audio",
+                liquid: "water",
+                moisture: "water",
+                btn: "button",
+                key: "button",
+                band: "strap",
+                haptic: "vibration",
+                glass: "screen",
+                cover: "backcover",
+                housing: "backcover",
+                icloud: "lock",
+                account: "lock",
+                passcode: "lock",
+                fold: "hinge",
+                crease: "fold",
+            };
+            function lev(a, b, cap) {
+                const m = a.length,
+                    n = b.length;
+                if (Math.abs(m - n) > cap) return cap + 1;
+                let prev = new Array(n + 1),
+                    cur = new Array(n + 1);
+                for (let j = 0; j <= n; j++) prev[j] = j;
+                for (let i = 1; i <= m; i++) {
+                    cur[0] = i;
+                    let rowMin = cur[0];
+                    for (let j = 1; j <= n; j++) {
+                        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                        cur[j] = Math.min(
+                            prev[j] + 1,
+                            cur[j - 1] + 1,
+                            prev[j - 1] + cost,
+                        );
+                        if (cur[j] < rowMin) rowMin = cur[j];
+                    }
+                    if (rowMin > cap) return cap + 1;
+                    const t = prev;
+                    prev = cur;
+                    cur = t;
+                }
+                return prev[n];
+            }
+            function subseq(t, h) {
+                let i = 0;
+                for (let c = 0; c < h.length && i < t.length; c++)
+                    if (h[c] === t[i]) i++;
+                return i === t.length;
+            }
+            function matchTerm(e, term) {
+                if (!term) return 0;
+                const i = e.hay.indexOf(term);
+                if (i === 0) return 100;
+                if (i > 0) return 92 - Math.min(i, 24) * 0.3;
+                const nt = term.replace(/\s+/g, "");
+                if (nt.length > 2 && e.norm.includes(nt)) return 82;
+                const tol = term.length <= 4 ? 1 : term.length <= 8 ? 2 : 3;
+                let best = 0;
+                for (const w of e.words) {
+                    if (Math.abs(w.length - term.length) > tol) continue;
+                    const d = lev(w, term, tol);
+                    if (d <= tol) {
+                        const s = 72 - d * 18;
+                        if (s > best) best = s;
+                    }
+                }
+                if (best) return best;
+                if (term.length >= 4 && subseq(term, e.hay)) return 38;
+                return 0;
+            }
+            function rank(list, q) {
+                const qLow = q.toLowerCase().trim();
+                const tokens = qLow.split(/[^a-z0-9]+/).filter(Boolean);
+                const terms = [qLow, ...tokens];
+                tokens.forEach((t) => {
+                    if (ALIAS[t]) terms.push(ALIAS[t]);
+                });
+                const scored = [];
+                for (const e of list) {
+                    let s = 0,
+                        all = true,
+                        any = false;
+                    for (const tm of terms) {
+                        if (tm.length < 2) continue;
+                        const m = matchTerm(e, tm);
+                        if (m > 0) any = true;
+                        else if (tm.length > 2) all = false;
+                        if (m > s) s = m;
+                    }
+                    if (tokens.length > 1 && all) s += 8;
+                    if (any) scored.push({ e, score: s });
+                }
+                scored.sort((a, b) => b.score - a.score || a.e.n - b.e.n);
+                return scored;
+            }
+
+            /* ============ Appearance / theme ============ */
+            function applyAppearance() {
+                const a = state.appearance,
+                    h = document.documentElement;
+                h.dataset.accent = a.accent;
+                h.dataset.radius = a.radius;
+                h.dataset.textsize = a.textsize;
+                h.dataset.motion = a.motion;
+                h.dataset.density = state.density;
+                store.set("qc-appearance", a);
+            }
+            function applyTheme() {
+                document.documentElement.dataset.theme = state.theme;
+                $("#metaTheme").setAttribute(
+                    "content",
+                    state.theme === "dark" ? "#141412" : "#f3f2ee",
+                );
+                store.set("qc-theme", state.theme);
+            }
+            $("#themeBtn").addEventListener("click", () => {
+                state.theme = state.theme === "dark" ? "light" : "dark";
+                applyTheme();
+            });
+
+            /* ============ Ripple ============ */
+            document.addEventListener("pointerdown", (e) => {
+                const el = e.target.closest(
+                    ".row,.gcard,.trow,.btn,.sbtn,.chip,.nav,.hchip,.batchbtn",
+                );
+                if (!el) return;
+                const r = el.getBoundingClientRect();
+                const d = Math.max(r.width, r.height) * 1.3;
+                const s = document.createElement("span");
+                s.className = "ripple";
+                s.style.width = s.style.height = d + "px";
+                s.style.left = e.clientX - r.left - d / 2 + "px";
+                s.style.top = e.clientY - r.top - d / 2 + "px";
+                el.appendChild(s);
+                setTimeout(() => s.remove(), 520);
+            });
+
+            /* ============ Filtering ============ */
+            function baseList() {
+                let list = DATA.slice();
+                if (state.cat === "pinned")
+                    list = list.filter((e) => state.pins.has(e.id));
+                else if (state.cat === "recent")
+                    list = state.recents
+                        .map((t) => DATA.find((d) => d.t === t))
+                        .filter(Boolean);
+                else if (state.cat !== "all")
+                    list = list.filter((e) => e.c === state.cat);
+                if (state.cat === "codes" && state.sub !== "ALL")
+                    list = list.filter((e) =>
+                        norm(e.t).startsWith(state.sub.toLowerCase()),
+                    );
+                return list;
+            }
+            function sortedPlain(list) {
+                const nv = (e) => (typeof e.n === "number" ? e.n : 1e9);
+                if (state.sort === "num") list.sort((a, b) => nv(a) - nv(b));
+                if (state.sort === "num-desc")
+                    list.sort((a, b) => nv(b) - nv(a));
+                if (state.sort === "az")
+                    list.sort((a, b) => a.t.localeCompare(b.t));
+                if (state.sort === "za")
+                    list.sort((a, b) => b.t.localeCompare(a.t));
+                return list;
+            }
+            function highlight(t) {
+                const q = state.q.trim();
+                if (!q) return esc(t);
+                const e2 = esc(t);
+                const escQ = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                try {
+                    return e2.replace(
+                        new RegExp("(" + escQ + ")", "ig"),
+                        "<mark>$1</mark>",
+                    );
+                } catch (e) {
+                    return e2;
+                }
+            }
+
+            /* ============ Render ============ */
+            function catCounts() {
+                const m = {
+                    all: DATA.length,
+                    pinned: state.pins.size,
+                    recent: state.recents.length,
+                };
+                DATA.forEach((e) => {
+                    m[e.c] = (m[e.c] || 0) + 1;
+                });
+                return m;
+            }
+            let lastCatHead = "";
+            function renderCats() {
+                const m = catCounts();
+                $("#nav").innerHTML = CATS.map(
+                    (c) => `
+    <button class="nav ${state.cat === c.id ? "active" : ""}" style="--cc:${c.color}" data-cat="${c.id}">
+      <span class="tico sm">${CATICON[c.id]}</span><span class="nname">${c.name}</span><span class="ncnt">${m[c.id] || 0}</span>
+    </button>`,
+                ).join("");
+                $("#subnav").innerHTML =
+                    state.cat === "codes"
+                        ? '<div class="slabel" style="padding-top:10px">Code groups</div>' +
+                          CODE_SUBS.map(
+                              (s) =>
+                                  `<button class="nav sub ${state.sub === s ? "active" : ""}" style="--cc:#7048e8" data-sub="${s}">${s === "ALL" ? "show all" : s}</button>`,
+                          ).join("")
+                        : "";
+                $("#chips").innerHTML = CATS.map(
+                    (c) => `
+    <button class="chip ${state.cat === c.id ? "active" : ""}" style="--cc:${c.color}" data-cat="${c.id}">
+      <span class="tico xs">${CATICON[c.id]}</span>${c.name}<span class="cnum mono">${m[c.id] || 0}</span>
+    </button>`,
+                ).join("");
+                const sc = $("#subchips");
+                if (state.cat === "codes") {
+                    sc.classList.add("show");
+                    sc.innerHTML = CODE_SUBS.map(
+                        (s) =>
+                            `<button class="chip ${state.sub === s ? "active" : ""}" style="--cc:#7048e8" data-sub="${s}">${s === "ALL" ? "All" : s}</button>`,
+                    ).join("");
+                } else sc.classList.remove("show");
+                $("#footCount").textContent = DATA.length + " entries";
+                const cur = catOf(state.cat);
+                $("#cathead").innerHTML = `
+    <div class="sechead ${state.cat !== lastCatHead ? "swap" : ""}" style="--cc:${cur.color}">
+      <span class="tico md">${CATICON[cur.id]}</span>
+      <div class="shinfo"><h2>${cur.name}</h2><p>${cur.desc}</p></div>
+      <span class="shcount">${m[cur.id] || 0}</span>
+    </div>`;
+                lastCatHead = state.cat;
+            }
+            function renderHistory() {
+                const r = state.recents;
+                $("#histbar").style.display = r.length ? "flex" : "none";
+                $("#hchips").innerHTML = r
+                    .map(
+                        (t) =>
+                            `<button class="hchip" data-hcopy="${escAttr(t)}" title="Copy again">${I.copy}<span class="htxt">${esc(t)}</span></button>`,
+                    )
+                    .join("");
+            }
+            function actsHTML(e) {
+                return `
+    ${state.edit ? `<button class="ibtn" data-act="edit" aria-label="Edit" title="Edit">${I.edit}</button><button class="ibtn" data-act="del" aria-label="Delete" title="Delete">${I.trash}</button>` : ""}
+    <button class="ibtn ${state.pins.has(e.id) ? "pinned" : ""}" data-act="pin" aria-label="Pin" title="Pin">${I.pin}${I.pinFill}</button>
+    <button class="ibtn" data-act="add" aria-label="Add to batch" title="Add to batch">${I.plus}</button>`;
+            }
+            function renderList(animate) {
+                const q = $("#search").value.trim();
+                let list,
+                    fuzzy = new Set();
+                if (q) {
+                    const ranked = rank(baseList(), q);
+                    list = ranked.map((r) => r.e);
+                    ranked.forEach((r) => {
+                        if (r.score < 80) fuzzy.add(r.e.id);
+                    });
+                } else list = sortedPlain(baseList());
+                $("#countLabel").textContent =
+                    list.length +
+                    (list.length === 1 ? " item" : " items") +
+                    (q ? " · ranked · ≈ approximate" : "");
+                $("#empty").style.display = list.length ? "none" : "block";
+                const wrap = $("#listwrap");
+                wrap.style.display = list.length ? "" : "none";
+                wrap.className =
+                    "listwrap " + state.layout + (animate ? " anim" : "");
+                const delay = (i) =>
+                    animate ? `animation-delay:${Math.min(i * 14, 280)}ms` : "";
+                if (state.layout === "grid") {
+                    wrap.innerHTML = list
+                        .map((e, i) => {
+                            const c = catOf(e.c);
+                            return `
+      <div class="gcard" data-id="${e.id}" style="--cc:${c.color};${delay(i)}" role="button" tabindex="0" title="Tap to copy">
+        <div class="chead"><span class="tico">${CATICON[e.c] || CATICON.all}</span><span class="rnum">#${e.n}</span></div>
+        <div class="rtxt ${e.c === "codes" ? "code" : ""}">${highlight(e.t)} ${fuzzy.has(e.id) ? '<span class="fz" title="Approximate match">≈</span>' : ""}</div>
+        <div class="cfoot"><span class="rpill">${esc(c.name)}</span><span class="racts">${actsHTML(e)}</span></div>
+      </div>`;
+                        })
+                        .join("");
+                } else if (state.layout === "table") {
+                    wrap.innerHTML =
+                        `<div class="thead"><span style="text-align:right">#</span><span></span><span>Wording</span><span>Category</span><span style="text-align:right">Actions</span></div>` +
+                        list
+                            .map((e, i) => {
+                                const c = catOf(e.c);
+                                return `
+      <div class="trow" data-id="${e.id}" style="--cc:${c.color};${delay(i)}" role="button" tabindex="0" title="Tap to copy">
+        <span class="rnum">${e.n}</span>
+        <span class="tico xs">${CATICON[e.c] || CATICON.all}</span>
+        <span class="rtxt ${e.c === "codes" ? "code" : ""}">${highlight(e.t)} ${fuzzy.has(e.id) ? '<span class="fz">≈</span>' : ""}</span>
+        <span class="rpill">${esc(c.name)}</span>
+        <span class="racts">${actsHTML(e)}</span>
+      </div>`;
+                            })
+                            .join("");
+                } else {
+                    wrap.innerHTML = list
+                        .map((e, i) => {
+                            const c = catOf(e.c);
+                            return `
+      <div class="row" data-id="${e.id}" style="--cc:${c.color};${delay(i)}" role="button" tabindex="0" title="Tap to copy">
+        <span class="rnum">${e.n}</span>
+        <span class="tico">${CATICON[e.c] || CATICON.all}</span>
+        <span class="rtxt ${e.c === "codes" ? "code" : ""}">${highlight(e.t)}</span>
+        <span class="rmeta">
+          ${fuzzy.has(e.id) ? '<span class="fz" title="Approximate match">≈</span>' : ""}
+          <span class="rpill">${esc(c.name)}</span>
+        </span>
+        <span class="racts">${actsHTML(e)}</span>
+      </div>`;
+                        })
+                        .join("");
+                }
+            }
+            function renderBatch() {
+                const b = state.batch;
+                $("#bcount").textContent = b.length;
+                $("#bbcount").textContent = b.length;
+                $("#bcopycount").textContent = b.length;
+                $("#blist").innerHTML = b.length
+                    ? b
+                          .map(
+                              (t, i) => `
+    <div class="bitem" data-bi="${i}" style="animation-delay:${Math.min(i * 10, 200)}ms" title="Tap to copy">
+      <span class="bi">${i + 1}</span><span class="bt">${esc(t)}</span>
+      <span class="bcopy1" data-bc="${i}">${I.copy}</span>
+      <button class="ibtn" data-rm="${i}" aria-label="Remove">${I.x}</button>
+    </div>`,
+                          )
+                          .join("")
+                    : `<div class="bempty">Batch is empty.<br>Use + on any row to queue it.</div>`;
+            }
+            function renderEdit() {
+                $("#editstrip").classList.toggle("show", state.edit);
+                $("#editBtn").classList.toggle("on", state.edit);
+            }
+            function renderAll(animate) {
+                renderCats();
+                renderHistory();
+                renderList(animate);
+                renderBatch();
+                renderEdit();
+            }
+
+            /* ============ History dropdown ============ */
+            let drop = $("#sdrop"),
+                searchEl = $("#search");
+            const closeDrop = () => drop.classList.remove("open");
+            function saveHistory(v) {
+                if (!v) return;
+                state.history = [
+                    v,
+                    ...state.history.filter((h) => h !== v),
+                ].slice(0, 8);
+                store.set("qc-history", state.history);
+            }
+            function renderDrop() {
+                const q = searchEl.value.trim();
+                if (
+                    q ||
+                    document.activeElement !== searchEl ||
+                    !state.history.length
+                ) {
+                    closeDrop();
+                    return;
+                }
+                drop.innerHTML =
+                    `<div class="dhead">Recent searches<button class="linky" id="hclear">Clear</button></div>` +
+                    state.history
+                        .map(
+                            (h) =>
+                                `<div class="drow" data-fill="${escAttr(h)}"><span class="dico">${I.clock}</span><span class="dtxt">${esc(h)}</span><button class="dmini" data-hdel="${escAttr(h)}" aria-label="Remove">${I.x}</button></div>`,
+                        )
+                        .join("");
+                drop.classList.add("open");
+            }
+            function fillSearch(v) {
+                searchEl.value = v;
+                state.q = v;
+                $("#clearBtn").classList.add("show");
+                saveHistory(v);
+                renderList(false);
+                closeDrop();
+                searchEl.focus();
+            }
+            searchEl.addEventListener("input", () => {
+                state.q = searchEl.value;
+                $("#clearBtn").classList.toggle("show", !!state.q);
+                renderList(false);
+                renderDrop();
+            });
+            searchEl.addEventListener("focus", renderDrop);
+            drop.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (e.target.closest("#hclear")) {
+                    state.history = [];
+                    store.set("qc-history", state.history);
+                    closeDrop();
+                    return;
+                }
+                const del = e.target.closest("[data-hdel]");
+                if (del) {
+                    state.history = state.history.filter(
+                        (h) => h !== del.dataset.hdel,
+                    );
+                    store.set("qc-history", state.history);
+                    renderDrop();
+                    return;
+                }
+                const row = e.target.closest("[data-fill]");
+                if (row) fillSearch(row.dataset.fill);
+            });
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest(".searchwrap")) closeDrop();
+            });
+            searchEl.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const q = searchEl.value.trim();
+                    if (!q) return;
+                    const top = rank(baseList(), q)[0];
+                    if (top) {
+                        copyText(top.e.t).then((ok) => {
+                            if (ok) {
+                                navigator.vibrate && navigator.vibrate(12);
+                                pushRecent(top.e.t);
+                                saveHistory(q);
+                                toast("Copied: " + top.e.t);
+                            }
+                        });
+                        closeDrop();
+                    }
+                }
+            });
+
+            /* ============ Clipboard / toasts ============ */
+            async function copyText(t) {
+                try {
+                    await navigator.clipboard.writeText(t);
+                    return true;
+                } catch (e) {
+                    const ta = document.createElement("textarea");
+                    ta.value = t;
+                    ta.style.cssText = "position:fixed;opacity:0";
+                    document.body.appendChild(ta);
+                    ta.select();
+                    let ok = false;
+                    try {
+                        ok = document.execCommand("copy");
+                    } catch (_) {}
+                    ta.remove();
+                    return ok;
+                }
+            }
+            const joiners = { nl: "\n", comma: ", ", semi: "; ", space: " " };
+            function toast(msg, icon, warn, action) {
+                const el = document.createElement("div");
+                el.className = "toast" + (warn ? " warn" : "");
+                el.innerHTML =
+                    (icon || I.check) +
+                    "<span>" +
+                    esc(msg) +
+                    "</span>" +
+                    (action
+                        ? `<button class="tact">${esc(action.label)}</button>`
+                        : "");
+                if (action)
+                    el.querySelector(".tact").addEventListener("click", () => {
+                        action.fn();
+                        el.remove();
+                    });
+                $("#toasts").appendChild(el);
+                setTimeout(
+                    () => {
+                        el.classList.add("out");
+                        setTimeout(() => el.remove(), 200);
+                    },
+                    action ? 4200 : 1700,
+                );
+            }
+            function pushRecent(t) {
+                state.recents = [
+                    t,
+                    ...state.recents.filter((x) => x !== t),
+                ].slice(0, 20);
+                store.set("qc-recents", state.recents);
+                renderHistory();
+                renderCats();
+            }
+            function pulseBatch() {
+                const b = $("#bbcount");
+                b.classList.remove("pulse");
+                void b.offsetWidth;
+                b.classList.add("pulse");
+            }
+            function flashCopy(el) {
+                el.classList.add("flash");
+                setTimeout(() => el.classList.remove("flash"), 450);
+                const numEl = el.querySelector(".rnum");
+                if (numEl) {
+                    const orig = numEl.innerHTML;
+                    numEl.innerHTML = I.check;
+                    numEl.classList.add("ok");
+                    setTimeout(() => {
+                        numEl.innerHTML = orig;
+                        numEl.classList.remove("ok");
+                    }, 650);
+                }
+            }
+
+            /* ============ Row events ============ */
+            $("#listwrap").addEventListener("click", async (e) => {
+                const btn = e.target.closest("[data-act]");
+                const item = e.target.closest("[data-id]");
+                if (!item) return;
+                const id = item.dataset.id;
+                const entry = DATA.find((d) => d.id === id);
+                if (!entry) return;
+                if (btn && btn.dataset.act === "pin") {
+                    state.pins.has(id)
+                        ? state.pins.delete(id)
+                        : state.pins.add(id);
+                    store.set("qc-pins", [...state.pins]);
+                    btn.classList.toggle("pinned");
+                    renderCats();
+                    toast(
+                        state.pins.has(id) ? "Pinned: " + entry.t : "Unpinned",
+                        I.pin,
+                        true,
+                    );
+                    return;
+                }
+                if (btn && btn.dataset.act === "add") {
+                    if (state.batch.includes(entry.t))
+                        toast("Already in batch", I.plus, true);
+                    else {
+                        state.batch.push(entry.t);
+                        store.set("qc-batch", state.batch);
+                        renderBatch();
+                        pulseBatch();
+                        toast("Added to batch: " + entry.t, I.plus);
+                    }
+                    return;
+                }
+                if (btn && btn.dataset.act === "edit") {
+                    openModal(entry);
+                    return;
+                }
+                if (btn && btn.dataset.act === "del") {
+                    deleteEntry(entry);
+                    return;
+                }
+                const ok = await copyText(entry.t);
+                if (ok) {
+                    navigator.vibrate && navigator.vibrate(12);
+                    pushRecent(entry.t);
+                    if (state.q.trim()) saveHistory(state.q.trim());
+                    flashCopy(item);
+                    toast("Copied: " + entry.t);
+                } else toast("Copy failed", I.x, true);
+            });
+            $("#listwrap").addEventListener("keydown", (e) => {
+                if (
+                    e.key === "Enter" &&
+                    e.target.dataset &&
+                    e.target.dataset.id
+                )
+                    e.target.click();
+            });
+
+            /* ============ Edit mode ============ */
+            $("#editBtn").addEventListener("click", () => {
+                state.edit = !state.edit;
+                renderEdit();
+                renderList(false);
+                toast(
+                    state.edit
+                        ? "Edit mode on — changes stay on this device"
+                        : "Edit mode off",
+                    state.edit ? I.edit : I.check,
+                    !state.edit,
+                );
+            });
+            let modalTarget = null;
+            $("#mcat").innerHTML = EDIT_CATS.map(
+                (c) => `<option value="${c.id}">${c.name}</option>`,
+            ).join("");
+            function openModal(entry) {
+                modalTarget = entry || null;
+                $("#mtitle span").textContent = entry
+                    ? "Edit wording"
+                    : "Add wording";
+                $("#mtext").value = entry ? entry.t : "";
+                $("#mcat").value = entry ? entry.c : "screen";
+                $("#mnum").value = entry
+                    ? entry.n
+                    : Math.max(...DATA.map((d) => d.n || 0), 0) + 1;
+                $("#modal").classList.add("open");
+                setTimeout(() => $("#mtext").focus(), 60);
+            }
+            function closeModal() {
+                $("#modal").classList.remove("open");
+                modalTarget = null;
+            }
+            $("#mcancel").addEventListener("click", closeModal);
+            $("#modal").addEventListener("click", (e) => {
+                if (e.target.id === "modal") closeModal();
+            });
+            $("#msave").addEventListener("click", () => {
+                const t = $("#mtext").value.trim();
+                if (!t) return toast("Text is required", I.x, true);
+                const c = $("#mcat").value;
+                const n = parseInt($("#mnum").value, 10) || 0;
+                if (modalTarget) {
+                    if (modalTarget.id.startsWith("b")) {
+                        const edits = store.get("qc-edits", {});
+                        edits[modalTarget.id] = { t, c, n };
+                        store.set("qc-edits", edits);
+                    } else {
+                        const customs = store.get("qc-custom", []);
+                        const x = customs.find((k) => k.id === modalTarget.id);
+                        if (x) {
+                            x.t = t;
+                            x.c = c;
+                            x.n = n;
+                        }
+                        store.set("qc-custom", customs);
+                    }
+                    toast("Updated: " + t, I.edit);
+                } else {
+                    const customs = store.get("qc-custom", []);
+                    customs.push({ id: "c" + Date.now(), t, c, n });
+                    store.set("qc-custom", customs);
+                    toast("Added: " + t, I.plus);
+                }
+                closeModal();
+                refreshData();
+                renderAll(true);
+            });
+            function deleteEntry(entry) {
+                const snap = {
+                    edits: store.get("qc-edits", {}),
+                    dels: store.get("qc-dels", []),
+                    customs: store.get("qc-custom", []),
+                };
+                if (entry.id.startsWith("b")) {
+                    const d = store.get("qc-dels", []);
+                    d.push(entry.id);
+                    store.set("qc-dels", d);
+                } else {
+                    store.set(
+                        "qc-custom",
+                        store
+                            .get("qc-custom", [])
+                            .filter((k) => k.id !== entry.id),
+                    );
+                }
+                refreshData();
+                renderAll(false);
+                toast("Deleted: " + entry.t, I.trash, true, {
+                    label: "Undo",
+                    fn: () => {
+                        store.set("qc-edits", snap.edits);
+                        store.set("qc-dels", snap.dels);
+                        store.set("qc-custom", snap.customs);
+                        refreshData();
+                        renderAll(true);
+                        toast("Restored: " + entry.t);
+                    },
+                });
+            }
+            $("#addBtn").addEventListener("click", () => openModal(null));
+            $("#exportBtn").addEventListener("click", () => {
+                const payload = {
+                    edits: store.get("qc-edits", {}),
+                    dels: store.get("qc-dels", []),
+                    customs: store.get("qc-custom", []),
+                };
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(
+                    new Blob([JSON.stringify(payload, null, 2)], {
+                        type: "application/json",
+                    }),
+                );
+                a.download = "qc-wording-changes.json";
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+                toast("Changes exported");
+            });
+            $("#importBtn").addEventListener("click", () =>
+                $("#importFile").click(),
+            );
+            $("#importFile").addEventListener("change", (e) => {
+                const f = e.target.files[0];
+                if (!f) return;
+                const r = new FileReader();
+                r.onload = () => {
+                    try {
+                        const p = JSON.parse(r.result);
+                        const edits = store.get("qc-edits", {});
+                        Object.assign(edits, p.edits || {});
+                        store.set("qc-edits", edits);
+                        const dels = store.get("qc-dels", []);
+                        store.set("qc-dels", [
+                            ...new Set(dels.concat(p.dels || [])),
+                        ]);
+                        const customs = store.get("qc-custom", []);
+                        const have = new Set(customs.map((c) => c.id));
+                        (p.customs || []).forEach((c) => {
+                            if (!have.has(c.id)) customs.push(c);
+                        });
+                        store.set("qc-custom", customs);
+                        refreshData();
+                        renderAll(true);
+                        toast("Changes imported");
+                    } catch (err) {
+                        toast("Invalid file", I.x, true);
+                    }
+                    e.target.value = "";
+                };
+                r.readAsText(f);
+            });
+            let resetArm = null;
+            $("#resetBtn").addEventListener("click", (e) => {
+                const b = e.currentTarget;
+                if (!resetArm) {
+                    resetArm = setTimeout(() => {
+                        resetArm = null;
+                        b.classList.remove("arm");
+                        b.textContent = "Reset all changes";
+                    }, 2600);
+                    b.classList.add("arm");
+                    b.textContent = "Tap again to confirm";
+                    return;
+                }
+                clearTimeout(resetArm);
+                resetArm = null;
+                b.classList.remove("arm");
+                b.textContent = "Reset all changes";
+                store.set("qc-edits", {});
+                store.set("qc-dels", []);
+                store.set("qc-custom", []);
+                refreshData();
+                renderAll(true);
+                toast("All changes reset to original");
+            });
+
+            /* ============ Appearance settings ============ */
+            function segSet(id, val, fn) {
+                const el = $(id);
+                el.querySelectorAll("button").forEach((b) => {
+                    b.classList.toggle("on", b.dataset.v === val);
+                    b.onclick = () => {
+                        fn(b.dataset.v);
+                        segSet(id, b.dataset.v, fn);
+                    };
+                });
+            }
+            function renderSettings() {
+                segSet("#setLayout", state.appearance.layout, (v) => {
+                    state.appearance.layout = v;
+                    state.layout = v;
+                    applyAppearance();
+                    renderList(true);
+                });
+                segSet("#setRadius", state.appearance.radius, (v) => {
+                    state.appearance.radius = v;
+                    applyAppearance();
+                });
+                segSet("#setDensity", state.density, (v) => {
+                    state.density = v;
+                    applyAppearance();
+                    store.set("qc-density", v);
+                });
+                segSet("#setText", state.appearance.textsize, (v) => {
+                    state.appearance.textsize = v;
+                    applyAppearance();
+                });
+                segSet("#setMotion", state.appearance.motion, (v) => {
+                    state.appearance.motion = v;
+                    applyAppearance();
+                });
+                $("#setAccent").innerHTML = ACCENTS.map(
+                    (a) =>
+                        `<button class="swatch ${state.appearance.accent === a[0] ? "on" : ""}" style="--sw:${a[1]}" data-a="${a[0]}" title="${a[0]}"></button>`,
+                ).join("");
+            }
+            $("#setAccent").addEventListener("click", (e) => {
+                const s = e.target.closest(".swatch");
+                if (!s) return;
+                state.appearance.accent = s.dataset.a;
+                applyAppearance();
+                renderSettings();
+            });
+            $("#setBtn").addEventListener("click", () => {
+                renderSettings();
+                $("#setmodal").classList.add("open");
+            });
+            $("#setdone").addEventListener("click", () =>
+                $("#setmodal").classList.remove("open"),
+            );
+            $("#setmodal").addEventListener("click", (e) => {
+                if (e.target.id === "setmodal")
+                    $("#setmodal").classList.remove("open");
+            });
+
+            /* ============ Nav / chips / history ============ */
+            function catClick(el) {
+                const c = el.closest("[data-cat]");
+                if (!c) return false;
+                state.cat = c.dataset.cat;
+                closeDrop();
+                renderCats();
+                renderList(true);
+                return true;
+            }
+            function subClick(el) {
+                const c = el.closest("[data-sub]");
+                if (!c) return false;
+                state.sub = c.dataset.sub;
+                renderCats();
+                renderList(true);
+                return true;
+            }
+            $("#nav").addEventListener("click", (e) => catClick(e.target));
+            $("#subnav").addEventListener("click", (e) => subClick(e.target));
+            $("#chips").addEventListener("click", (e) => catClick(e.target));
+            $("#subchips").addEventListener("click", (e) => subClick(e.target));
+            $("#hchips").addEventListener("click", async (e) => {
+                const chip = e.target.closest("[data-hcopy]");
+                if (!chip) return;
+                const t = chip.dataset.hcopy;
+                if (await copyText(t)) {
+                    navigator.vibrate && navigator.vibrate(12);
+                    pushRecent(t);
+                    toast("Copied: " + t);
+                }
+            });
+            $("#hclearAll").addEventListener("click", () => {
+                state.recents = [];
+                store.set("qc-recents", state.recents);
+                renderHistory();
+                renderCats();
+                toast("History cleared", I.x, true);
+            });
+            $("#clearBtn").addEventListener("click", () => {
+                searchEl.value = "";
+                state.q = "";
+                $("#clearBtn").classList.remove("show");
+                renderList(false);
+                closeDrop();
+                searchEl.focus();
+            });
+            $("#sortSel").value = state.sort;
+            $("#sortSel").addEventListener("change", (e) => {
+                state.sort = e.target.value;
+                store.set("qc-sort", state.sort);
+                renderList(true);
+            });
+
+            /* ============ Batch ============ */
+            $("#joinSel").value = state.join;
+            $("#joinSel").addEventListener("change", (e) => {
+                state.join = e.target.value;
+                store.set("qc-join", state.join);
+            });
+            $("#autoclear").checked = state.autoclear;
+            $("#autoclear").addEventListener("change", (e) => {
+                state.autoclear = e.target.checked;
+                store.set("qc-autoclear", state.autoclear);
+            });
+            $("#blist").addEventListener("click", async (e) => {
+                const rm = e.target.closest("[data-rm]");
+                if (rm) {
+                    state.batch.splice(+rm.dataset.rm, 1);
+                    store.set("qc-batch", state.batch);
+                    renderBatch();
+                    return;
+                }
+                const bc = e.target.closest("[data-bc]");
+                const item = e.target.closest("[data-bi]");
+                const idx = bc
+                    ? +bc.dataset.bc
+                    : item
+                      ? +item.dataset.bi
+                      : null;
+                if (idx == null) return;
+                const t = state.batch[idx];
+                if (await copyText(t)) {
+                    navigator.vibrate && navigator.vibrate(12);
+                    pushRecent(t);
+                    toast("Copied: " + t);
+                }
+            });
+            $("#bcopy").addEventListener("click", async () => {
+                if (!state.batch.length)
+                    return toast("Batch is empty", I.x, true);
+                const count = state.batch.length;
+                const ok = await copyText(
+                    state.batch.join(joiners[state.join]),
+                );
+                if (ok) {
+                    navigator.vibrate && navigator.vibrate(20);
+                    if (state.autoclear) {
+                        state.batch = [];
+                        store.set("qc-batch", state.batch);
+                        renderBatch();
+                        toast("Copied " + count + " · batch cleared");
+                    } else
+                        toast(
+                            "Copied " +
+                                count +
+                                (count === 1 ? " item" : " items"),
+                        );
+                    document.body.classList.remove("sheet-open");
+                } else toast("Copy failed", I.x, true);
+            });
+            const clearBatch = () => {
+                state.batch = [];
+                store.set("qc-batch", state.batch);
+                renderBatch();
+                toast("Batch cleared", I.x, true);
+            };
+            $("#bclear").addEventListener("click", clearBatch);
+            $("#bclearTop").addEventListener("click", clearBatch);
+            $("#bpaste").addEventListener("click", async () => {
+                let t = "";
+                try {
+                    t = await navigator.clipboard.readText();
+                } catch (e) {
+                    return toast("Clipboard blocked by browser", I.x, true);
+                }
+                if (!t || !t.trim())
+                    return toast("Clipboard is empty", I.x, true);
+                const lines = t
+                    .split(/\r?\n/)
+                    .map((s) => s.trim())
+                    .filter(Boolean);
+                let added = 0;
+                lines.forEach((l) => {
+                    if (!state.batch.includes(l)) {
+                        state.batch.push(l);
+                        added++;
+                    }
+                });
+                store.set("qc-batch", state.batch);
+                renderBatch();
+                toast(
+                    added
+                        ? "Imported " +
+                              added +
+                              (added === 1 ? " line" : " lines")
+                        : "Nothing new to add",
+                    added ? undefined : I.x,
+                    !added,
+                );
+            });
+            $("#batchBtn").addEventListener("click", () =>
+                document.body.classList.add("sheet-open"),
+            );
+            $("#backdrop").addEventListener("click", () =>
+                document.body.classList.remove("sheet-open"),
+            );
+            $("#bclose").addEventListener("click", () =>
+                document.body.classList.remove("sheet-open"),
+            );
+
+            /* ============ Misc ============ */
+            window.addEventListener(
+                "scroll",
+                () => {
+                    $("#toTop").classList.toggle("show", window.scrollY > 600);
+                },
+                { passive: true },
+            );
+            $("#toTop").addEventListener("click", () =>
+                window.scrollTo({ top: 0, behavior: "smooth" }),
+            );
+            document.addEventListener("keydown", (e) => {
+                if (
+                    e.key === "/" &&
+                    !/INPUT|SELECT|TEXTAREA/.test(
+                        document.activeElement.tagName,
+                    )
+                ) {
+                    e.preventDefault();
+                    searchEl.focus();
+                }
+                if (e.key === "Escape") {
+                    if ($("#modal").classList.contains("open")) closeModal();
+                    else if ($("#setmodal").classList.contains("open"))
+                        $("#setmodal").classList.remove("open");
+                    else if (drop.classList.contains("open")) closeDrop();
+                    else if (document.body.classList.contains("sheet-open"))
+                        document.body.classList.remove("sheet-open");
+                    else if (document.activeElement === searchEl) {
+                        searchEl.value = "";
+                        state.q = "";
+                        $("#clearBtn").classList.remove("show");
+                        renderList(false);
+                        searchEl.blur();
+                    }
+                }
+            });
+            $("#dlBtn").addEventListener("click", () => {
+                closeDrop();
+                const html =
+                    "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(
+                    new Blob([html], { type: "text/html" }),
+                );
+                a.download = "qc-standard-wording.html";
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+                toast("Offline copy downloaded");
+            });
+            (function () {
+                const icon =
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#e8590c"/><path d="M150 268l82 82 148-164" fill="none" stroke="#fff" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                const m = {
+                    name: "QC Standard Wording",
+                    short_name: "QC Wording",
+                    description: "Fast QC wording lookup & copy tool",
+                    start_url: ".",
+                    display: "standalone",
+                    orientation: "any",
+                    background_color: "#141412",
+                    theme_color: "#e8590c",
+                    icons: [
+                        {
+                            src:
+                                "data:image/svg+xml," +
+                                encodeURIComponent(icon),
+                            sizes: "any",
+                            type: "image/svg+xml",
+                            purpose: "any",
+                        },
+                    ],
+                };
+                const l = document.createElement("link");
+                l.rel = "manifest";
+                l.href =
+                    "data:application/manifest+json," +
+                    encodeURIComponent(JSON.stringify(m));
+                document.head.appendChild(l);
+            })();
+            let deferredPrompt = null;
+            window.addEventListener("beforeinstallprompt", (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                $("#installBtn").classList.add("show");
+            });
+            $("#installBtn").addEventListener("click", async () => {
+                if (!deferredPrompt)
+                    return toast(
+                        "Use browser menu → Add to Home screen",
+                        I.x,
+                        true,
+                    );
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                $("#installBtn").classList.remove("show");
+            });
+
+            applyTheme();
+            applyAppearance();
+            renderAll(true);
+        </script>
+    </body>
+</html>
+```
