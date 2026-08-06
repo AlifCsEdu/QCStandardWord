@@ -1,5 +1,18 @@
 import React, { useMemo } from 'react';
-import { AppShell, MantineProvider, createTheme } from '@mantine/core';
+import {
+  AppShell,
+  MantineProvider,
+  createTheme,
+  Affix,
+  Button,
+  Transition,
+  useMantineColorScheme,
+} from '@mantine/core';
+import { Notifications, notifications } from '@mantine/notifications';
+import { Spotlight, spotlight, type SpotlightActionData } from '@mantine/spotlight';
+import { useWindowScroll } from '@mantine/hooks';
+import { IconArrowUp, IconSearch } from '@tabler/icons-react';
+
 import { AppHeader } from './components/AppHeader.tsx';
 import { BatchDrawer } from './components/BatchDrawer.tsx';
 import { CategoryChips } from './components/CategoryChips.tsx';
@@ -8,10 +21,27 @@ import { EditModal } from './components/EditModal.tsx';
 import { EditToolbar } from './components/EditToolbar.tsx';
 import { HistoryBar } from './components/HistoryBar.tsx';
 import { SettingsModal } from './components/SettingsModal.tsx';
+import { StatsDashboard } from './components/StatsDashboard.tsx';
 import { ToastsContainer } from './components/ToastsContainer.tsx';
 import { WordingContainer } from './components/WordingContainer.tsx';
 import { useAppearance } from './hooks/useAppearance.ts';
 import { useQCState } from './hooks/useQCState.ts';
+
+if (typeof window !== 'undefined') {
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = (cb: FrameRequestCallback) => setTimeout(cb, 16) as any;
+  }
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = (id: number) => clearTimeout(id);
+  }
+  if (!window.ResizeObserver) {
+    window.ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as any;
+  }
+}
 
 export const AppContent: React.FC = () => {
   const {
@@ -28,6 +58,8 @@ export const AppContent: React.FC = () => {
     setMotion,
     setAccent,
   } = useAppearance();
+
+  const { setColorScheme } = useMantineColorScheme();
 
   const {
     searchQuery,
@@ -73,6 +105,8 @@ export const AppContent: React.FC = () => {
     resetAllChanges,
   } = useQCState();
 
+  const [scroll, scrollTo] = useWindowScroll();
+
   // Compute category item counts
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
@@ -87,8 +121,28 @@ export const AppContent: React.FC = () => {
   }, [activeItems, pinsSet, recents]);
 
   const handleToggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    setColorScheme(nextTheme);
   };
+
+  // Build spotlight actions for Cmd+K search modal
+  const spotlightActions: SpotlightActionData[] = useMemo(() => {
+    return activeItems.map((item) => ({
+      id: String(item.id),
+      label: item.t,
+      description: `Category: ${item.c.toUpperCase()} ${item.n ? `#${item.n}` : ''}`,
+      onClick: () => {
+        copySingleItem(item.t);
+        notifications.show({
+          title: 'Wording Copied',
+          message: item.t,
+          color: 'teal',
+        });
+      },
+      leftSection: <IconSearch size={16} />,
+    }));
+  }, [activeItems, copySingleItem]);
 
   return (
     <AppShell header={{ height: 60 }} padding="0">
@@ -105,6 +159,22 @@ export const AppContent: React.FC = () => {
       </AppShell.Header>
 
       <AppShell.Main style={{ paddingTop: '60px' }}>
+        {/* Inspection Stats Dashboard Header */}
+        <StatsDashboard
+          categoryCounts={categoryCounts}
+          selectedCategory={selectedCategory}
+          selectedSubCategory={selectedSubCategory}
+          searchQuery={searchQuery}
+          totalFilteredCount={searchResults.length}
+          batchCount={batchQueue.length}
+          pinnedCount={pinsSet.size}
+          onOpenSpotlight={() => spotlight.open()}
+          onSelectCategory={(cat) => {
+            setSelectedCategory(cat);
+            setSelectedSubCategory('ALL');
+          }}
+        />
+
         {/* Category Navigation Chips */}
         <CategoryChips
           selectedCategory={selectedCategory}
@@ -145,6 +215,7 @@ export const AppContent: React.FC = () => {
           onClearSearch={() => setSearchQuery('')}
           results={searchResults}
           layoutMode={layout}
+          onSetLayout={setLayout}
           pinsSet={pinsSet}
           editMode={editMode}
           onCopyItem={copySingleItem}
@@ -192,6 +263,38 @@ export const AppContent: React.FC = () => {
 
         {/* Toast Notifications */}
         <ToastsContainer toasts={toasts} onRemoveToast={removeToast} />
+
+        {/* Mantine Spotlight Search Modal (Cmd+K / Ctrl+K) */}
+        <Spotlight
+          actions={spotlightActions}
+          searchProps={{
+            placeholder: 'Search QC defect wording (Press Cmd+K / Ctrl+K)...',
+          }}
+          shortcut={['mod + k', 'ctrl + k']}
+          nothingFound="No QC wording items match search query."
+          highlightQuery
+        />
+
+        {/* Floating Scroll-to-Top Button (Mantine Affix) */}
+        <Affix position={{ bottom: 24, right: 24 }}>
+          <Transition transition="slide-up" mounted={scroll.y > 100}>
+            {(transitionStyles) => (
+              <Button
+                id="scrollTopBtn"
+                leftSection={<IconArrowUp size={16} />}
+                style={transitionStyles}
+                onClick={() => scrollTo({ y: 0 })}
+                variant="filled"
+                color="blue"
+                radius="xl"
+                size="sm"
+                shadow="md"
+              >
+                Scroll to Top
+              </Button>
+            )}
+          </Transition>
+        </Affix>
       </AppShell.Main>
     </AppShell>
   );
@@ -204,7 +307,8 @@ const defaultTheme = createTheme({
 
 export default function App() {
   return (
-    <MantineProvider theme={defaultTheme}>
+    <MantineProvider theme={defaultTheme} defaultColorScheme="light">
+      <Notifications position="top-right" zIndex={1000} />
       <AppContent />
     </MantineProvider>
   );

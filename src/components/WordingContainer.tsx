@@ -1,4 +1,5 @@
 import React from 'react';
+import { SegmentedControl } from '@mantine/core';
 import type { LayoutMode, QCItem, SearchResult } from '../types/qc.ts';
 import { WordingGrid } from './WordingGrid.tsx';
 import { WordingList } from './WordingList.tsx';
@@ -10,6 +11,7 @@ interface WordingContainerProps {
   onClearSearch: () => void;
   results: SearchResult[];
   layoutMode: LayoutMode;
+  onSetLayout?: (layout: LayoutMode) => void;
   pinsSet: Set<string | number>;
   editMode: boolean;
   onCopyItem: (text: string) => void;
@@ -25,6 +27,7 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
   onClearSearch,
   results,
   layoutMode,
+  onSetLayout,
   pinsSet,
   editMode,
   onCopyItem,
@@ -37,9 +40,9 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
 
   return (
     <div className="wording-container" style={{ padding: '20px' }}>
-      {/* Search Input Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-        <div style={{ position: 'relative', flex: 1 }}>
+      {/* Search Input Bar & View Toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '240px' }}>
           <input
             id="search"
             type="text"
@@ -84,6 +87,20 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
             </button>
           )}
         </div>
+
+        {/* View Mode SegmentedControl from @mantine/core */}
+        {onSetLayout && (
+          <SegmentedControl
+            size="xs"
+            value={layoutMode}
+            onChange={(val) => onSetLayout(val as LayoutMode)}
+            data={[
+              { label: 'List', value: 'list' },
+              { label: 'Grid', value: 'grid' },
+              { label: 'Table', value: 'table' },
+            ]}
+          />
+        )}
 
         <div id="countLabel" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#495057', whiteSpace: 'nowrap' }}>
           {results.length} {results.length === 1 ? 'wording' : 'wordings'}
