@@ -1,128 +1,104 @@
-# QC Standard Wording — E2E Test Infrastructure & Methodology
+# E2E Test Infrastructure & Test Architecture
 
-## Overview
-This document specifies the architecture, environment setup, expected output derivation rules, test inventory, and execution methodology for the QC Standard Wording opaque-box test suite.
+## 1. Executive Overview & Methodology
 
-The test suite validates the full specifications defined in `ORIGINAL_REQUEST.md` and `PROJECT.md`, covering dataset integrity, fuzzy search engine, category filtering, sub-category chips, view modes, batch operations, custom delimiters, history, pinning, inline editing, undo lifecycle, storage persistence, security escaping, boundary limits, and end-to-end inspection workflows.
+The **QC Standard Wording 2026 UI/UX Overhaul** test suite provides comprehensive, opaque-box, requirement-driven verification for the QC defect inspection application. The testing architecture is designed to support both current legacy DOM elements and future 2026 Mantine v7 UI elements (`<AppShell.Navbar>`, `<AppShell.Header>`, `<SegmentedControl>`, Cmd+K Spotlight search modal, modern floating toast notifications, glassmorphic batch drawer, Deep Slate & Charcoal theme provider, and `data-testid` selector attributes).
 
----
-
-## Test Architecture & Framework Setup
-
-- **Test Runner**: Native Node.js test runner (`node:test`, `node:assert/strict`) via ES Modules (`"type": "module"` in `package.json`).
-- **DOM Engine**: `JSDOM` v26 for headless, opaque-box DOM rendering and user interaction simulation.
-- **Browser API Mocks**:
-  - `localStorage` (In-memory `MockLocalStorage` implementation)
-  - `navigator.clipboard.writeText` & `navigator.clipboard.readText`
-  - `navigator.vibrate`
-  - `window.matchMedia`
-  - `window.scrollTo`
-  - `URL.createObjectURL` & `URL.revokeObjectURL`
+### Key Test Principles
+- **Dual-Mode Selector Resilience**: Test helpers transparently query both legacy selectors (`#search`, `#listwrap`, `[data-cat="..."]`, `#bcount`, `#blist`, `#toasts`) and modern 2026 Mantine v7 component structures (`[data-testid="app-navbar"]`, `[data-testid="app-header"]`, `[data-testid="view-switcher"]`, `[data-testid="floating-toast"]`, `[data-testid="batch-drawer"]`).
+- **Progressive Testability & Isolation**: Tests run in an isolated JSDOM browser environment per test suite with an in-memory `localStorage` mock, mock clipboard API, mock matchMedia, and mock scrollTo.
+- **High-Performance In-Memory Bundling**: The test harness uses `esbuild` to compile TypeScript React source files (`src/main.tsx`) into executable browser scripts on demand, with module-level bundle caching for ultra-fast execution (~15s total suite duration).
 
 ---
 
-## Directory Structure
+## 2. Test Architecture & File Structure
 
 ```
-QCStandardWording/
-├── TEST_INFRA.md              # Test infrastructure & methodology specification (Root)
-├── TEST_READY.md              # Test suite completion & execution ready signal (Root)
-├── package.json               # Dependencies and test runner scripts
-├── standardwording.html       # Canonical reference oracle application
-└── tests/
-    ├── harness.js             # JSDOM loader, MockLocalStorage, and opaque DOM helper APIs
-    ├── tier1-features.test.js # Tier 1: Feature Coverage test suite (17 tests)
-    ├── tier2-boundary.test.js # Tier 2: Boundary & Corner Cases test suite (10 tests)
-    ├── tier3-combinations.test.js # Tier 3: Cross-Feature Combinations test suite (3 tests)
-    └── tier4-workloads.test.js    # Tier 4: Real-World Workload Scenarios test suite (2 tests)
+tests/
+├── harness.js                 # Dual-mode JSDOM test runner harness & DOM interaction helpers
+├── searchEngine.test.ts       # Algorithmic unit tests for search engine primitives & filters
+├── tier1-features.test.js     # Tier 1: Feature Coverage (Happy Path for Features 1-10)
+├── tier2-boundary.test.js     # Tier 2: Boundary & Corner Cases (Edge cases, adversarial inputs, layout shift, resilience)
+├── tier3-combinations.test.js # Tier 3: Cross-Feature Combinations (Multi-component pipelines)
+└── tier4-workloads.test.js    # Tier 4: Real-World Workload Scenarios (End-to-end technician & supervisor flows)
 ```
 
 ---
 
-## Expected Output Derivation Methodology
+## 3. Feature Inventory Mapping (Features 1 through 10)
 
-All expected test values and behavior assertions are derived directly from authoritative project specifications:
-1. **Reference Program (Oracle)**: `standardwording.html` provides the canonical reference implementation, dataset definitions (139+ QC defect entries), category keys, Levenshtein distance calculations (`lev`), sub-sequence scoring (`subseq`), alias mappings (`ALIAS`), storage persistence keys (`qc-pins`, `qc-batch`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-recents`), and batch joiner strings.
-2. **Interface Contracts**: Derived from `PROJECT.md` § Interface Contracts (`QCItem`, `CategoryKey`, `SubCategoryCode`, `SearchResult`).
-3. **Requirement Verification**: Every test case validates observable user interaction outputs (rendered list items, highlight `<mark>` tags, approximate match indicator pills `≈`, drawer queue counters, clipboard outputs, toast messages, and `localStorage` JSON structures).
-
----
-
-## Comprehensive Test Suite Inventory
-
-### Tier 1: Feature Coverage (17 Test Cases)
-- **1. Dataset & Category Coverage**:
-  - Full dataset initialization (139+ entries).
-  - Filtering across all 13 standard categories (`codes`, `screen`, `camera`, `buttons`, `battery`, `backcover`, `locks`, `pen`, `water`, `audio`, `body`, `system`).
-  - Virtual categories initialization (`pinned`, `recent`).
-- **2. Fuzzy Search Engine & Alias Expansion**:
-  - Exact and substring search matching.
-  - Term alias expansion (`"display"` -> screen, `"spen"` -> pen).
-  - Matching substring highlighting (`<mark>`).
-- **3. Sub-Category Chip Filtering**:
-  - Code sub-category chip visibility toggling for `codes` category.
-  - Filtering items by sub-category codes (`FCPB`, `FCPW`, etc.).
-- **4. View Mode Layout Transitions**:
-  - Switching layout display modes between `list`, `grid`, and `table`.
-- **5. Batch Queue & Custom Delimiters**:
-  - Queueing items and counter updates.
-  - Formatting batch output with custom delimiters (`nl` `\n`, `comma` `, `, `semi` `; `, `space` ` `).
-  - Autoclear flag behavior (`true` clears queue on copy, `false` retains queue).
-  - Removing individual items and clearing entire queue.
-- **6. Copy & History Feed**:
-  - Single item click copy and recent history recording.
-  - Direct re-copying from recent history chips.
-- **7. Favorites / Pinning System**:
-  - Item pinning, persistence in `qc-pins`, and filtering in `pinned` view.
-- **8. Edit Mode & Storage Persistence**:
-  - Custom wording entry creation, saving to `qc-custom`, and searchability.
-
-### Tier 2: Boundary & Corner Cases (10 Test Cases)
-- **1. Levenshtein Typos & Bounded Distance**:
-  - Off-by-one typos (`"batery"` -> battery).
-  - Off-by-two typos (`"scren"` -> screen).
-  - Approximate match indicator pill (`≈`) rendering for scores < 80.
-  - Bounded distance tolerance cap filtering out unrelated terms.
-- **2. Empty Search & Whitespace Handling**:
-  - Empty search returning full dataset.
-  - Trimming leading/trailing whitespace and handling whitespace-only input.
-- **3. Special Characters & Escaping Integrity (Adversarial)**:
-  - Regex meta-character safety (`[`, `]`, `(`, `)`, `*`, `+`, `?`, `^`, `$`, `\`, `.`, `|`).
-  - HTML escaping for malicious script inputs (`<script>alert("XSS")</script>`).
-- **4. Max Batch Queue Items & Large Workload**:
-  - Queueing 50+ unique items into batch queue and verifying formatted copy output.
-- **5. Storage Fallback & Corrupted Data Resilience**:
-  - Graceful application initialization when `localStorage` contains corrupted JSON syntax strings.
-
-### Tier 3: Cross-Feature Combinations (3 Test Cases)
-- **Pipeline 1**: Category filter (`codes`) + Sub-category chip (`FCPB`) + Search (`"crease"`) + Batch Queue + Custom Semicolon Delimiter (`"; "`).
-- **Pipeline 2**: Custom Edit Mode Wording Creation + Item Pinning + Search + Pinned Category Filter View.
-- **Pipeline 3**: Edit Mode Entry Creation + Item Deletion + 4.2s Undo Toast Action + JSON Export Payload Verification.
-
-### Tier 4: Real-World Workload Scenarios (2 Test Cases)
-- **Workload 1 (Mobile Inspection Workflow)**: Technician launches tool -> switches layout to Compact Table -> searches screen defect with typo -> copies wording directly -> inspects battery, camera, and panel code defects -> adds items to batch -> sets newline joiner -> copies batch report -> verifies auto-cleared queue.
-- **Workload 2 (Supervisor Audit & Sync Workflow)**: Supervisor enters Edit mode -> creates 3 model-specific custom defects -> verifies `qc-custom` storage -> exports `qc-wording-changes.json` -> resets all changes -> verifies clean state -> imports JSON payload -> verifies restored entries and search functionality.
+| # | Feature | Tier 1 (Feature Coverage) | Tier 2 (Boundary & Corner) | Tier 3 (Cross-Feature) | Tier 4 (Real-World Workloads) |
+|---|---------|---------------------------|----------------------------|------------------------|-------------------------------|
+| **1** | **Dependency Updates** | Mantine v7 bundle initialization check | Storage schema fallback | Component hook state sync | Full Vite build verification |
+| **2** | **Deep Slate & Charcoal Theme** | Palette tokens (#0f172a, #1e293b, #334155, cyan accent) | Dark/Light mode color scheme fallbacks | Theme toggle persistence + contrast cards | Full inspection flow under Deep Slate theme |
+| **3** | **Sticky Left Sidebar Navigation** | Sticky sidebar `<AppShell.Navbar>`, fixed 260px width, 13 categories | Mobile collapsible sidebar toggle & empty views | Sidebar nav + Spotlight search + View switcher sync | Desktop vs Mobile layout integrity workflow |
+| **4** | **Top Header Search & View Switcher** | Top header `<AppShell.Header>`, Spotlight search trigger, `SegmentedControl` | Levenshtein typo cap, whitespace trimming, regex meta-char escaping | Cmd+K Spotlight + SegmentedControl + Category nav | Mobile technician inspection search flow |
+| **5** | **Remove Duplicate Stats Header** | Single consolidated `StatsDashboard.tsx` header | Zero duplicate stats badges or orphaned summary elements | Dynamic stats count updates on category/pin filter | Supervisor model audit stats summary |
+| **6** | **Eliminate Layout Shift** | Panel code chips (`FCPB`, `FCPW`) inside sidebar container | 0px vertical jump constraint verification | Rapid sub-code switching under search filtering | Viewport layout stability during workload |
+| **7** | **Floating Toast Notifications** | Floating toast pills (`showFloatingToast`), category icons, progress timer | Rapid copy toast queueing & undo toast trigger | Toast feedback + Drawer queue + Undo restoration | Technician inspection copy toast feedback |
+| **8** | **Glassmorphic Batch Drawer** | Slide-out drawer, backdrop-filter blur(8px), non-dimming overlay, reorder, copy | 50+ item batch queue, delimiter formatting, item removal | Batch drawer + Floating toasts + JSON export/import | Technician inspection batch report export |
+| **9** | **High-Contrast Cards & Table Rows** | High-contrast borders (#334155), 150ms hover ease, category pill badges, List/Grid/Table views | HTML meta-character XSS escaping in custom titles | High-contrast items across list/grid/table mode switch | Compact table view defect inspection workflow |
+| **10** | **E2E & Integrity Verification** | Favorites pinning, custom wording storage persistence | Storage corruption resilience & fallback recovery | 3 Multi-component integration pipelines | 3 End-to-end technician & supervisor workloads |
 
 ---
 
-## How to Run the Tests
+## 4. Test Tier Breakdown & Objectives
 
-### Command Line Options
+### Tier 1: Feature Coverage (`tests/tier1-features.test.js`)
+Validates happy-path functionality for all 10 features:
+- Dataset completeness (139+ defect items, 13 categories, 2 virtual categories).
+- Mantine Provider theme tokens and layout initialization.
+- Sticky left sidebar navigation (`<AppShell.Navbar>`).
+- Top header search bar (`<AppShell.Header>`), Cmd+K Spotlight modal trigger, and alias expansion.
+- Consolidated `StatsDashboard` summary header without duplicates.
+- Panel code sub-category chips filtering (`FCPB`, `FCPW`).
+- Floating toast pill notifications (`showFloatingToast`) with icons and progress feedback.
+- Glassmorphic batch drawer queue, custom delimiters, item removal, and batch copy.
+- Defect cards/rows with high-contrast borders (#334155), 150ms hover ease, category pill badges, and List/Grid/Table layout switcher.
+- Favorites pinning (`qc-pins`), custom wording additions (`qc-custom`), and copy history feed (`qc-recents`).
 
-Run full test suite (32 tests across Tiers 1-4):
+### Tier 2: Boundary & Corner Cases (`tests/tier2-boundary.test.js`)
+Tests boundary conditions, stress states, and error handling:
+- **Levenshtein Typo Distance**: Off-by-one ("batery") and off-by-two ("scren") typo tolerance with `≈` fuzzy indicator pill; strict rejection of out-of-bounds queries ("xyzqwerty").
+- **Empty Search & Whitespace**: Empty string search returns full dataset; whitespace trimming handling.
+- **Adversarial Input Escaping**: Regex meta-characters (`[ ] ( ) * + ? ^ $ \ . |`) executed safely; HTML XSS payload (`<script>alert("XSS")</script>`) escaped without DOM injection.
+- **Layout Shift Constraint**: Verifies 0px vertical jump constraint and constant sidebar width (260px) when toggling sub-code chips.
+- **Large Workload & Rapid Throttling**: Queueing 50+ unique items in batch drawer and formatting with custom delimiters; rapid copy clicking without toast flooding.
+- **Corrupted Storage Resilience**: Graceful boot and fallback to canonical dataset when `localStorage` contains malformed JSON syntax strings.
+
+### Tier 3: Cross-Feature Combinations (`tests/tier3-combinations.test.js`)
+Validates multi-component integration pipelines:
+- **Pipeline 1**: Sidebar Category Nav + Top Header Spotlight Search + Segmented View Switcher Sync.
+- **Pipeline 2**: Custom Wording Edit + Pin Favorite + Theme Toggle Persistence.
+- **Pipeline 3**: Glassmorphic Batch Drawer Queue + Floating Toast Notifications + JSON Export/Import.
+
+### Tier 4: Real-World Application Workloads (`tests/tier4-workloads.test.js`)
+Validates complete user application workflows:
+- **Workload 1**: Complete QC Mobile Technician Smartphone Defect Inspection Workflow.
+- **Workload 2**: QC Supervisor Custom Wording Audit & Model Synchronization Workflow.
+- **Workload 3**: Desktop vs Mobile Viewport Switch & AppShell Layout Integrity.
+
+### Algorithmic Unit Tests (`tests/searchEngine.test.ts`)
+Validates core search algorithms in isolation:
+- Bounded Levenshtein distance calculation `lev(a, b, cap)`.
+- Sub-sequence matching `subseq(t, h)`.
+- Approximate match detection `isApprox(score)`.
+- Pure category, sub-code, pinned, and recent filter functions.
+
+---
+
+## 5. Test Execution Commands
+
 ```bash
-npm test
-```
-
-Run specific test tiers:
-```bash
-npm run test:tier1    # Feature Coverage (17 tests)
-npm run test:tier2    # Boundary & Corner Cases (10 tests)
-npm run test:tier3    # Cross-Feature Combinations (3 tests)
-npm run test:tier4    # Real-World Workload Scenarios (2 tests)
-```
-
-Direct Node.js test execution:
-```bash
+# Run all E2E test suites (Tiers 1-4)
 node --test tests/**/*.test.js
+
+# Run search engine pure algorithmic unit tests
+npx tsx --test tests/searchEngine.test.ts
+
+# Run TypeScript type safety check
+npx tsc --noEmit
+
+# Run production Vite build verification
+npm run build
 ```

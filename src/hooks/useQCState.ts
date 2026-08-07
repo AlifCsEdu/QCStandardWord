@@ -45,12 +45,38 @@ export function useQCState() {
   });
 
   const [batchQueue, setBatchQueue] = useState<string[]>(() => {
-    return safeJSONParse<string[]>('qc-batch', []);
+    if (typeof localStorage === 'undefined') return [];
+    const raw = localStorage.getItem('qc-batch');
+    if (!raw) return [];
+    let parsed: any;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return [];
+    }
+    if (parsed !== null && parsed !== undefined && !Array.isArray(parsed)) {
+      throw new TypeError(`Corrupt qc-batch storage value: expected Array, got ${typeof parsed}`);
+    }
+    return Array.isArray(parsed) ? parsed : [];
   });
 
   const [delimiter, setDelimiterState] = useState<DelimiterKey>(() => {
-    const d = safeJSONParse<string>('qc-join', 'nl');
-    return (['nl', 'comma', 'semi', 'space'].includes(d) ? d : 'nl') as DelimiterKey;
+    if (typeof localStorage === 'undefined') return 'nl';
+    try {
+      const raw = localStorage.getItem('qc-join');
+      if (!raw) return 'nl';
+      let clean = raw;
+      if (clean.startsWith('"') && clean.endsWith('"')) {
+        try {
+          clean = JSON.parse(clean);
+        } catch {
+          // ignore
+        }
+      }
+      return (['nl', 'comma', 'semi', 'space', 'pipe', 'bullet'].includes(clean) ? clean : 'nl') as DelimiterKey;
+    } catch {
+      return 'nl';
+    }
   });
 
   const [autoclear, setAutoclearState] = useState<boolean>(() => {
@@ -85,6 +111,7 @@ export function useQCState() {
   const [batchDrawerOpen, setBatchDrawerOpen] = useState<boolean>(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState<boolean>(false);
   const [toasts, setToasts] = useState<ToastNotice[]>([]);
+  const toastTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   // Calculate active dataset from BASE_ITEMS + edits - dels + custom
   const activeItems = useMemo<QCItem[]>(() => {
@@ -123,20 +150,39 @@ export function useQCState() {
   }, [activeItems, searchQuery, selectedCategory, selectedSubCategory, pinsSet, recents]);
 
   // Toasts helper
-  const addToast = useCallback((msg: string, warn = false, action?: ToastNotice['action']) => {
-    const id = 't_' + Math.random().toString(36).substring(2, 9);
-    const newToast: ToastNotice = { id, msg, warn, action };
-    setToasts((prev) => [...prev, newToast]);
-
-    // Auto dismiss after 4.2 seconds
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4200);
-  }, []);
-
   const removeToast = useCallback((id: string) => {
+    const timer = toastTimersRef.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      toastTimersRef.current.delete(id);
+    }
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
+
+  const addToast = useCallback(
+    (msg: string, warn = false, action?: ToastNotice['action']) => {
+      const id = 't_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+      const newToast: ToastNotice = { id, msg, warn, action };
+
+      // Refresh timers for all existing active toasts to retain queue state during consecutive dispatches
+      toastTimersRef.current.forEach((timer, existingId) => {
+        clearTimeout(timer);
+        const refreshedTimer = setTimeout(() => {
+          removeToast(existingId);
+        }, 4200);
+        toastTimersRef.current.set(existingId, refreshedTimer);
+      });
+
+      setToasts((prev) => [...prev, newToast]);
+
+      const timer = setTimeout(() => {
+        removeToast(id);
+      }, 4200);
+
+      toastTimersRef.current.set(id, timer);
+    },
+    [removeToast]
+  );
 
   // Pinning
   const togglePin = useCallback((id: string | number) => {
@@ -198,6 +244,31 @@ export function useQCState() {
     });
   }, []);
 
+  const moveBatchItemUp = useCallback((index: number) => {
+    if (index <= 0) return;
+    setBatchQueue((prev) => {
+      if (index >= prev.length) return prev;
+      const next = [...prev];
+      const temp = next[index];
+      next[index] = next[index - 1];
+      next[index - 1] = temp;
+      safeStorageSet('qc-batch', next);
+      return next;
+    });
+  }, []);
+
+  const moveBatchItemDown = useCallback((index: number) => {
+    setBatchQueue((prev) => {
+      if (index < 0 || index >= prev.length - 1) return prev;
+      const next = [...prev];
+      const temp = next[index];
+      next[index] = next[index + 1];
+      next[index + 1] = temp;
+      safeStorageSet('qc-batch', next);
+      return next;
+    });
+  }, []);
+
   const clearBatch = useCallback(() => {
     setBatchQueue([]);
     safeStorageSet('qc-batch', []);
@@ -223,6 +294,8 @@ export function useQCState() {
     if (curDelim === 'comma') sep = ', ';
     else if (curDelim === 'semi') sep = '; ';
     else if (curDelim === 'space') sep = ' ';
+    else if (curDelim === 'pipe') sep = ' | ';
+    else if (curDelim === 'bullet') sep = ' • ';
 
     const formatted = batchQueue.join(sep);
     await copyToClipboard(formatted);
@@ -313,10 +386,6 @@ export function useQCState() {
 
   const deleteWordingItem = useCallback(
     (item: QCItem) => {
-      const snapshotEdits = { ...qcEdits };
-      const snapshotDels = [...qcDels];
-      const snapshotCustom = [...qcCustom];
-
       if (item.custom) {
         setQcCustom((prev) => {
           const next = prev.filter((c) => c.id !== item.id);
@@ -334,17 +403,26 @@ export function useQCState() {
       addToast(`Deleted item #${item.n} (${item.t})`, true, {
         label: 'Undo',
         fn: () => {
-          setQcEdits(snapshotEdits);
-          setQcDels(snapshotDels);
-          setQcCustom(snapshotCustom);
-          safeStorageSet('qc-edits', snapshotEdits);
-          safeStorageSet('qc-dels', snapshotDels);
-          safeStorageSet('qc-custom', snapshotCustom);
+          if (item.custom) {
+            setQcCustom((prev) => {
+              const next = [...prev, item];
+              safeStorageSet('qc-custom', next);
+              return next;
+            });
+          } else {
+            setQcDels((prev) => {
+              const next = prev.filter(
+                (id) => String(id) !== String(item.id) && String(id) !== String(item.n)
+              );
+              safeStorageSet('qc-dels', next);
+              return next;
+            });
+          }
           addToast('Restored deleted item');
         },
       });
     },
-    [qcEdits, qcDels, qcCustom, addToast]
+    [addToast]
   );
 
   // Storage Operations: Export, Import, Reset
@@ -435,6 +513,8 @@ export function useQCState() {
     batchQueue,
     addToBatch,
     removeFromBatch,
+    moveBatchItemUp,
+    moveBatchItemDown,
     clearBatch,
     delimiter,
     setDelimiter,

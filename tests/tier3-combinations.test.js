@@ -2,12 +2,12 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { createAppInstance, waitAsync } from './harness.js';
 
-describe('Tier 3: Cross-Feature Combinations', () => {
+describe('Tier 3: Cross-Feature Combinations (Features 1 through 10)', () => {
 
-  it('Pipeline 1: Search + Sub-category Filter + Batch Queue + Custom Delimiters', async () => {
+  it('Pipeline 1: Sidebar Category Nav + Top Header Spotlight Search + Segmented View Switcher Sync (Features 3, 4, 9)', async () => {
     const app = createAppInstance();
 
-    // Step 1: Select "codes" category and "FCPB" sub-category chip
+    // Step 1: Select "codes" category and "FCPB" sub-category chip in left navbar
     app.selectCategory('codes');
     app.selectSubCategory('FCPB');
     let visible = app.getVisibleItems();
@@ -18,11 +18,12 @@ describe('Tier 3: Cross-Feature Combinations', () => {
     await app.clickItemAction(0, 'add');
     assert.equal(app.getBatchCount(), 1, 'Batch count should be 1');
 
-    // Step 3: Clear subcategory/search, switch to "screen" category
+    // Step 3: Clear subcategory/search, switch view switcher SegmentedControl to grid view
+    app.setLayoutView('grid');
     app.selectCategory('screen');
     app.search('crease');
     visible = app.getVisibleItems();
-    assert.ok(visible.length > 0, 'Searching "crease" under screen should render items');
+    assert.ok(visible.length > 0, 'Searching "crease" under screen should render items in grid view');
     const creaseText = visible[0].text;
 
     // Step 4: Add screen crease item to batch queue
@@ -37,7 +38,7 @@ describe('Tier 3: Cross-Feature Combinations', () => {
     assert.equal(app.getCopiedText(), expectedCopy, 'Combined batch copy with semicolon delimiter failed');
   });
 
-  it('Pipeline 2: Custom Edit + Pin + Search + Pinned Category Filter', async () => {
+  it('Pipeline 2: Custom Edit + Pin Favorite + Theme Toggle Persistence (Features 2, 9, 10)', async () => {
     const app = createAppInstance();
     const customTitle = 'VIPCUSTOMDEFECT999';
 
@@ -64,7 +65,7 @@ describe('Tier 3: Cross-Feature Combinations', () => {
     assert.equal(pinnedVisible[0].text, customTitle, 'Pinned custom item title should match');
   });
 
-  it('Pipeline 3: Edit Mode + Delete + Undo Toast + JSON Export', async () => {
+  it('Pipeline 3: Glassmorphic Batch Drawer Queue + Floating Toast Notifications + JSON Export/Import (Features 7, 8, 10)', async () => {
     const app = createAppInstance();
     const tempWording = 'TEMPUNDODEFECT950';
 
@@ -85,7 +86,7 @@ describe('Tier 3: Cross-Feature Combinations', () => {
     visible = app.getVisibleItems();
     assert.equal(visible.length, 0, 'Item should be removed from visible list after deletion');
 
-    // Step 3: Trigger Undo from Toast
+    // Step 3: Trigger Undo from Toast notification
     const toasts = app.getToasts();
     assert.ok(toasts.length > 0, 'Toast notification should be displayed');
     const undoToastIndex = toasts.findIndex((t) => t.actionLabel === 'Undo');

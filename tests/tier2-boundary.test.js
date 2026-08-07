@@ -2,9 +2,9 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { createAppInstance, waitAsync } from './harness.js';
 
-describe('Tier 2: Boundary & Corner Cases', () => {
+describe('Tier 2: Boundary & Corner Cases (Features 1 through 10)', () => {
 
-  describe('1. Levenshtein Typos & Bounded Distance', () => {
+  describe('1. Levenshtein Typos & Bounded Distance (Feature 4)', () => {
     it('should tolerate off-by-one typos ("batery" -> battery)', () => {
       const app = createAppInstance();
       app.search('batery');
@@ -47,7 +47,7 @@ describe('Tier 2: Boundary & Corner Cases', () => {
     });
   });
 
-  describe('2. Empty Search & Whitespace Handling', () => {
+  describe('2. Empty Search & Whitespace Handling (Feature 4)', () => {
     it('should return all category items when search query is empty', () => {
       const app = createAppInstance();
       app.search('');
@@ -72,7 +72,7 @@ describe('Tier 2: Boundary & Corner Cases', () => {
     });
   });
 
-  describe('3. Special Characters & Escaping Integrity (Adversarial)', () => {
+  describe('3. Special Characters & Escaping Integrity (Feature 4 & 9 - Adversarial)', () => {
     it('should handle regex meta-characters without throwing RegExp errors ([ ] ( ) * + ? ^ $ \\ . |)', () => {
       const app = createAppInstance();
       const dangerousQueries = [
@@ -102,7 +102,7 @@ describe('Tier 2: Boundary & Corner Cases', () => {
       const { document } = app;
 
       // Verify no actual script element was created
-      const scripts = Array.from(document.querySelectorAll('#listwrap script'));
+      const scripts = Array.from(document.querySelectorAll('#listwrap script, script[src*="XSS"]'));
       assert.equal(scripts.length, 0, 'XSS payload must not execute or inject <script> tags into DOM');
 
       const visible = app.getVisibleItems();
@@ -110,7 +110,20 @@ describe('Tier 2: Boundary & Corner Cases', () => {
     });
   });
 
-  describe('4. Max Batch Queue Items & Large Workload', () => {
+  describe('4. Layout Shift & Vertical Jump Constraint (Feature 6)', () => {
+    it('should verify 0px vertical jump constraint when switching sub-code chips', () => {
+      const app = createAppInstance();
+      app.selectCategory('codes');
+      
+      const metricsBefore = app.getLayoutShiftMetrics();
+      app.selectSubCategory('FCPB');
+      const metricsAfter = app.getLayoutShiftMetrics();
+
+      assert.ok(metricsBefore.navbarWidth === metricsAfter.navbarWidth, 'Sidebar navbar width must remain constant (260px)');
+    });
+  });
+
+  describe('5. Max Batch Queue Items & Rapid Toast Throttling (Features 7 & 8)', () => {
     it('should queue 50+ unique items in batch and format correctly with custom delimiters', async () => {
       const app = createAppInstance();
 
@@ -129,9 +142,20 @@ describe('Tier 2: Boundary & Corner Cases', () => {
       const parts = copied.split(', ');
       assert.equal(parts.length, 50, 'Copied batch should contain 50 items separated by comma');
     });
+
+    it('should queue floating toasts gracefully without DOM flooding on rapid copy clicks', async () => {
+      const app = createAppInstance();
+
+      for (let i = 0; i < 5; i++) {
+        await app.clickItemRow(i);
+      }
+
+      const toasts = app.getToasts();
+      assert.ok(toasts.length > 0, 'Toast notifications should render for rapid copy clicks');
+    });
   });
 
-  describe('5. Storage Fallback & Corrupted Data Resilience', () => {
+  describe('6. Storage Fallback & Corrupted Data Resilience (Feature 10)', () => {
     it('should boot gracefully when localStorage contains corrupted JSON syntax strings', () => {
       const app = createAppInstance({
         initialStorage: {

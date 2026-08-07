@@ -14,16 +14,18 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
   categoryCounts = {},
 }) => {
   return (
-    <div id="nav" className="category-nav-container" style={{ padding: '10px 20px', borderBottom: '1px solid #e9ecef' }}>
+    <div
+      id="nav"
+      className="category-nav-container"
+      style={{ padding: '12px 10px', borderBottom: '1px solid var(--border-contrast, #334155)' }}
+    >
       <div
         id="chips"
         className="chips-scroll-container"
         style={{
           display: 'flex',
-          gap: '8px',
-          overflowX: 'auto',
-          paddingBottom: '4px',
-          scrollbarWidth: 'thin',
+          flexDirection: 'column',
+          gap: '4px',
         }}
       >
         {CATEGORIES.map((cat) => {
@@ -34,23 +36,29 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
               key={cat.id}
               data-cat={cat.id}
               onClick={() => {
-              console.log('Chip clicked:', cat.id);
-              onSelectCategory(cat.id);
-            }}
+                console.log('Chip clicked:', cat.id);
+                onSelectCategory(cat.id);
+              }}
               className={`chip-btn ${isActive ? 'active' : ''}`}
               style={{
-                padding: '6px 14px',
-                borderRadius: '16px',
-                border: isActive ? `2px solid ${cat.color || '#1971c2'}` : '1px solid #ced4da',
-                background: isActive ? cat.color || '#1971c2' : '#ffffff',
-                color: isActive ? '#ffffff' : '#495057',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                border: isActive
+                  ? `1px solid ${cat.color || 'var(--accent-cyan, #06b6d4)'}`
+                  : '1px solid transparent',
+                background: isActive
+                  ? cat.color || 'rgba(6, 182, 212, 0.2)'
+                  : 'transparent',
+                color: isActive ? '#ffffff' : 'var(--text-secondary, #94a3b8)',
                 fontWeight: isActive ? 600 : 500,
                 fontSize: '0.875rem',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                display: 'inline-flex',
+                display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                justifyContent: 'space-between',
+                width: '100%',
+                boxSizing: 'border-box',
                 transition: 'all 0.15s ease',
               }}
             >
@@ -60,9 +68,10 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
                   style={{
                     fontSize: '0.75rem',
                     opacity: 0.85,
-                    padding: '1px 6px',
+                    padding: '2px 8px',
                     borderRadius: '10px',
-                    background: isActive ? 'rgba(255,255,255,0.25)' : '#e9ecef',
+                    background: isActive ? 'rgba(255,255,255,0.25)' : 'var(--container-charcoal, #1e293b)',
+                    color: isActive ? '#ffffff' : 'var(--text-secondary, #94a3b8)',
                   }}
                 >
                   {count}
@@ -75,3 +84,4 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
     </div>
   );
 };
+

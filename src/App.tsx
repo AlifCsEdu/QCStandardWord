@@ -2,15 +2,15 @@ import React, { useMemo } from 'react';
 import {
   AppShell,
   MantineProvider,
-  createTheme,
   Affix,
   Button,
   Transition,
   useMantineColorScheme,
 } from '@mantine/core';
+import { theme } from './theme';
 import { Notifications, notifications } from '@mantine/notifications';
 import { Spotlight, spotlight, type SpotlightActionData } from '@mantine/spotlight';
-import { useWindowScroll } from '@mantine/hooks';
+import { useWindowScroll, useDisclosure } from '@mantine/hooks';
 import { IconArrowUp, IconSearch } from '@tabler/icons-react';
 
 import { AppHeader } from './components/AppHeader.tsx';
@@ -78,6 +78,8 @@ export const AppContent: React.FC = () => {
     batchQueue,
     addToBatch,
     removeFromBatch,
+    moveBatchItemUp,
+    moveBatchItemDown,
     clearBatch,
     delimiter,
     setDelimiter,
@@ -106,6 +108,7 @@ export const AppContent: React.FC = () => {
   } = useQCState();
 
   const [scroll, scrollTo] = useWindowScroll();
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
 
   // Compute category item counts
   const categoryCounts = useMemo(() => {
@@ -145,9 +148,19 @@ export const AppContent: React.FC = () => {
   }, [activeItems, copySingleItem]);
 
   return (
-    <AppShell header={{ height: 60 }} padding="0">
-      <AppShell.Header>
+    <AppShell
+      header={{ height: 60 }}
+      navbar={{ width: 260, breakpoint: 'sm', collapsed: { mobile: !mobileOpened } }}
+      padding="0"
+    >
+      <AppShell.Header id="appHeader" data-testid="app-header" className="app-header">
         <AppHeader
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onClearSearch={() => setSearchQuery('')}
+          layoutMode={layout}
+          onSetLayout={setLayout}
+          onOpenSpotlight={() => spotlight.open()}
           editMode={editMode}
           onToggleEditMode={toggleEditMode}
           batchCount={batchQueue.length}
@@ -155,8 +168,26 @@ export const AppContent: React.FC = () => {
           onOpenSettings={() => setSettingsModalOpen(true)}
           theme={theme}
           onToggleTheme={handleToggleTheme}
+          mobileOpened={mobileOpened}
+          onToggleMobile={toggleMobile}
         />
       </AppShell.Header>
+
+      <AppShell.Navbar data-testid="app-navbar" id="sidebarNav" className="sidebar-nav" style={{ overflowY: 'auto' }}>
+        <CategoryChips
+          selectedCategory={selectedCategory}
+          onSelectCategory={(cat) => {
+            setSelectedCategory(cat);
+            setSelectedSubCategory('ALL');
+          }}
+          categoryCounts={categoryCounts}
+        />
+        <CodeSubChips
+          selectedCategory={selectedCategory}
+          selectedSubCategory={selectedSubCategory}
+          onSelectSubCategory={setSelectedSubCategory}
+        />
+      </AppShell.Navbar>
 
       <AppShell.Main style={{ paddingTop: '60px' }}>
         {/* Inspection Stats Dashboard Header */}
@@ -173,23 +204,6 @@ export const AppContent: React.FC = () => {
             setSelectedCategory(cat);
             setSelectedSubCategory('ALL');
           }}
-        />
-
-        {/* Category Navigation Chips */}
-        <CategoryChips
-          selectedCategory={selectedCategory}
-          onSelectCategory={(cat) => {
-            setSelectedCategory(cat);
-            setSelectedSubCategory('ALL');
-          }}
-          categoryCounts={categoryCounts}
-        />
-
-        {/* Panel Sub-code Chips (for 'codes' category) */}
-        <CodeSubChips
-          selectedCategory={selectedCategory}
-          selectedSubCategory={selectedSubCategory}
-          onSelectSubCategory={setSelectedSubCategory}
         />
 
         {/* Copy History Feed Bar */}
@@ -225,6 +239,7 @@ export const AppContent: React.FC = () => {
           onDeleteItem={deleteWordingItem}
         />
 
+
         {/* Batch Drawer */}
         <BatchDrawer
           isOpen={batchDrawerOpen}
@@ -232,6 +247,10 @@ export const AppContent: React.FC = () => {
           batchQueue={batchQueue}
           onRemoveItem={removeFromBatch}
           onClearBatch={clearBatch}
+          onMoveItemUp={moveBatchItemUp}
+          onMoveItemDown={moveBatchItemDown}
+          moveBatchItemUp={moveBatchItemUp}
+          moveBatchItemDown={moveBatchItemDown}
           delimiter={delimiter}
           onSetDelimiter={setDelimiter}
           autoclear={autoclear}
@@ -300,14 +319,9 @@ export const AppContent: React.FC = () => {
   );
 };
 
-const defaultTheme = createTheme({
-  primaryColor: 'blue',
-  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
-});
-
 export default function App() {
   return (
-    <MantineProvider theme={defaultTheme} defaultColorScheme="light">
+    <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications position="top-right" zIndex={1000} />
       <AppContent />
     </MantineProvider>

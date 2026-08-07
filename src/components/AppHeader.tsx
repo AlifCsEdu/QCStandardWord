@@ -1,7 +1,15 @@
 import React from 'react';
-import type { CategoryKey } from '../types/qc.ts';
+import { SegmentedControl, Burger } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
+import type { LayoutMode } from '../types/qc.ts';
 
 interface AppHeaderProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onClearSearch: () => void;
+  layoutMode: LayoutMode;
+  onSetLayout?: (layout: LayoutMode) => void;
+  onOpenSpotlight: () => void;
   editMode: boolean;
   onToggleEditMode: () => void;
   batchCount: number;
@@ -9,9 +17,17 @@ interface AppHeaderProps {
   onOpenSettings: () => void;
   theme: 'light' | 'dark' | 'auto';
   onToggleTheme: () => void;
+  mobileOpened?: boolean;
+  onToggleMobile?: () => void;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
+  searchQuery,
+  onSearchChange,
+  onClearSearch,
+  layoutMode,
+  onSetLayout,
+  onOpenSpotlight,
   editMode,
   onToggleEditMode,
   batchCount,
@@ -19,28 +35,51 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onOpenSettings,
   theme,
   onToggleTheme,
+  mobileOpened = false,
+  onToggleMobile,
 }) => {
+  const hasQuery = searchQuery.trim().length > 0;
+
   return (
     <header
+      id="appHeader"
+      data-testid="app-header"
       className="app-header"
       style={{
-        padding: '12px 20px',
-        borderBottom: '1px solid var(--mantine-color-gray-3, #e9ecef)',
+        padding: '10px 20px',
+        borderBottom: '1px solid var(--border-contrast, #334155)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        background: 'var(--header-bg, #ffffff)',
+        background: 'var(--header-bg, #1e293b)',
+        gap: '16px',
+        flexWrap: 'wrap',
+        minHeight: '60px',
+        boxSizing: 'border-box',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>QC Standard Wording</h2>
+      {/* Left side: Mobile Burger + Logo/Title */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {onToggleMobile && (
+          <Burger
+            opened={mobileOpened}
+            onClick={onToggleMobile}
+            hiddenFrom="sm"
+            size="sm"
+            aria-label="Toggle navigation"
+          />
+        )}
+        <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary, #f8fafc)', whiteSpace: 'nowrap' }}>
+          QC Standard Wording
+        </h2>
         <span
           style={{
             fontSize: '0.75rem',
             padding: '2px 8px',
             borderRadius: '12px',
-            background: '#e7f5ff',
-            color: '#1971c2',
+            background: 'rgba(6, 182, 212, 0.15)',
+            color: 'var(--accent-cyan, #06b6d4)',
+            border: '1px solid rgba(6, 182, 212, 0.3)',
             fontWeight: 600,
           }}
         >
@@ -48,7 +87,103 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Middle: Search Bar + Clear Button + Cmd+K Spotlight Trigger */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, maxWidth: '480px', minWidth: '220px' }}>
+        <div style={{ position: 'relative', flex: 1 }}>
+          <input
+            id="search"
+            data-testid="header-search-input"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+              }
+            }}
+            placeholder="Search QC defects (e.g. FCPB, battery, display, crease)..."
+            style={{
+              width: '100%',
+              padding: '8px 36px 8px 12px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-contrast, #334155)',
+              background: 'var(--bg-deep-slate, #0f172a)',
+              color: 'var(--text-primary, #f8fafc)',
+              fontSize: '0.9rem',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          />
+          {hasQuery && (
+            <button
+              id="clearBtn"
+              data-testid="clear-search-btn"
+              className={`clear-btn ${hasQuery ? 'show' : ''}`}
+              onClick={onClearSearch}
+              title="Clear search"
+              style={{
+                position: 'absolute',
+                right: '8px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                border: 'none',
+                background: 'transparent',
+                color: 'var(--text-secondary, #94a3b8)',
+                fontSize: '1rem',
+                cursor: 'pointer',
+                fontWeight: 700,
+                padding: '2px 4px',
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Cmd+K Spotlight Modal Trigger */}
+        <button
+          id="spotlightBtn"
+          data-testid="spotlight-trigger"
+          className="spotlight-btn"
+          onClick={onOpenSpotlight}
+          title="Quick Search (Cmd+K / Ctrl+K)"
+          style={{
+            padding: '6px 10px',
+            borderRadius: '8px',
+            border: '1px solid var(--border-contrast, #334155)',
+            background: 'var(--bg-deep-slate, #0f172a)',
+            color: 'var(--text-secondary, #94a3b8)',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.8rem',
+            fontWeight: 500,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <IconSearch size={14} color="var(--accent-cyan, #06b6d4)" />
+          <span>⌘K</span>
+        </button>
+      </div>
+
+      {/* Right side: View Switcher SegmentedControl & Header Action Buttons */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        {onSetLayout && (
+          <SegmentedControl
+            id="setLayout"
+            data-testid="view-switcher"
+            size="xs"
+            value={layoutMode}
+            onChange={(val) => onSetLayout(val as LayoutMode)}
+            data={[
+              { label: 'List', value: 'list' },
+              { label: 'Grid', value: 'grid' },
+              { label: 'Table', value: 'table' },
+            ]}
+          />
+        )}
+
         {/* Edit Mode Toggle */}
         <button
           id="editBtn"
@@ -56,14 +191,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           onClick={onToggleEditMode}
           title="Toggle Edit Mode"
           style={{
-            padding: '6px 14px',
+            padding: '5px 12px',
             borderRadius: '6px',
-            border: editMode ? '1px solid #1971c2' : '1px solid #ced4da',
+            border: editMode ? '1px solid var(--accent-sky, #0284c7)' : '1px solid var(--border-contrast, #334155)',
             cursor: 'pointer',
-            background: editMode ? '#1971c2' : '#ffffff',
-            color: editMode ? '#ffffff' : '#212529',
+            background: editMode ? 'var(--accent-sky, #0284c7)' : 'var(--container-charcoal, #1e293b)',
+            color: editMode ? '#ffffff' : 'var(--text-primary, #f8fafc)',
             fontWeight: 600,
-            fontSize: '0.875rem',
+            fontSize: '0.85rem',
             transition: 'all 0.15s ease',
           }}
         >
@@ -77,17 +212,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           onClick={onOpenBatchDrawer}
           title="Open Batch Drawer"
           style={{
-            padding: '6px 14px',
+            padding: '5px 12px',
             borderRadius: '6px',
-            border: '1px solid #ced4da',
+            border: '1px solid var(--border-contrast, #334155)',
             cursor: 'pointer',
-            background: '#ffffff',
-            color: '#212529',
+            background: 'var(--container-charcoal, #1e293b)',
+            color: 'var(--text-primary, #f8fafc)',
             fontWeight: 600,
-            fontSize: '0.875rem',
+            fontSize: '0.85rem',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
           }}
         >
           <span>Batch Queue</span>
@@ -95,9 +230,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             id="bcount"
             className="bcount"
             style={{
-              background: '#1971c2',
-              color: '#ffffff',
-              padding: '2px 8px',
+              background: 'var(--accent-cyan, #06b6d4)',
+              color: '#0f172a',
+              padding: '1px 7px',
               borderRadius: '10px',
               fontSize: '0.75rem',
               fontWeight: 700,
@@ -114,14 +249,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           onClick={onOpenSettings}
           title="Appearance & Layout Settings"
           style={{
-            padding: '6px 14px',
+            padding: '5px 12px',
             borderRadius: '6px',
-            border: '1px solid #ced4da',
+            border: '1px solid var(--border-contrast, #334155)',
             cursor: 'pointer',
-            background: '#ffffff',
-            color: '#212529',
+            background: 'var(--container-charcoal, #1e293b)',
+            color: 'var(--text-primary, #f8fafc)',
             fontWeight: 600,
-            fontSize: '0.875rem',
+            fontSize: '0.85rem',
           }}
         >
           Settings
@@ -144,14 +279,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           }}
           title="Download Offline Copy"
           style={{
-            padding: '6px 14px',
+            padding: '5px 12px',
             borderRadius: '6px',
-            border: '1px solid #ced4da',
+            border: '1px solid var(--border-contrast, #334155)',
             cursor: 'pointer',
-            background: '#ffffff',
-            color: '#212529',
+            background: 'var(--container-charcoal, #1e293b)',
+            color: 'var(--text-primary, #f8fafc)',
             fontWeight: 500,
-            fontSize: '0.875rem',
+            fontSize: '0.85rem',
           }}
         >
           Offline Copy
@@ -164,14 +299,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           onClick={onToggleTheme}
           title="Toggle Dark/Light Theme"
           style={{
-            padding: '6px 14px',
+            padding: '5px 12px',
             borderRadius: '6px',
-            border: '1px solid #ced4da',
+            border: '1px solid var(--border-contrast, #334155)',
             cursor: 'pointer',
-            background: '#ffffff',
-            color: '#212529',
+            background: 'var(--container-charcoal, #1e293b)',
+            color: 'var(--text-primary, #f8fafc)',
             fontWeight: 500,
-            fontSize: '0.875rem',
+            fontSize: '0.85rem',
           }}
         >
           {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}

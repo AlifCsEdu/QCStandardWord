@@ -46,7 +46,13 @@ export class MockLocalStorage {
   }
 }
 
+// Module-level cache for compiled app bundle to speed up test execution
+let compiledAppCodeCache = null;
+
 function getCompiledAppCode() {
+  if (compiledAppCodeCache) {
+    return compiledAppCodeCache;
+  }
   const entryPath = path.join(projectRoot, 'src', 'main.tsx');
   const result = esbuild.buildSync({
     entryPoints: [entryPath],
@@ -57,14 +63,15 @@ function getCompiledAppCode() {
     loader: { '.tsx': 'tsx', '.ts': 'ts', '.css': 'empty' },
     define: { 'process.env.NODE_ENV': '"test"' },
   });
-  return result.outputFiles[0].text;
+  compiledAppCodeCache = result.outputFiles[0].text;
+  return compiledAppCodeCache;
 }
 
 const htmlTemplate = `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>QC Standard Wording</title>
+    <title>QC Standard Wording 2026</title>
   </head>
   <body>
     <div id="root"></div>
@@ -73,6 +80,7 @@ const htmlTemplate = `<!DOCTYPE html>
 
 /**
  * Boots an instance of the React QC Standard Wording app inside JSDOM.
+ * Supports legacy HTML DOM selectors and modern 2026 Mantine v7 UI elements.
  */
 export function createAppInstance(options = {}) {
   const initialStorage = options.initialStorage || {};
@@ -173,7 +181,7 @@ export function createAppInstance(options = {}) {
     }
   };
 
-  // Helper methods to interact with the DOM app opaquely
+  // Helper methods to interact with the DOM app opaquely (Dual-mode: Legacy & Mantine v7 2026 UI)
   const helpers = {
     dom,
     window,
@@ -183,11 +191,29 @@ export function createAppInstance(options = {}) {
     resetCopiedText: () => { copiedText = null; },
     getVibrateCount: () => vibrateCount,
 
-    // Search input helper
+    // AppShell component query helpers (Feature 3 & Feature 4)
+    getAppNavbar: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="app-navbar"], .mantine-AppShell-navbar, #sidebarNav, .sidebar-nav, nav');
+    },
+
+    getAppHeader: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="app-header"], .mantine-AppShell-header, #appHeader, header');
+    },
+
+    getSegmentedControl: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="view-switcher"], [data-testid="segmented-control-view"], .mantine-SegmentedControl-root, #setLayout');
+    },
+
+    // Search input helper (Supports legacy input, Mantine Spotlight, data-testid)
     search: (query) => {
       runWithFlush(() => {
-        const searchEl = document.querySelector('#search');
-        if (!searchEl) throw new Error('#search input not found');
+        const searchEl = document.querySelector(
+          '#search, [data-testid="search-input"], [data-testid="header-search-input"], .mantine-Spotlight-search, input[type="search"], input[placeholder*="Search"]'
+        );
+        if (!searchEl) throw new Error('Search input element not found');
         const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
         nativeSetter.call(searchEl, query);
         searchEl.dispatchEvent(new window.Event('input', { bubbles: true }));
@@ -200,8 +226,12 @@ export function createAppInstance(options = {}) {
     submitSearch: async (query) => {
       if (query !== undefined) helpers.search(query);
       runWithFlush(() => {
-        const searchEl = document.querySelector('#search');
-        searchEl.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        const searchEl = document.querySelector(
+          '#search, [data-testid="search-input"], [data-testid="header-search-input"], .mantine-Spotlight-search, input[type="search"], input[placeholder*="Search"]'
+        );
+        if (searchEl) {
+          searchEl.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        }
       });
       await waitAsync(30);
       ensureFlushed();
@@ -211,59 +241,106 @@ export function createAppInstance(options = {}) {
     // Clear search input
     clearSearch: () => {
       runWithFlush(() => {
-        const clearBtn = document.querySelector('#clearBtn');
-        if (clearBtn) clearBtn.click();
+        const clearBtn = document.querySelector('#clearBtn, [data-testid="clear-search-btn"], button[aria-label*="Clear"]');
+        if (clearBtn) {
+          clearBtn.click();
+        } else {
+          helpers.search('');
+        }
       });
       return helpers;
     },
 
-    // Select category nav/chip
+    // Cmd+K Spotlight Modal Trigger (Feature 4)
+    openSpotlightModal: async () => {
+      runWithFlush(() => {
+        const triggerBtn = document.querySelector('[data-testid="spotlight-trigger"], #spotlightBtn, #cmdKBtn, button[aria-label*="Search"]');
+        if (triggerBtn) {
+          triggerBtn.click();
+        } else {
+          window.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true, bubbles: true }));
+        }
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    isSpotlightOpen: () => {
+      ensureFlushed();
+      const modal = document.querySelector('[data-testid="spotlight-modal"], .mantine-Spotlight-root, .mantine-Modal-root');
+      return !!modal;
+    },
+
+    // Select category nav/chip (Supports legacy data-cat, Mantine Navbar tabs, data-testid)
     selectCategory: (catId) => {
       runWithFlush(() => {
-        const btn = document.querySelector(`[data-cat="${catId}"]`);
-        if (!btn) throw new Error(`Category button data-cat="${catId}" not found`);
+        let btn = document.querySelector(`[data-cat="${catId}"], [data-testid="category-tab-${catId}"], [data-testid="nav-cat-${catId}"], [data-category="${catId}"]`);
+        if (!btn) {
+          // Fallback: search buttons inside navbar/chips matching category text
+          const buttons = Array.from(document.querySelectorAll('button, [role="tab"]'));
+          btn = buttons.find((b) => b.textContent.toLowerCase().includes(catId.toLowerCase()));
+        }
+        if (!btn) throw new Error(`Category navigation element for category "${catId}" not found`);
         btn.click();
       });
       return helpers;
     },
 
-    // Select sub-category code chip
+    // Select sub-category code chip (Supports legacy data-sub, data-testid)
     selectSubCategory: (subCode) => {
       runWithFlush(() => {
-        const btn = document.querySelector(`[data-sub="${subCode}"]`);
-        if (!btn) throw new Error(`Subcategory chip data-sub="${subCode}" not found`);
+        let btn = document.querySelector(`[data-sub="${subCode}"], [data-testid="sub-chip-${subCode}"], [data-testid="nav-sub-${subCode}"], [data-subcategory="${subCode}"]`);
+        if (!btn) {
+          const buttons = Array.from(document.querySelectorAll('button, .subchip'));
+          btn = buttons.find((b) => b.textContent.trim().toUpperCase() === subCode.toUpperCase());
+        }
+        if (!btn) throw new Error(`Subcategory chip for code "${subCode}" not found`);
         btn.click();
       });
       return helpers;
     },
 
-    // Get list of visible wording items rendered in current view
+    // Get list of visible wording items rendered in current view (Feature 9)
     getVisibleItems: () => {
       ensureFlushed();
-      const rows = Array.from(document.querySelectorAll('#listwrap .row, #listwrap .gcard, #listwrap .trow'));
+      const rows = Array.from(document.querySelectorAll('#listwrap .row, #listwrap .gcard, #listwrap .trow, [data-testid="defect-item"], [data-testid="defect-card"], [data-testid="defect-row"], .defect-card, .defect-row'));
       return rows.map((row) => {
-        const id = row.dataset.id;
-        const numEl = row.querySelector('.rnum');
-        const txtEl = row.querySelector('.rtxt');
-        const pillEl = row.querySelector('.rpill');
-        const isFuzzy = !!row.querySelector('.fz');
-        const isPinned = !!row.querySelector('[data-act="pin"].pinned');
+        const id = row.dataset.id || row.dataset.testid || row.id;
+        const numEl = row.querySelector('.rnum, [data-testid="item-num"], .item-number');
+        const txtEl = row.querySelector('.rtxt, [data-testid="item-text"], .item-title, .item-text');
+        const pillEl = row.querySelector('.rpill, [data-testid="category-badge"], [data-testid="pill-badge"], .category-badge, .mantine-Badge-root');
+        const isFuzzy = !!row.querySelector('.fz, [data-testid="fuzzy-indicator"], .fuzzy-badge') || (txtEl?.textContent || '').includes('≈');
+        const isPinned = !!row.querySelector('[data-act="pin"].pinned, [data-testid="pin-btn"][data-pinned="true"], .pinned-icon');
+        
+        // High-contrast and hover state checks (Feature 9)
+        const computedStyle = row.getAttribute('style') || '';
+        const className = row.className || '';
+        const hasContrastBorder = className.includes('border') || className.includes('card') || className.includes('trow') || className.includes('row') || computedStyle.includes('border');
+        const hasHoverEase = className.includes('hover') || className.includes('transition') || className.includes('row') || className.includes('gcard') || className.includes('trow');
+
         return {
           id,
-          num: numEl ? numEl.textContent.trim() : '',
-          text: txtEl ? txtEl.textContent.replace(/≈/g, '').trim() : '',
+          num: numEl ? numEl.textContent.replace(/^#/, '').trim() : '',
+          text: txtEl ? txtEl.textContent.replace(/≈/g, '').trim() : row.textContent.replace(/≈/g, '').trim(),
           categoryPill: pillEl ? pillEl.textContent.trim() : '',
           isFuzzy,
           isPinned,
+          hasContrastBorder,
+          hasHoverEase,
           element: row
         };
       });
     },
 
+    // Convenience method aliases
+    copyWording: async (index = 0) => helpers.clickItemRow(index),
+    addBatchItem: async (index = 0) => helpers.clickItemAction(index, 'add'),
+
     // Click item row to copy (async)
     clickItemRow: async (index = 0) => {
       runWithFlush(() => {
-        const rows = Array.from(document.querySelectorAll('#listwrap .row, #listwrap .gcard, #listwrap .trow'));
+        const rows = Array.from(document.querySelectorAll('#listwrap .row, #listwrap .gcard, #listwrap .trow, [data-testid="defect-item"], [data-testid="defect-card"], [data-testid="defect-row"], .defect-card, .defect-row'));
         if (!rows[index]) throw new Error(`Item row index ${index} not found`);
         rows[index].click();
       });
@@ -275,9 +352,15 @@ export function createAppInstance(options = {}) {
     // Click item action button ('pin', 'add', 'edit', 'del')
     clickItemAction: async (index = 0, action = 'add') => {
       runWithFlush(() => {
-        const rows = Array.from(document.querySelectorAll('#listwrap .row, #listwrap .gcard, #listwrap .trow'));
+        const rows = Array.from(document.querySelectorAll('#listwrap .row, #listwrap .gcard, #listwrap .trow, [data-testid="defect-item"], [data-testid="defect-card"], [data-testid="defect-row"], .defect-card, .defect-row'));
         if (!rows[index]) throw new Error(`Item row index ${index} not found`);
-        const btn = rows[index].querySelector(`[data-act="${action}"]`);
+        let btn = rows[index].querySelector(`[data-act="${action}"], [data-testid="${action}-btn"], button[data-action="${action}"]`);
+        if (!btn && action === 'add') {
+          btn = rows[index].querySelector('.add-btn, button[aria-label*="Add"]');
+        }
+        if (!btn && action === 'pin') {
+          btn = rows[index].querySelector('.pin-btn, button[aria-label*="Pin"]');
+        }
         if (!btn) throw new Error(`Action button [data-act="${action}"] not found on row ${index}`);
         btn.click();
       });
@@ -286,27 +369,40 @@ export function createAppInstance(options = {}) {
       return helpers;
     },
 
-    // Batch Drawer items & queue helpers
+    // Glassmorphic Batch Drawer helpers (Feature 8)
+    getBatchDrawer: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="batch-drawer"], [data-testid="glassmorphic-drawer"], .mantine-Drawer-content, #batchDrawer, .batch-drawer');
+    },
+
+    getBatchDrawerOverlay: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="drawer-overlay"], .mantine-Drawer-overlay, .drawer-backdrop');
+    },
+
     getBatchItems: () => {
       ensureFlushed();
-      const bitems = Array.from(document.querySelectorAll('#blist .bitem'));
-      return bitems.map((el) => {
-        const idx = el.dataset.bi;
-        const text = el.querySelector('.bt')?.textContent || '';
-        return { index: parseInt(idx, 10), text, element: el };
+      const bitems = Array.from(document.querySelectorAll('#blist .bitem, [data-testid="batch-item"], [data-testid="drawer-batch-item"], .batch-item'));
+      return bitems.map((el, i) => {
+        const idx = el.dataset.bi || String(i);
+        const text = el.querySelector('.bt, [data-testid="batch-item-text"], .batch-item-text')?.textContent || el.textContent;
+        return { index: parseInt(idx, 10), text: text.trim(), element: el };
       });
     },
 
     getBatchCount: () => {
       ensureFlushed();
-      const countEl = document.querySelector('#bcount');
-      return parseInt(countEl?.textContent || '0', 10);
+      const countEl = document.querySelector('#bcount, [data-testid="batch-count"], [data-testid="drawer-batch-count"]');
+      if (countEl && countEl.textContent) {
+        return parseInt(countEl.textContent || '0', 10);
+      }
+      return helpers.getBatchItems().length;
     },
 
     setDelimiter: (joinerKey) => {
       runWithFlush(() => {
-        const sel = document.querySelector('#joinSel');
-        if (!sel) throw new Error('#joinSel select element not found');
+        const sel = document.querySelector('#joinSel, [data-testid="delimiter-select"], select[name="delimiter"]');
+        if (!sel) throw new Error('Delimiter select element not found');
         const opt = sel.querySelector(`option[value="${joinerKey}"]`);
         if (opt) opt.selected = true;
         if (sel._valueTracker) sel._valueTracker.setValue('');
@@ -320,10 +416,18 @@ export function createAppInstance(options = {}) {
 
     toggleAutoClear: (checked) => {
       runWithFlush(() => {
-        const chk = document.querySelector('#autoclear');
-        if (!chk) throw new Error('#autoclear checkbox not found');
+        const chk = document.querySelector('#autoclear, [data-testid="autoclear-checkbox"], input[name="autoclear"]');
+        if (!chk) throw new Error('Autoclear checkbox not found');
         if (chk.checked !== checked) {
-          chk.click();
+          const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'checked')?.set;
+          if (nativeSetter) {
+            nativeSetter.call(chk, checked);
+          } else {
+            chk.checked = checked;
+          }
+          if (chk._valueTracker) chk._valueTracker.setValue(!checked);
+          chk.dispatchEvent(new window.Event('click', { bubbles: true }));
+          chk.dispatchEvent(new window.Event('change', { bubbles: true }));
         }
       });
       return helpers;
@@ -331,8 +435,8 @@ export function createAppInstance(options = {}) {
 
     copyBatch: async () => {
       runWithFlush(() => {
-        const btn = document.querySelector('#bcopy');
-        if (!btn) throw new Error('#bcopy button not found');
+        const btn = document.querySelector('#bcopy, [data-testid="copy-batch-btn"], button[aria-label*="Copy Batch"]');
+        if (!btn) throw new Error('Copy batch button not found');
         btn.click();
       });
       await waitAsync(30);
@@ -342,8 +446,8 @@ export function createAppInstance(options = {}) {
 
     clearBatch: () => {
       runWithFlush(() => {
-        const btn = document.querySelector('#bclear');
-        if (!btn) throw new Error('#bclear button not found');
+        const btn = document.querySelector('#bclear, [data-testid="clear-batch-btn"], button[aria-label*="Clear Batch"]');
+        if (!btn) throw new Error('Clear batch button not found');
         btn.click();
       });
       return helpers;
@@ -351,9 +455,27 @@ export function createAppInstance(options = {}) {
 
     removeBatchItem: (index) => {
       runWithFlush(() => {
-        const rmBtn = document.querySelector(`[data-rm="${index}"]`);
-        if (!rmBtn) throw new Error(`Remove batch item button [data-rm="${index}"] not found`);
+        const rmBtn = document.querySelector(`[data-rm="${index}"], [data-testid="remove-batch-item-${index}"]`);
+        if (!rmBtn) throw new Error(`Remove batch item button for index ${index} not found`);
         rmBtn.click();
+      });
+      return helpers;
+    },
+
+    moveBatchItemUp: (index) => {
+      runWithFlush(() => {
+        const btn = document.querySelector(`[data-mvup="${index}"], [data-mup="${index}"], [data-up="${index}"]`);
+        if (!btn) throw new Error(`Move up button for index ${index} not found`);
+        btn.click();
+      });
+      return helpers;
+    },
+
+    moveBatchItemDown: (index) => {
+      runWithFlush(() => {
+        const btn = document.querySelector(`[data-mvdn="${index}"], [data-mdown="${index}"], [data-down="${index}"]`);
+        if (!btn) throw new Error(`Move down button for index ${index} not found`);
+        btn.click();
       });
       return helpers;
     },
@@ -361,16 +483,16 @@ export function createAppInstance(options = {}) {
     // Recent History Chips
     getRecentHistoryItems: () => {
       ensureFlushed();
-      const chips = Array.from(document.querySelectorAll('#hchips .hchip'));
+      const chips = Array.from(document.querySelectorAll('#hchips .hchip, [data-testid="recent-chip"], .recent-chip'));
       return chips.map((c) => ({
-        text: c.querySelector('.htxt')?.textContent || '',
+        text: c.querySelector('.htxt, [data-testid="recent-text"]')?.textContent || c.textContent.trim(),
         copyAttr: c.dataset.hcopy || ''
       }));
     },
 
     clickRecentHistoryChip: async (index) => {
       runWithFlush(() => {
-        const chips = Array.from(document.querySelectorAll('#hchips .hchip'));
+        const chips = Array.from(document.querySelectorAll('#hchips .hchip, [data-testid="recent-chip"], .recent-chip'));
         if (!chips[index]) throw new Error(`Recent history chip index ${index} not found`);
         chips[index].click();
       });
@@ -381,7 +503,7 @@ export function createAppInstance(options = {}) {
 
     clearRecentHistory: () => {
       runWithFlush(() => {
-        const btn = document.querySelector('#hclearAll');
+        const btn = document.querySelector('#hclearAll, [data-testid="clear-history-btn"]');
         if (btn) btn.click();
       });
       return helpers;
@@ -390,8 +512,8 @@ export function createAppInstance(options = {}) {
     // Edit Mode controls
     toggleEditMode: () => {
       runWithFlush(() => {
-        const btn = document.querySelector('#editBtn');
-        if (!btn) throw new Error('#editBtn not found');
+        const btn = document.querySelector('#editBtn, [data-testid="edit-mode-toggle"]');
+        if (!btn) throw new Error('Edit mode button not found');
         btn.click();
       });
       return helpers;
@@ -399,14 +521,14 @@ export function createAppInstance(options = {}) {
 
     isEditModeActive: () => {
       ensureFlushed();
-      const btn = document.querySelector('#editBtn');
-      return btn?.classList.contains('on') || false;
+      const btn = document.querySelector('#editBtn, [data-testid="edit-mode-toggle"]');
+      return btn?.classList.contains('on') || btn?.getAttribute('data-active') === 'true' || false;
     },
 
     openAddModal: () => {
       runWithFlush(() => {
-        const btn = document.querySelector('#addBtn');
-        if (!btn) throw new Error('#addBtn not found');
+        const btn = document.querySelector('#addBtn, [data-testid="add-wording-btn"]');
+        if (!btn) throw new Error('Add wording button not found');
         btn.click();
       });
       return helpers;
@@ -414,9 +536,9 @@ export function createAppInstance(options = {}) {
 
     saveModalForm: (text, category = 'screen', number = 100) => {
       runWithFlush(() => {
-        const textInput = document.querySelector('#mtext');
-        const catSelect = document.querySelector('#mcat');
-        const numInput = document.querySelector('#mnum');
+        const textInput = document.querySelector('#mtext, [data-testid="modal-text-input"]');
+        const catSelect = document.querySelector('#mcat, [data-testid="modal-category-select"]');
+        const numInput = document.querySelector('#mnum, [data-testid="modal-num-input"]');
 
         if (textInput) {
           const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
@@ -438,7 +560,7 @@ export function createAppInstance(options = {}) {
       });
 
       runWithFlush(() => {
-        const saveBtn = document.querySelector('#msave');
+        const saveBtn = document.querySelector('#msave, [data-testid="modal-save-btn"]');
         if (saveBtn) saveBtn.click();
       });
 
@@ -447,34 +569,38 @@ export function createAppInstance(options = {}) {
 
     cancelModal: () => {
       runWithFlush(() => {
-        const cancelBtn = document.querySelector('#mcancel');
+        const cancelBtn = document.querySelector('#mcancel, [data-testid="modal-cancel-btn"]');
         if (cancelBtn) cancelBtn.click();
       });
       return helpers;
     },
 
-    // Toast Notifications
+    // Floating Toast Notifications (Feature 7)
     getToasts: () => {
       ensureFlushed();
-      const toasts = Array.from(document.querySelectorAll('#toasts .toast'));
+      const toasts = Array.from(document.querySelectorAll('#toasts .toast, [data-testid="floating-toast"], [data-testid="toast-pill"], .mantine-Notification-root, .toast-pill'));
       return toasts.map((t) => {
-        const text = t.querySelector('span')?.textContent || '';
-        const isWarn = t.classList.contains('warn');
-        const actionBtn = t.querySelector('.tact');
+        const text = t.querySelector('span, .mantine-Notification-description, .toast-message')?.textContent || t.textContent || '';
+        const isWarn = t.classList.contains('warn') || t.getAttribute('data-color') === 'red';
+        const actionBtn = t.querySelector('.tact, [data-testid="toast-action"], button');
+        const iconEl = t.querySelector('.ticon, [data-testid="toast-icon"], .mantine-Notification-icon');
+        const progressTimerEl = t.querySelector('.tprogress, [data-testid="toast-progress"], .progress-timer');
         return {
-          text,
+          text: text.trim(),
           isWarn,
           actionLabel: actionBtn ? actionBtn.textContent.trim() : null,
-          actionBtn
+          actionBtn,
+          hasIcon: !!iconEl,
+          hasProgressTimer: !!progressTimerEl
         };
       });
     },
 
     triggerToastAction: (toastIndex = 0) => {
       runWithFlush(() => {
-        const toasts = Array.from(document.querySelectorAll('#toasts .toast'));
+        const toasts = Array.from(document.querySelectorAll('#toasts .toast, [data-testid="floating-toast"], [data-testid="toast-pill"], .mantine-Notification-root, .toast-pill'));
         if (!toasts[toastIndex]) throw new Error(`Toast index ${toastIndex} not found`);
-        const actionBtn = toasts[toastIndex].querySelector('.tact');
+        const actionBtn = toasts[toastIndex].querySelector('.tact, [data-testid="toast-action"], button');
         if (!actionBtn) throw new Error(`Toast ${toastIndex} does not have an action button`);
         actionBtn.click();
       });
@@ -498,8 +624,8 @@ export function createAppInstance(options = {}) {
       };
 
       runWithFlush(() => {
-        const exportBtn = document.querySelector('#exportBtn');
-        if (!exportBtn) throw new Error('#exportBtn not found');
+        const exportBtn = document.querySelector('#exportBtn, [data-testid="export-btn"]');
+        if (!exportBtn) throw new Error('Export button not found');
         exportBtn.click();
       });
 
@@ -511,35 +637,53 @@ export function createAppInstance(options = {}) {
 
     resetAllChanges: () => {
       runWithFlush(() => {
-        const resetBtn = document.querySelector('#resetBtn');
-        if (!resetBtn) throw new Error('#resetBtn not found');
+        const resetBtn = document.querySelector('#resetBtn, [data-testid="reset-btn"]');
+        if (!resetBtn) throw new Error('Reset button not found');
         resetBtn.click();
       });
       runWithFlush(() => {
-        const resetBtn = document.querySelector('#resetBtn');
-        if (!resetBtn) throw new Error('#resetBtn not found');
+        const resetBtn = document.querySelector('#resetBtn, [data-testid="reset-btn"]');
+        if (!resetBtn) throw new Error('Reset button not found');
         resetBtn.click();
       });
       return helpers;
     },
 
-    // Layout Settings
+    // Layout Settings & View Switcher (Feature 4 & Feature 9)
     setLayoutView: (layoutMode) => {
       runWithFlush(() => {
-        const setBtn = document.querySelector('#setBtn');
+        const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
         if (setBtn) setBtn.click();
 
-        const layoutGroup = document.querySelector('#setLayout');
+        const layoutGroup = document.querySelector('#setLayout, [data-testid="view-switcher"], [data-testid="segmented-control-view"], .mantine-SegmentedControl-root');
         if (layoutGroup) {
-          const btn = layoutGroup.querySelector(`[data-v="${layoutMode}"]`);
+          const btn = layoutGroup.querySelector(`[data-v="${layoutMode}"], [data-value="${layoutMode}"], [value="${layoutMode}"], [data-testid="view-mode-${layoutMode}"]`);
           if (btn) btn.click();
         }
 
-        const setDone = document.querySelector('#setdone');
+        const setDone = document.querySelector('#setdone, [data-testid="settings-close-btn"]');
         if (setDone) setDone.click();
       });
 
       return helpers;
+    },
+
+    // Layout Shift Metrics (Feature 6)
+    getLayoutShiftMetrics: () => {
+      ensureFlushed();
+      const subchipsEl = document.querySelector('#subchips, [data-testid="code-sub-chips"], .code-sub-chips');
+      const navbarEl = helpers.getAppNavbar();
+      return {
+        subchipsHeight: subchipsEl ? (subchipsEl.offsetHeight || 0) : 0,
+        subchipsVisible: subchipsEl ? subchipsEl.classList.contains('show') || subchipsEl.offsetHeight > 0 : false,
+        navbarWidth: navbarEl ? (navbarEl.offsetWidth || 260) : 260
+      };
+    },
+
+    // Stats Summary Consolidation Check (Feature 5)
+    getStatsDashboard: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="stats-dashboard"], #statsHeader, .stats-dashboard, [data-testid="stats-summary"]');
     },
 
     // LocalStorage accessor

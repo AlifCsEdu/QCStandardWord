@@ -1,18 +1,18 @@
 import React from 'react';
-import { Badge, Group, Paper, Text, Card, SimpleGrid, Button } from '@mantine/core';
-import { IconDashboard, IconFilter, IconSearch, IconBookmark, IconCopy } from '@tabler/icons-react';
+import { Badge, Group, Paper, Text } from '@mantine/core';
+import { IconDashboard, IconFilter, IconBookmark, IconCopy } from '@tabler/icons-react';
 import type { CategoryKey, SubCategoryCode } from '../types/qc.ts';
 
 interface StatsDashboardProps {
-  categoryCounts: Record<string, number>;
+  categoryCounts?: Record<string, number>;
   selectedCategory: CategoryKey;
   selectedSubCategory: SubCategoryCode;
   searchQuery: string;
   totalFilteredCount: number;
   batchCount: number;
   pinnedCount: number;
-  onOpenSpotlight: () => void;
-  onSelectCategory: (cat: CategoryKey) => void;
+  onOpenSpotlight?: () => void;
+  onSelectCategory?: (cat: CategoryKey) => void;
 }
 
 const CATEGORY_NAMES: Record<CategoryKey, string> = {
@@ -34,117 +34,71 @@ const CATEGORY_NAMES: Record<CategoryKey, string> = {
 };
 
 export const StatsDashboard: React.FC<StatsDashboardProps> = ({
-  categoryCounts,
   selectedCategory,
   selectedSubCategory,
   searchQuery,
   totalFilteredCount,
   batchCount,
   pinnedCount,
-  onOpenSpotlight,
-  onSelectCategory,
 }) => {
-  const categoriesToShow: CategoryKey[] = [
-    'codes',
-    'screen',
-    'camera',
-    'buttons',
-    'battery',
-    'locks',
-    'audio',
-    'body',
-  ];
-
   return (
     <Paper
       id="statsDashboard"
-      p="md"
+      data-testid="stats-dashboard"
+      p="sm"
       m="md"
       radius="md"
       withBorder
       style={{
-        background: 'var(--mantine-color-body, #ffffff)',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+        background: 'var(--container-charcoal, #1e293b)',
+        borderColor: 'var(--border-contrast, #334155)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
       }}
     >
-      <Group justify="space-between" mb="xs">
+      <Group justify="space-between" align="center" wrap="wrap" gap="xs">
         <Group gap="xs">
-          <IconDashboard size={20} color="var(--mantine-color-blue-6)" />
-          <Text fw={700} size="sm">
-            Inspection Stats Dashboard
+          <IconDashboard size={18} color="var(--accent-cyan, #06b6d4)" />
+          <Text fw={700} size="sm" c="var(--text-primary, #f8fafc)">
+            Inspection Dashboard
           </Text>
-          <Badge color="blue" variant="light" size="sm">
+          <Badge color="cyan" variant="light" size="sm">
             {totalFilteredCount} matching
           </Badge>
         </Group>
 
-        <Group gap="xs">
-          <Button
-            variant="subtle"
-            size="xs"
-            leftSection={<IconSearch size={14} />}
-            onClick={onOpenSpotlight}
-            rightSection={
-              <Badge size="xs" variant="outline" color="gray">
-                ⌘K / Ctrl+K
+        {/* Active Filter & Status Summary */}
+        <Group gap="xs" wrap="wrap">
+          <Group gap="xs">
+            <IconFilter size={14} color="var(--text-secondary, #94a3b8)" />
+            <Text size="xs" c="var(--text-secondary, #94a3b8)" fw={500}>
+              Active Filter:
+            </Text>
+            <Badge size="xs" color="cyan" variant="dot">
+              Cat: {CATEGORY_NAMES[selectedCategory] || selectedCategory}
+            </Badge>
+            {selectedCategory === 'codes' && selectedSubCategory !== 'ALL' && (
+              <Badge size="xs" color="indigo" variant="dot">
+                Sub: {selectedSubCategory}
               </Badge>
-            }
-          >
-            Quick Search
-          </Button>
-        </Group>
-      </Group>
+            )}
+            {searchQuery.trim() && (
+              <Badge size="xs" color="orange" variant="dot">
+                Query: "{searchQuery.trim()}"
+              </Badge>
+            )}
+          </Group>
 
-      {/* Category Breakdown Badges */}
-      <Group gap="xs" mb="sm" wrap="wrap">
-        {categoriesToShow.map((cat) => {
-          const count = categoryCounts[cat] || 0;
-          const isActive = selectedCategory === cat;
-          return (
-            <Badge
-              key={cat}
-              variant={isActive ? 'filled' : 'outline'}
-              color={isActive ? 'blue' : 'gray'}
-              style={{ cursor: 'pointer', textTransform: 'capitalize' }}
-              onClick={() => onSelectCategory(cat)}
-            >
-              {CATEGORY_NAMES[cat] || cat}: {count}
+          <Group gap="xs" ml="xs">
+            <Badge size="xs" color="yellow" variant="outline" leftSection={<IconBookmark size={10} />}>
+              Pinned: {pinnedCount}
             </Badge>
-          );
-        })}
-      </Group>
-
-      {/* Active Filter Summary Banner */}
-      <Group gap="md" style={{ borderTop: '1px solid var(--mantine-color-gray-2)', paddingTop: '8px' }}>
-        <Group gap="xs">
-          <IconFilter size={14} color="var(--mantine-color-dimmed)" />
-          <Text size="xs" c="dimmed" fw={500}>
-            Active Filter:
-          </Text>
-          <Badge size="xs" color="indigo" variant="dot">
-            Cat: {CATEGORY_NAMES[selectedCategory] || selectedCategory}
-          </Badge>
-          {selectedCategory === 'codes' && selectedSubCategory !== 'ALL' && (
-            <Badge size="xs" color="teal" variant="dot">
-              Sub: {selectedSubCategory}
+            <Badge size="xs" color="cyan" variant="outline" leftSection={<IconCopy size={10} />}>
+              Batch: {batchCount}
             </Badge>
-          )}
-          {searchQuery.trim() && (
-            <Badge size="xs" color="orange" variant="dot">
-              Query: "{searchQuery.trim()}"
-            </Badge>
-          )}
-        </Group>
-
-        <Group gap="xs" ml="auto">
-          <Badge size="xs" color="yellow" variant="outline" leftSection={<IconBookmark size={10} />}>
-            Pinned: {pinnedCount}
-          </Badge>
-          <Badge size="xs" color="cyan" variant="outline" leftSection={<IconCopy size={10} />}>
-            Batch: {batchCount}
-          </Badge>
+          </Group>
         </Group>
       </Group>
     </Paper>
   );
 };
+

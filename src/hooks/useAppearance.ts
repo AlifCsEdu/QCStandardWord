@@ -8,7 +8,7 @@ const DEFAULT_SETTINGS: AppearanceSettings = {
   accent: 'indigo',
   density: 'cozy',
   motion: 'full',
-  theme: 'light',
+  theme: 'dark',
 };
 
 function safeJSONParse<T>(key: string, fallback: T): T {
@@ -44,7 +44,7 @@ function safeStorageSet(key: string, value: string): void {
 export function useAppearance() {
   const [appearance, setAppearanceState] = useState<AppearanceSettings>(() => {
     const savedApp = safeJSONParse<Partial<AppearanceSettings>>('qc-appearance', {});
-    const savedTheme = safeStorageGet('qc-theme', savedApp.theme || 'light') as AppearanceSettings['theme'];
+    const savedTheme = safeStorageGet('qc-theme', savedApp.theme || 'dark') as AppearanceSettings['theme'];
     const savedDensity = safeStorageGet('qc-density', savedApp.density || 'cozy') as DensityMode;
     return {
       ...DEFAULT_SETTINGS,

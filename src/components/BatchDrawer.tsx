@@ -15,6 +15,10 @@ interface BatchDrawerProps {
   onSetAutoclear: (val: boolean) => void;
   onCopyBatch: () => void;
   onBulkImport: (rawText: string) => void;
+  onMoveItemUp?: (index: number) => void;
+  onMoveItemDown?: (index: number) => void;
+  moveBatchItemUp?: (index: number) => void;
+  moveBatchItemDown?: (index: number) => void;
 }
 
 export const BatchDrawer: React.FC<BatchDrawerProps> = ({
@@ -29,7 +33,13 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
   onSetAutoclear,
   onCopyBatch,
   onBulkImport,
+  onMoveItemUp,
+  onMoveItemDown,
+  moveBatchItemUp,
+  moveBatchItemDown,
 }) => {
+  const handleMoveUp = onMoveItemUp || moveBatchItemUp;
+  const handleMoveDown = onMoveItemDown || moveBatchItemDown;
   const [pasteModalOpen, setPasteModalOpen] = useState(false);
   const [pasteText, setPasteText] = useState('');
 
@@ -43,7 +53,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
 
   return (
     <>
-      {/* Backdrop overlay for backward compatibility */}
+      {/* Backdrop overlay for backward compatibility and glassmorphic styling */}
       <div
         id="backdrop"
         className={`drawer-backdrop ${isOpen ? 'show' : ''}`}
@@ -55,9 +65,12 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0,0,0,0.4)',
+          background: 'var(--drawer-backdrop-bg, rgba(15, 23, 42, 0.4))',
+          backdropFilter: 'var(--drawer-backdrop-blur, blur(8px))',
+          WebkitBackdropFilter: 'var(--drawer-backdrop-blur, blur(8px))',
+          '--drawer-backdrop-blur': 'blur(8px)',
           zIndex: 998,
-        }}
+        } as React.CSSProperties}
       />
 
       {/* Mantine v7 Drawer container */}
@@ -109,6 +122,8 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                 </Text>
                 <select
                   id="joinSel"
+                  name="delimiter"
+                  data-testid="delimiter-select"
                   value={delimiter}
                   onChange={(e) => onSetDelimiter(e.target.value as DelimiterKey)}
                   style={{
@@ -123,6 +138,8 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                   <option value="comma">Comma (, )</option>
                   <option value="semi">Semicolon (; )</option>
                   <option value="space">Space ( )</option>
+                  <option value="pipe">Pipe ( | )</option>
+                  <option value="bullet">Bullet ( • )</option>
                 </select>
               </Group>
 
@@ -179,7 +196,56 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
 
                   <Group gap={4}>
                     <button
+                      className="bup"
+                      data-mvup={idx}
+                      data-mup={idx}
+                      data-up={idx}
+                      data-act="moveup"
+                      data-testid={`move-up-${idx}`}
+                      disabled={idx === 0}
+                      onClick={() => handleMoveUp?.(idx)}
+                      title="Move Up"
+                      style={{
+                        border: '1px solid var(--border-contrast, #334155)',
+                        background: idx === 0 ? 'rgba(51, 65, 85, 0.2)' : 'rgba(15, 23, 42, 0.4)',
+                        color: idx === 0 ? '#64748b' : '#38bdf8',
+                        padding: '4px 6px',
+                        borderRadius: '4px',
+                        cursor: idx === 0 ? 'not-allowed' : 'pointer',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      ▲
+                    </button>
+
+                    <button
+                      className="bdn"
+                      data-mvdn={idx}
+                      data-mdown={idx}
+                      data-down={idx}
+                      data-act="movedown"
+                      data-testid={`move-down-${idx}`}
+                      disabled={idx === batchQueue.length - 1}
+                      onClick={() => handleMoveDown?.(idx)}
+                      title="Move Down"
+                      style={{
+                        border: '1px solid var(--border-contrast, #334155)',
+                        background: idx === batchQueue.length - 1 ? 'rgba(51, 65, 85, 0.2)' : 'rgba(15, 23, 42, 0.4)',
+                        color: idx === batchQueue.length - 1 ? '#64748b' : '#38bdf8',
+                        padding: '4px 6px',
+                        borderRadius: '4px',
+                        cursor: idx === batchQueue.length - 1 ? 'not-allowed' : 'pointer',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      ▼
+                    </button>
+
+                    <button
                       data-bc={idx}
+                      className="bcopy-item"
                       onClick={async () => {
                         if (typeof navigator !== 'undefined' && navigator.clipboard) {
                           await navigator.clipboard.writeText(itemText);
@@ -202,6 +268,8 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
 
                     <button
                       data-rm={idx}
+                      data-testid={`remove-batch-item-${idx}`}
+                      className="brm-item"
                       onClick={() => onRemoveItem(idx)}
                       title="Remove item"
                       style={{

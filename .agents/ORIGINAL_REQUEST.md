@@ -1,79 +1,32 @@
 # Original User Request
 
-## Initial Request — 2026-08-07T00:49:28+08:00
+## 2026-08-07T13:21:42Z
 
-Recreate and transform the single-page HTML QC Standard Wording inspection tool into a production-grade, highly optimized, full-stack React + Vite web application powered by Mantine UI v7.
-
-Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
-Integrity mode: development
-
-## Requirements
-
-### R1. Modern UI Architecture with Mantine UI v7
-- Implement a responsive layout with Mantine's AppShell, Navbar, Header, Drawer, Modal, and Notification system.
-- Provide dynamic light/dark mode toggling, accent color palettes, component radius options, text size controls, and density toggles (Cozy vs Compact).
-- Support multiple layout display modes for wording entries: List view, Responsive Card Grid, and Compact Table view.
-
-### R2. Complete QC Wording Data & Instant Typo-Tolerant Search Engine
-- Retain all 139+ QC defect entries across 13 standard categories (Codes, Screen, Camera, Buttons, Battery, Back Cover, Locks, Pen, Water Damage, Audio & Mic, Body & Parts, System).
-- Implement instant typo-safe fuzzy search using Levenshtein distance, token matching, sub-sequence scoring, and alias expansion.
-- Provide sub-category chip filtering for specialized panel codes (FCPB, FCPW, FCPC, RCPB, RCPW, RCPC, FCDS, RCDS, PC).
-
-### R3. Advanced Batch Clipboard & Power Inspection Workflow
-- Slide-out Mantine Drawer for batch operations: queue multiple defect strings, choose custom delimiters (newline, comma, semicolon, space), reorder/remove items, auto-clear on copy, and bulk paste/import.
-- Pinning/Favorites system, copy history feed with quick re-copy, and full inline Edit Mode (add, update, delete custom entries with JSON import/export and reset fallback).
-- Full PWA support / offline readiness with localStorage state persistence.
-
-## Acceptance Criteria
-
-### UI & Aesthetics
-- [ ] Built cleanly with React, Vite, and Mantine UI v7 (@mantine/core, @mantine/hooks, @tabler/icons-react).
-- [ ] Stunning visual hierarchy with custom badges, micro-interactions, smooth animations, and crisp dark/light themes.
-
-### Functionality & Performance
-- [ ] Instant search results with highlighted matching substrings and approximate match indicators (≈).
-- [ ] 100% clipboard copy reliability across desktop and mobile devices with visual feedback toast notifications.
-- [ ] Complete state persistence (pins, batch queue, custom wording edits, theme/appearance settings) in browser storage.
-- [ ] Automated build verification passes cleanly via npm run build without any TypeScript or bundling errors.
-
-## Follow-up — 2026-08-07T01:33:50+08:00
-
-<USER_REQUEST>
-Recreate and modernize the QC Standard Wording React + Vite web application using the latest Mantine UI component architecture (https://mantine.dev/llms.txt), fixing Cloudflare Workers Assets deployment, and incorporating modern 2026 web application design standards.
+Complete 2026 UI/UX design overhaul of the QC Standard Wording application featuring a Deep Slate & Charcoal color palette (#0f172a / #1e293b), sticky left sidebar navigation, high-contrast cards and table rows, modern floating toast notifications, and non-intrusive backdrop-filtered batch drawer.
 
 Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
 Integrity mode: development
 
 ## Requirements
 
-### R1. Cloudflare Workers Assets & Pages Dual Deployment Fix
-- Update wrangler.jsonc to set "assets": { "directory": "./dist" } to support both npx wrangler deploy (Cloudflare Workers Assets) and npx wrangler pages deploy dist (Cloudflare Pages) without entry-point errors.
-- Ensure Vite build outputs valid static PWA assets with public/_redirects SPA fallback.
+### R1. 2026 Modern Deep Slate & Charcoal Design Theme
+- **Theme Palette**: Deep Slate background (#0f172a), Charcoal containers (#1e293b), high-contrast border outlines (#334155), and cool cyan accent highlights (#06b6d4 / #0284c7).
+- **Sidebar & Header Layout**: Clean split layout — sticky left sidebar for category tabs (All, Codes, Screen, Camera, etc.) and sub-code chips (FCPB, FCPW, etc.); top header for search bar (Cmd+K Spotlight modal trigger), view switcher (List, Grid, Table), and appearance settings.
+- **Visual Contrast & Differentiation**: Sharp visual separation between defect cards/rows, clear hover states (150ms ease), category pill badges with distinct theme colors, and bold typography hierarchy.
 
-### R2. Mantine UI Modernization & Power-User Components (https://mantine.dev/llms.txt)
-- Theme: Ocean Blue / Clean Teal minimalist technical look with dynamic light/dark mode (useMantineColorScheme, useComputedColorScheme).
-- AppShell layout featuring Mantine Header, Navbar, SegmentedControl view toggle (List, Grid Cards, Table), ActionIcon buttons, and Notification toasts (@mantine/notifications).
-- Mantine Spotlight (@mantine/spotlight) with Cmd+K / Ctrl+K search modal and instant keyboard navigation.
-- Inspection Stats Dashboard header showing category breakdown badges and active filters.
-- Mantine Affix floating scroll-to-top button.
+### R2. Modern 2026 Floating Notifications & Non-Intrusive Drawer
+- **Toast Notifications**: Modern floating toast pills with category icons, subtle glow, copy feedback animations, and progress timers.
+- **Glassmorphic Batch Drawer**: Slide-out panel with subtle background blur (backdrop-filter: blur(8px)), non-dimming overlay (rgba(15, 23, 42, 0.4)), and quick batch reorder/copy controls.
 
-### R3. Complete QC Wording Data & Typo-Tolerant Search Engine
-- 139+ QC defect entries across 13 standard categories with bounded Levenshtein distance, token matching, sub-sequence scoring, alias expansion, query highlighting (<mark>), and ≈ approximate match indicators.
-- Specialized panel code sub-chips (FCPB, FCPW, FCPC, RCPB, RCPW, RCPC, FCDS, RCDS, PC).
-
-### R4. Advanced Batch Clipboard & State Persistence
-- Slide-out Mantine Drawer for batch operations: queue multiple defect strings, custom delimiters (\n, , , ; ,  ), reordering, removal, auto-clear on copy, and bulk paste import.
-- Pinning/Favorites system, copy history feed with quick re-copy, and full inline Edit Mode (add, update, delete custom entries with JSON import/export and reset fallback).
-- LocalStorage state persistence for pins, batch queue, custom wording edits, and appearance settings.
+### R3. Dependencies & Performance
+- Update @mantine/core, @mantine/hooks, @mantine/notifications, @mantine/spotlight to latest available packages.
+- Zero layout shift, 100% responsive desktop/mobile support, and clean TypeScript build (npm run build).
 
 ## Acceptance Criteria
 
-### Cloudflare Deployment
-- [ ] wrangler.jsonc configured with "assets": { "directory": "./dist" }.
-- [ ] Both npx wrangler deploy and npm run build pass cleanly without errors.
-
-### UI & UX Excellence
-- [ ] Fully aligned with https://mantine.dev/llms.txt best practices.
-- [ ] Mantine Spotlight (Cmd+K / Ctrl+K) search, Inspection Stats header, and Affix back-to-top button active.
-- [ ] All 32+ unit/E2E test suites pass cleanly.
-</USER_REQUEST>
+### UI & UX Overhaul
+- [ ] Deep Slate (#0f172a) & Charcoal (#1e293b) theme with high contrast borders (#334155).
+- [ ] Unified sticky left sidebar navigation with no duplicate stats headers.
+- [ ] Floating glassmorphic toast notifications with category icons.
+- [ ] Non-intrusive backdrop-filtered batch drawer.
+- [ ] npm run build and npm run test pass with 100% success rate.

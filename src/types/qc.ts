@@ -65,7 +65,7 @@ export type RadiusOption = 'sharp' | 'soft' | 'round';
 export type TextSizeOption = 's' | 'm' | 'l';
 export type DensityMode = 'cozy' | 'compact';
 export type MotionMode = 'full' | 'reduced';
-export type DelimiterKey = 'nl' | 'comma' | 'semi' | 'space';
+export type DelimiterKey = 'nl' | 'comma' | 'semi' | 'space' | 'pipe' | 'bullet';
 export type SortOption = 'default' | 'alpha' | 'num';
 
 export interface AppearanceSettings {
