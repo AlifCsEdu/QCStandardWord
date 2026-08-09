@@ -30,7 +30,7 @@ export const WordingList: React.FC<WordingViewProps> = ({
   isPinnedInFolder,
 }) => {
   return (
-    <div className="wording-list-body flex flex-col gap-2">
+    <div className="wording-list-body flex flex-col gap-2.5">
       {results.map(({ item, isApprox, highlightedText }) => {
         const isPinned = pinsSet.has(item.id) || pinsSet.has(item.n);
         return (

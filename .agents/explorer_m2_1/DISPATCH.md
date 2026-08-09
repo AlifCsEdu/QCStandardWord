@@ -1,26 +1,15 @@
-## 2026-08-07T21:28:33Z
+## 2026-08-09T13:19:13Z
+Assignee: explorer_m2_1 (role: teamwork_preview_explorer)
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1
 
-You are Explorer 1 for Milestone 2: 2026 Deep Slate & Charcoal Theme & Design Tokens Setup.
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1.
+MANDATORY INPUTS:
+- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
 
-Objective:
-Investigate existing Mantine theme configuration, color tokens, MantineProvider setup, global CSS, and components in the project.
-
-Required Reads:
-- ORIGINAL_REQUEST.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
-- SCOPE.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m2\SCOPE.md
-
-Specific Focus:
-1. Examine `src/theme/`, `src/App.tsx`, `src/index.css`, `src/main.tsx`, and existing MantineProvider theme configuration.
-2. Verify Mantine UI v7 theme structure (colors object format, primaryColor, createTheme, cssVariablesResolver if needed, component default props and styles).
-3. Determine how to implement:
-   - Deep Slate background (`#0f172a`)
-   - Charcoal containers (`#1e293b`)
-   - High-contrast border outlines (`#334155`)
-   - Cool cyan accent highlights (`#06b6d4` / `#0284c7`)
-   - Maintain dark/light color scheme compatibility and `data-theme` attribute on root/body element.
-4. Check existing tests (`src/App.test.tsx` or similar) to ensure theme changes will pass existing and future tests.
-
-Write your detailed findings to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1\handoff.md`.
-Communicate your completion to the parent orchestrator via send_message.
+ASSIGNMENT (Milestone M2: Sticky Left Sidebar & Custom Pin Folder Manager):
+1. Read ORIGINAL_REQUEST.md and PROJECT.md.
+2. Investigate src/components/CategoryChips.tsx in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording.
+   Analyze current sticky sidebar layout, Lucide category icons (15 categories), count badges, custom pin folder CRUD manager (create/edit/delete/rename folders), collapsible category/folder sections, and theme-aware left border accents.
+3. Formulate precise refactoring strategy to bring CategoryChips.tsx to 2026 Linear/Vercel aesthetic standards (Onyx container surfaces #0c0e12, 1px razor borders border-white/[0.08], ambient cyan glow highlights, 150ms ease hover states, theme-aware cyan/emerald pill badges) while strictly preserving #sidebarNav, data-cat, data-testid, and folder DOM contracts.
+4. Write your analysis to strategy_sidebar.md in your working directory.
+5. When finished, send a completion message with summary to parent.

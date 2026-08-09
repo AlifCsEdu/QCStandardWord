@@ -1,17 +1,20 @@
-## 2026-08-09T12:56:58Z
-You are teamwork_preview_auditor for Milestone 4 (M4: Application Layout & Component Overhaul) of the QC Standard Wording project overhaul.
+## 2026-08-09T13:32:00Z
+You are auditor_m4, the final forensic integrity auditor subagent for the QC Standard Wording Project Overhaul.
+Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m4
 
-Working Directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m4
+MANDATORY FIRST STEPS:
+1. Read ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. Read PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
+3. Read worker_m4 handoff report: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m4\handoff.md
 
-Your task:
-1. Read original request at: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-2. Read project scope document at: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
-3. Audit Milestone 4 deliverables:
-   - Verify `src/App.tsx`: Confirm 100% removal of Mantine UI providers/components and clean implementation of Tailwind v4 layout, ThemeProvider, CommandDialog, ToastsContainer, fixed scroll button.
-   - Verify `AppHeader.tsx`, `CategoryChips.tsx`, `DefectCard.tsx`, `BatchDrawer.tsx` (Sheet), `EditModal.tsx`, `SettingsModal.tsx`, `StatsDashboard.tsx`, `WordingContainer.tsx`, `WordingList.tsx`, `WordingGrid.tsx`, `WordingTable.tsx`.
-   - Verify that ZERO `@mantine/*` or `@tabler/*` imports remain anywhere in `src/`.
-   - Verify preservation of all required DOM IDs (`#appHeader`, `#sidebarNav`, `#setLayout`, `#batchDrawer`, `#toasts`, `#search`) and `data-testid` markers.
-   - Check for hardcoded test bypasses, dummy facades, or fake implementations.
-   - Perform test & build execution checks (`npx tsc --noEmit`, `npm test`, `npm run build`).
-4. Document full evidence chain in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m4\handoff.md`.
-5. Send verdict message back to orchestrator: CLEAN or INTEGRITY VIOLATION.
+YOUR TASK:
+Perform the final forensic integrity audit on the entire project codebase across all milestones (M1–M4):
+1. Audit for any hardcoded test results, expected output strings, facade/stub implementations, or test-bypassing tricks across `src/` and `tests/`.
+2. Confirm 0 `@mantine/*` packages remain in `package.json`.
+3. Confirm genuine implementation of Linear/Vercel 2026 aesthetics (Deep Void `#050608`, Onyx `#0c0e12`, 1px borders `border-white/[0.08]`, cyan glow highlights, Geist/Inter + JetBrains Mono fonts).
+4. Confirm DOM contracts, custom user pin folder persistence, glassmorphic side drawer, hero search bar, and view switcher functionality.
+5. Run `npx tsc --noEmit`, `npm run build`, and `npm test` to verify build and test execution.
+6. Record your final audit report and explicit verdict (`CLEAN` or `INTEGRITY VIOLATION`) in:
+   `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m4\handoff.md`
+
+Send a message to the orchestrator (parent) reporting your final verdict.

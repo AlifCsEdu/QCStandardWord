@@ -1,79 +1,89 @@
-# Milestone 2 Forensic Audit Report — UI Component Primitives & Iconography
+# Forensic Audit Report — Milestone M2
+
+**Auditor**: auditor_m2 (Role: teamwork_preview_auditor / forensic_auditor)  
+**Target Work Product**: Milestone M2 Deliverables (`CategoryChips.tsx`, `AppHeader.tsx`, `App.tsx`, `useQCState.ts`)  
+**Profile**: General Project  
+**Integrity Mode**: Development  
+**Verdict**: CLEAN  
+
+---
 
 ## 1. Observation
 
-- **Scope & Profile**: General Project Forensic Audit for Milestone 2 (M2: UI Component Primitives & Iconography).
-- **Integrity Mode**: `development` (per `ORIGINAL_REQUEST.md`).
+Direct empirical evidence gathered from static analysis, repository inspection, and execution tools:
 
-### A. UI Component Primitives (`src/components/ui/`)
-- All 14 required primitives exist in `src/components/ui/`:
-  - `button.tsx`: Implements `@radix-ui/react-slot` Slot & `class-variance-authority` (cva) buttonVariants with cyan accent styling (`bg-cyan-500 hover:bg-cyan-400 text-zinc-950`).
-  - `badge.tsx`: Implements cva badgeVariants with cyan/secondary/destructive/outline styling.
-  - `card.tsx`: Exports `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` with Zinc palette (`bg-zinc-900 border-zinc-800 text-zinc-100`).
-  - `input.tsx`: Genuine styled input element with cyan focus ring (`focus-visible:ring-cyan-500`).
-  - `dialog.tsx`: Implements `@radix-ui/react-dialog` DialogPrimitive (Root, Portal, Overlay, Trigger, Close, Content, Header, Footer, Title, Description) with Lucide `X` icon.
-  - `select.tsx`: Implements `@radix-ui/react-select` with Lucide `Check`, `ChevronDown`, `ChevronUp` icons.
-  - `checkbox.tsx`: Implements `@radix-ui/react-checkbox` with Lucide `Check` icon.
-  - `textarea.tsx`: Genuine styled textarea element with cyan focus ring.
-  - `sheet.tsx`: Implements `@radix-ui/react-dialog` with cva side variants (top, bottom, left, right), glassmorphic backdrop (`bg-zinc-900/95 backdrop-blur-md`), and Lucide `X` icon.
-  - `command.tsx`: Implements `cmdk` CommandPrimitive with Dialog integration (`CommandDialog`) and Lucide `Search` icon.
-  - `toggle-group.tsx`: Implements `@radix-ui/react-toggle-group` with cva toggleVariants.
-  - `scroll-area.tsx`: Implements `@radix-ui/react-scroll-area` with custom vertical/horizontal ScrollBar.
-  - `tooltip.tsx`: Implements `@radix-ui/react-tooltip` (TooltipProvider, Tooltip, TooltipTrigger, TooltipContent).
-  - `dropdown-menu.tsx`: Implements `@radix-ui/react-dropdown-menu` with Lucide `Check`, `ChevronRight`, `Circle` icons.
+1. **Source Inspection & Code Authenticity**:
+   - **`src/components/CategoryChips.tsx`**: Verified authentic implementation of left navigation sidebar refactored to 2026 Dark Onyx design (`#0c0e12`, `border-white/[0.08]`, ambient cyan glow highlights). Features 3 collapsible sections: Quick Views, Pin Folders Manager (with inline creation form, color picker, rename input, delete confirmation modal, and item count pills), and Defect Categories (13 categories with dynamic Lucide icon rendering via `getCategoryIconComponent`).
+   - **`src/components/AppHeader.tsx`**: Verified authentic implementation of top header navbar (`#appHeader`, `bg-[#0c0e12]/80`, `backdrop-blur-xl`). Preserves hero search input (`#search`), clear search button (`#clearBtn`), Spotlight trigger button (`#spotlightBtn`, `⌘K`), View Switcher segmented control (`#setLayout`, `data-v="list|grid|table"`), edit mode (`#editBtn`), batch queue counter (`#batchBtn`, `#bcount`), settings modal toggle (`#setBtn`), offline HTML downloader (`#dlBtn`), and theme switcher (`#themeBtn`).
+   - **`src/App.tsx`**: Verified authentic integration of `<aside id="sidebarNav" data-testid="app-navbar">` and Spotlight Search `<CommandDialog>` modal with `Cmd+K` keyboard shortcut event listener, defect search item list with JetBrains Mono code badges, and keyboard navigation guidance footer (`[↑↓] Navigate`, `[↵] Copy & Close`, `[ESC] Exit`).
+   - **`src/hooks/useQCState.ts`**: Verified genuine custom pin folder manager state handlers (`createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, `getItemFolderIds`) with dual `localStorage` persistence (`qc-pin-folders` & `qc-pins`) and backwards-compatible fallback migration.
 
-### B. Category Iconography & Accents (`src/utils/categoryColors.ts`)
-- Lucide Icon Map `CATEGORY_ICON_MAP` maps all 15 category keys & aliases (`screen`: Monitor, `camera`: Camera, `buttons`: Sliders, `radio`: Radio, `battery`: Battery, `backcover`: Smartphone, `locks`: Lock, `pen`: PenTool, `water`: Droplets, `audio`: Volume2, `body`: Cpu, `system`: Settings, `activity`: Activity, `codes`: Code, `folder`/`folders`: Folder, `pinned`/`favorites`: Star, `recent`: History).
-- Left border accent styling: `CATEGORY_LEFT_BORDER_CLASS` exported as `'border-l-4'`, and `getCategoryLeftBorderStyle(categoryKey)` returns `{ borderLeftWidth: '4px', borderLeftStyle: 'solid', borderLeftColor: color }`.
-- `getCategoryBadgeStyle(categoryKey)` returns rgba background and border colors for theme-aware visual badges.
-- `getCategoryIconComponent` and `getCategoryIcon` dynamically provide Lucide icon React elements.
+2. **DOM Selector & Data Contract Preservation**:
+   - Confirmed 100% preservation of required contract IDs: `#appHeader`, `#sidebarNav`, `#nav`, `#chips`, `#search`, `#clearBtn`, `#spotlightBtn`, `#setLayout`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`.
+   - Confirmed 100% preservation of required dataset attributes: `data-cat`, `data-folder`, `data-v="list|grid|table"`, `data-value`.
+   - Confirmed 100% preservation of test IDs: `data-testid="app-navbar"`, `data-testid="app-header"`, `data-testid="header-search-input"`, `data-testid="clear-search-btn"`, `data-testid="spotlight-trigger"`, `data-testid="view-switcher"`, `data-testid="category-tab-{cat.id}"`, `data-testid="pin-folder-{folder.id}"`.
 
-### C. Toast Notifications (`src/utils/notifications.ts`)
-- Integrates `sonner.toast` directly (`import { toast } from 'sonner'`).
-- Wraps toasts with appropriate Lucide icons (`Copy`, `Pin`, `Plus`, `Trash2`, `Undo2`, `AlertTriangle`, `Check`, `Pencil`, `Download`, `Upload`, `RotateCcw`).
-- Exports `showNotice`, `createToastNotice`, and `showFloatingToast`.
+3. **Test Integrity Audit**:
+   - Ran `git diff tests/` and `git status tests/`. Result: Zero test files were added, deleted, or modified in `tests/`.
 
-### D. Anti-Cheating & Integrity Analysis
-- No hardcoded test bypasses, dummy facades, or fake return constants were found in `src/components/ui/` or utility files.
-- Components use standard Radix UI primitives, React forwardRef, and cva utility functions without hardcoded result injection.
-
-### E. Build & Test Executions
-1. `npx tsc --noEmit`: Executed cleanly with exit code 0. Zero TypeScript errors.
-2. `npm test`: Executed `node --test tests/**/*.test.js`. Result: 41 passing tests out of 41 total (0 failed, 0 skipped, 0 cancelled).
-3. `npm run build`: Executed `tsc && vite build`. Result: Exit code 0, 1614 modules transformed, static assets emitted to `dist/` in 1.74s.
+4. **Static & Behavioral Verification Logs**:
+   - **`npm run lint`** (`tsc --noEmit`): Exited with code 0 (0 errors).
+   - **`npm run build`** (`tsc && vite build`): Exited with code 0 (built production Vite bundle in `dist/` in 3.53s).
+   - **`npm test`** (`node --test tests/**/*.test.js`): Exited with code 0. Executed 55 test cases across 28 suites in Tiers 1 through 5 with 0 failures (100% pass rate).
 
 ---
 
 ## 2. Logic Chain
 
-1. **Observation 1A**: Direct inspection of all 14 files in `src/components/ui/` confirmed genuine implementations using `@radix-ui/react-*`, `cmdk`, `class-variance-authority`, `tailwind-merge`, and `lucide-react`.
-2. **Observation 1B**: Inspection of `src/utils/categoryColors.ts` confirmed mapping of all 15 defect category icons to Lucide icons and left border accent styling (`border-l-4` / `borderLeftWidth: '4px'`).
-3. **Observation 1C**: Inspection of `src/utils/notifications.ts` confirmed Sonner toast integration wrapped with Lucide icon helpers.
-4. **Observation 1D**: Forensic search for hardcoded test bypasses or facades yielded zero hits across component files and utilities.
-5. **Observation 1E**: Independent execution of `npx tsc --noEmit`, `npm test`, and `npm run build` all returned exit code 0 with 41/41 passing unit/integration tests and zero compilation errors.
-6. **Conclusion**: All deliverables for Milestone 2 meet the architectural requirements and pass all integrity checks without violations.
+1. **Static Analysis of Work Product**:
+   - Analyzed `CategoryChips.tsx`, `AppHeader.tsx`, `App.tsx`, and `useQCState.ts` line-by-line.
+   - Evaluated code against the prohibited patterns (hardcoded test results, facade implementations, pre-populated artifacts, self-certifying tests, or execution delegation).
+   - **Finding**: All logic is genuine, production-grade React TypeScript code. Folder CRUD operations update React state and flush to `localStorage`. Search query filtering uses genuine substring and alias matching in `searchEngine.ts`. No hardcoded outputs or dummy shortcuts exist.
+
+2. **Test Modification Audit**:
+   - Inspected git status and git diff for the `tests/` directory.
+   - **Finding**: No test files were modified by worker_m2 to bypass assertion checks.
+
+3. **Runtime & Build Execution Verification**:
+   - Executed `npm run lint`, `npm run build`, and `npm test` directly from terminal.
+   - **Finding**: Type checking passed clean. Build generated valid distribution assets in `dist/`. All 55 tests in Tiers 1–5 passed cleanly.
 
 ---
 
 ## 3. Caveats
 
-- Milestone 2 focuses on UI component primitives, iconography mappings, notification helpers, and type/build check validity. Full application assembly and page-level integration using these primitives takes place in Milestone 4.
-- No caveats.
+- **No Caveats**: All static checks, contract inspections, test suite runs, and integrity forensic procedures passed without exception.
 
 ---
 
 ## 4. Conclusion
 
-- **Verdict**: **CLEAN**
-- Milestone 2 deliverables (`src/components/ui/` primitives, `src/utils/categoryColors.ts`, `src/utils/notifications.ts`) are 100% genuine, pass all TypeScript checks, pass 100% of the test suite, and build cleanly.
+**Verdict: CLEAN**
+
+Milestone M2 implementation by `worker_m2` passes all integrity checks. The sidebar navigation, pin folder manager, header navbar, view switcher, and spotlight command dialog are genuine, production-grade, and 100% compliant with project architecture and test harness contracts.
 
 ---
 
 ## 5. Verification Method
 
-To independently verify this audit:
-1. Run `npx tsc --noEmit` in project root — must succeed with 0 errors.
-2. Run `npm test` in project root — all 41 tests must pass (0 failed, 0 skipped).
-3. Run `npm run build` — must generate production static assets in `./dist`.
-4. Inspect `src/components/ui/` (14 files present, Radix + Lucide + cva imports).
-5. Inspect `src/utils/categoryColors.ts` and `src/utils/notifications.ts`.
+To independently reproduce and verify this audit:
+
+```bash
+# 1. Check for modified test files (must return empty output)
+git diff tests/
+
+# 2. Type check
+npm run lint
+
+# 3. Production build
+npm run build
+
+# 4. Run full test suite (Tiers 1–5)
+npm test
+```
+
+**Expected Outputs**:
+- `git diff tests/`: Empty output (0 changes).
+- `npm run lint`: Exits with code 0.
+- `npm run build`: Exits with code 0 (`dist/` created).
+- `npm test`: 55 passed, 0 failed across 28 test suites.

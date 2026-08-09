@@ -1,39 +1,36 @@
-# BRIEFING — 2026-08-07T13:30:00Z
+# BRIEFING — 2026-08-09T21:20:02Z
 
 ## Mission
-Investigate CSS custom properties, global styles, Mantine v7 design tokens, and root attributes (`data-theme`) setup for requirement R1 (2026 Deep Slate & Charcoal Theme & Design Tokens Setup).
+Investigate AppHeader and CommandDialog (Spotlight modal) in QCStandardWording for Milestone M2: Top Header, Hero Search & Spotlight Command Modal, and formulate a 2026 Linear/Vercel aesthetic refactoring strategy while preserving key IDs, attributes, handlers, and shortcuts.
 
 ## 🔒 My Identity
-- Archetype: Teamwork explorer
-- Roles: Explorer 2 for Milestone 2
+- Archetype: teamwork_preview_explorer
+- Roles: explorer
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2
-- Original parent: de3631d7-8bea-4f55-9c79-e342363735e1
-- Milestone: Milestone 2 (Deep Slate & Charcoal Theme & Design Tokens)
+- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Milestone: M2 - Top Header, Hero Search & Spotlight Command Modal
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement
-- Inspect CSS files, Mantine integration, container components color derivation
-- Output findings in `handoff.md` and report via `send_message`
+- Read-only investigation — do NOT implement code changes in src/
+- Strictly preserve `#appHeader`, `data-v="list|grid|table"`, search input handlers, and modal trigger keybindings (⌘K / Ctrl+K)
+- Design target: 2026 Linear/Vercel dark UI (Onyx #0c0e12, glassmorphism backdrop-blur-xl, ambient cyan glow border #06b6d4, Geist/Inter font hierarchy)
 
 ## Current Parent
-- Conversation ID: de3631d7-8bea-4f55-9c79-e342363735e1
-- Updated: 2026-08-07T13:30:00Z
+- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Updated: 2026-08-09T21:20:02Z
 
 ## Investigation State
-- **Explored paths**: `src/index.css`, `src/App.tsx`, `src/main.tsx`, `src/hooks/useAppearance.ts`, `src/components/*.tsx`
-- **Key findings**:
-  1. `src/index.css` contains only `@import` statements for Mantine styles; custom CSS variables (`--bg-deep-slate`, `--container-charcoal`, `--border-contrast`, `--accent-cyan`) are missing.
-  2. `useAppearance.ts` sets `data-mantine-color-scheme`, `data-theme`, `data-density`, and `data-layout` on `document.documentElement`.
-  3. AppShell, Header, Drawer, Modal, Paper, and Card components rely on hardcoded light mode hex colors or basic fallbacks.
-  4. Formulated complete CSS variable overrides and Mantine v7 TypeScript theme token specifications (`src/theme/tokens.ts`, `src/theme/index.ts`, `src/index.css`).
-- **Unexplored areas**: None for R1 design tokens investigation scope.
+- **Explored paths**: `src/components/AppHeader.tsx`, `src/App.tsx`, `src/components/ui/command.tsx`, `src/components/ui/dialog.tsx`, `src/index.css`, `tests/harness.js`, `tests/tier1-features.test.js`
+- **Key findings**: Formulated complete 2026 Linear/Vercel aesthetic refactoring strategy for AppHeader and CommandDialog; identified unimported `FolderPin` icon defect in `AppHeader.tsx`.
+- **Unexplored areas**: None for Milestone M2 top header & command search modal.
 
 ## Key Decisions Made
-- Formulated 10-shade color tuples for `deepSlate` and `cyanAccent` for Mantine v7 theme overrides.
-- Specified CSS custom property mapping under `:root`, `[data-theme="dark"]`, and `[data-theme="light"]`.
+- Prepared technical strategy document `strategy_header_search.md`.
+- Completed handoff report `handoff.md`.
 
 ## Artifact Index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\DISPATCH.md` — Dispatch context log
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\BRIEFING.md` — Persistent memory briefing index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\progress.md` — Progress tracker
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\handoff.md` — Complete investigation report
+- DISPATCH.md — Initial user request dispatch log
+- BRIEFING.md — Working memory index
+- strategy_header_search.md — Comprehensive technical analysis and refactoring strategy
+- progress.md — Heartbeat & step progress log
+- handoff.md — 5-component handoff report

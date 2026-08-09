@@ -1,40 +1,34 @@
-# BRIEFING — 2026-08-09T20:43:00Z
+# BRIEFING — 2026-08-09T13:13:00Z
 
 ## Mission
-Survey all @mantine/* and @tabler/icons-react usages across the QCStandardWording codebase, map Mantine UI components and providers to shadcn/ui primitives / Radix UI / Lucide icons, list all UI files and component boundaries needing migration, and write handoff.md.
+Investigate UI/UX architecture, styling, component design, and aesthetic gaps against Linear/Vercel/Apple 2026 design system standards in QCStandardWording.
 
 ## 🔒 My Identity
-- Archetype: Explorer
-- Roles: Read-only investigator / Mantine UI & Icons Auditor
+- Archetype: explorer
+- Roles: teamwork_preview_explorer
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2
-- Original parent: ab4d18e8-e0b8-4828-86c9-78ea6701f987
-- Milestone: Step 0 Survey
+- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Milestone: UI/UX Architecture Investigation & Aesthetic Gap Analysis
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT modify source code.
-- Write findings only to your directory (.agents/explorer_survey_2).
+- Read-only investigation — do NOT implement code changes in project source files
+- Focus on UI architecture, styling implementation, component tree, theme configuration, Lucide icons, glassmorphism, toast, badge pills, search modal, drawer, sidebar, header, grid cards, table view.
+- Identify design/architectural gaps vs. Linear/Vercel/Apple 2026 aesthetic design guidelines.
 
 ## Current Parent
-- Conversation ID: ab4d18e8-e0b8-4828-86c9-78ea6701f987
-- Updated: 2026-08-09T20:43:00Z
+- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Updated: 2026-08-09T13:13:00Z
 
 ## Investigation State
-- **Explored paths**:
-  - `package.json`, `postcss.config.cjs`, `vite.config.ts`, `src/index.css`
-  - `src/App.tsx`, `src/main.tsx`
-  - All `src/components/*.tsx` (AppHeader, BatchDrawer, CategoryChips, CodeSubChips, DefectCard, EditModal, EditToolbar, HistoryBar, SettingsModal, StatsDashboard, ToastsContainer, WordingContainer, WordingGrid, WordingList, WordingTable)
-  - `src/hooks/*.ts` (useAppearance, useQCState)
-  - `src/utils/*.ts` (notifications, categoryColors, searchEngine)
-  - `src/theme/*.ts` (index, tokens)
-  - `tests/harness.js` & test suites for DOM selector requirements
-- **Key findings**:
-  - 5 Mantine packages (`core`, `hooks`, `notifications`, `spotlight`, `postcss-preset-mantine`) + `@tabler/icons-react` to be removed.
-  - Complete mapping created for 15+ Mantine components to shadcn/ui (Radix UI + Lucide + Sonner + Command).
-  - DOM IDs (`#appHeader`, `#sidebarNav`, `#setLayout`, `#batchDrawer`, `#toasts`, `#search`) and `data-testid` attributes identified to preserve test suite compatibility.
-- **Unexplored areas**: None. Comprehensive survey complete.
+- **Explored paths**: Entire UI component library (`AppHeader.tsx`, `CategoryChips.tsx`, `CodeSubChips.tsx`, `DefectCard.tsx`, `WordingGrid.tsx`, `WordingTable.tsx`, `WordingList.tsx`, `BatchDrawer.tsx`, `ToastsContainer.tsx`, `StatsDashboard.tsx`, `HistoryBar.tsx`, `EditToolbar.tsx`, `EditModal.tsx`, `SettingsModal.tsx`), CSS tokens (`index.css`), iconography (`categoryColors.ts`), dependencies (`package.json`), test suites (`tests/`).
+- **Key findings**: Identified 7 major aesthetic gaps vs. 2026 Linear/Vercel standards (Deep Void Midnight `#050608` palette shift needed, Geist/Inter & JetBrains Mono font imports missing, hardcoded light inline styles in `HistoryBar` & `EditToolbar`, legacy Mantine CSS variables, dual toast system, ambient glows).
+- **Unexplored areas**: None. Full UI architecture audit complete.
 
 ## Key Decisions Made
-- Fully documented all Mantine/Tabler package dependencies, component mappings, icon replacements, and target UI file boundaries in `handoff.md`.
+- Written detailed report `ui_architecture.md` and 5-component `handoff.md` in `.agents/explorer_survey_2/`.
 
 ## Artifact Index
-- handoff.md — Complete survey findings report
+- DISPATCH.md — Received dispatch assignment log
+- BRIEFING.md — Context and identity tracking
+- ui_architecture.md — Full UI architecture report & aesthetic gap analysis
+- handoff.md — 5-component handoff report

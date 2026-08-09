@@ -56,52 +56,27 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
   return (
     <div
       id="editstrip"
-      className={`editstrip-container ${editMode ? 'show' : ''}`}
-      style={{
-        display: editMode ? 'flex' : 'none',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '10px 20px',
-        background: '#e7f5ff',
-        borderBottom: '1px solid #a5d8ff',
-      }}
+      className={`editstrip-container ${editMode ? 'show flex' : 'hidden'} items-center justify-between px-5 py-2.5 bg-cyan-950/20 border-b border-cyan-500/20 backdrop-blur-md`}
+      style={{ display: editMode ? 'flex' : 'none' }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1971c2' }}>
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-bold text-cyan-400">
           Edit Mode Controls:
         </span>
         <button
           id="addBtn"
           onClick={onOpenAddModal}
-          style={{
-            padding: '6px 14px',
-            borderRadius: '6px',
-            border: '1px solid #1971c2',
-            background: '#1971c2',
-            color: '#ffffff',
-            fontWeight: 600,
-            fontSize: '0.85rem',
-            cursor: 'pointer',
-          }}
+          className="bg-cyan-600 hover:bg-cyan-500 text-white border border-cyan-400/30 px-3.5 py-1.5 rounded-md font-semibold text-xs cursor-pointer transition-colors shadow-sm"
         >
           + Add Wording
         </button>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="flex items-center gap-2">
         <button
           id="exportBtn"
           onClick={onExport}
-          style={{
-            padding: '6px 12px',
-            borderRadius: '6px',
-            border: '1px solid #495057',
-            background: '#ffffff',
-            color: '#495057',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors"
         >
           Export JSON
         </button>
@@ -109,16 +84,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
         <button
           id="importBtn"
           onClick={handleImportButtonClick}
-          style={{
-            padding: '6px 12px',
-            borderRadius: '6px',
-            border: '1px solid #495057',
-            background: '#ffffff',
-            color: '#495057',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors"
         >
           Import JSON
         </button>
@@ -133,19 +99,12 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
 
         <button
           id="resetBtn"
-          className={armedReset ? 'arm' : ''}
+          className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-all duration-150 border ${
+            armedReset
+              ? 'arm bg-red-600 hover:bg-red-500 border-red-500 text-white animate-pulse'
+              : 'bg-red-950/20 hover:bg-red-950/40 border-red-500/30 text-red-400'
+          }`}
           onClick={handleResetClick}
-          style={{
-            padding: '6px 12px',
-            borderRadius: '6px',
-            border: armedReset ? '1px solid #e03131' : '1px solid #ced4da',
-            background: armedReset ? '#e03131' : '#ffffff',
-            color: armedReset ? '#ffffff' : '#c92a2a',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'all 0.15s ease',
-          }}
         >
           {armedReset ? 'Tap again to confirm' : 'Reset All'}
         </button>

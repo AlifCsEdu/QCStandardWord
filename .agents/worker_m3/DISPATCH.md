@@ -1,23 +1,50 @@
-## 2026-08-07T01:04:29Z
-You are Worker M3 (React UI & Test Harness Implementer).
-Your working directory is c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m3\.
-Read c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md and c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md.
-Read Explorer Remediation handoff report at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_remediation\handoff.md and analysis report at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_remediation\analysis.md.
+## 2026-08-09T13:26:16Z
+You are worker_m3, the implementation worker for Milestone M3 (Grid/Table View Redesign, Glassmorphic Side Drawer & Floating Toasts) of the QC Standard Wording Project Overhaul.
+Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m3
 
-Your scope for Milestone 3 & Remediation:
-1. Create src/hooks/useAppearance.ts: Manages theme (light/dark), accent palette, radius, text size, density (cozy/compact), layout mode (list, grid, table).
-2. Create src/hooks/useQCState.ts: Complete reactive state hook managing 140 defect items (qcData.ts + custom edits + deletions), search query q, category cat, sub-category sub, pins set, recents array, history array, batch queue items, delimiter selection (nl, comma, semi, space), auto-clear toggle, inline edit modal state, 4.2s Undo toast state, JSON import/export, and hard reset. Persists state to 13 localStorage keys matching legacy names (qc-appearance, qc-sort, qc-theme, qc-density, qc-pins, qc-recents, qc-history, qc-batch, qc-join, qc-autoclear, qc-edits, qc-dels, qc-custom).
-3. Create Mantine UI v7 modular components in src/components/:
-   - AppHeader.tsx: Header, search input (#search), batch drawer toggle button (#batchBtn), badge (#bcount), view selector (#layoutSel), edit mode toggle (#editBtn), settings button (#settingsBtn), theme toggle.
-   - CategoryBar.tsx: Category selector chips ([data-cat]) for all 13 categories + 2 virtual views (pinned, recent).
-   - CodeSubChips.tsx: Panel code chips ([data-sub]) when category is codes (ALL, FCPB, FCPW, FCPC, RCPB, RCPW, RCPC, FCDS, RCDS, PC).
-   - WordingList.tsx / WordingGrid.tsx / WordingTable.tsx: Render wording items with DOM class/id attributes (.row, .gcard, .trow, .rnum, .rtxt, .rpill, .fz, [data-act], [data-id], [data-pin]). Highlighting matched substrings and showing ≈ indicator for fuzzy matches. Supporting copy to clipboard, pin/unpin, edit item trigger.
-   - BatchDrawer.tsx: Slide-out Mantine Drawer (#batchDrawer). Delimiter selector (#joinSel), auto-clear toggle (#autoclear), batch queue list, copy batch button (#bcopy), bulk paste import input (#batchImport).
-   - EditModal.tsx: Inline Edit Modal (#editModal). Add custom item (#addBtn), update item, delete item with 4.2s Undo toast (#toasts, .toast, .tact), JSON export (#exportBtn), JSON import (#importBtn), armed hard reset fallback (#resetBtn).
-   - SettingsModal.tsx: Theme, accent palette, radius, text size, density settings.
-4. Update src/App.tsx: Main Mantine AppShell integrating all components, hooks, notifications, drawer, and modals.
-5. Refactor tests/harness.js: Update createAppInstance() to compile/load src/App.tsx and render <MantineProvider><App /></MantineProvider> into JSDOM <div id="root"></div>. Ensure all DOM element IDs, classes, data-attributes, and helper method contracts in tests/harness.js match the React components so all 32+ tests in tests/*.test.js execute against src/ modules.
-6. Execute npm run test and npm run build to verify 100% test pass rate and clean production build.
-7. Deliver handoff report to c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m3\handoff.md.
-
+MANDATORY INTEGRITY WARNING:
 DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results, create dummy/facade implementations, or circumvent the intended task. A teamwork_preview_auditor will independently verify your work. Integrity violations WILL be detected and your work WILL be rejected.
+
+MANDATORY FIRST STEPS:
+1. Read ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. Read PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
+3. Read Explorer 1 handoff report: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m3_1\handoff.md
+4. Read Explorer 2 handoff report: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m3_2\handoff.md
+5. Read Explorer 3 handoff report: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m3_3\handoff.md
+
+YOUR EXCLUSIVE SCOPE OF FILES TO MODIFY:
+- `src/components/DefectCard.tsx`
+- `src/components/WordingContainer.tsx`
+- `src/components/WordingGrid.tsx`
+- `src/components/WordingList.tsx`
+- `src/components/WordingTable.tsx`
+- `src/components/BatchDrawer.tsx`
+- `src/components/ToastsContainer.tsx`
+- `src/index.css` (for toast, card, and theme token definitions if needed)
+
+REFACTORING REQUIREMENTS:
+1. **Defect Cards & Table Redesign (`DefectCard.tsx`, `WordingContainer.tsx`, `WordingGrid.tsx`, `WordingTable.tsx`)**:
+   - Apply 2026 Linear / Vercel dark aesthetics: Deep Void Midnight (`#050608`) background, Onyx (`#0c0e12`) card containers, 1px razor-sharp borders (`border-white/[0.08]` / `border-zinc-800`), ambient cyan glow hover states (`hover:border-cyan-500/50 hover:shadow-[0_0_20px_-3px_rgba(6,182,212,0.25)]`).
+   - `.rnum` code badges styled with JetBrains Mono font (`font-mono text-xs font-bold text-zinc-400 group-hover:text-cyan-400`).
+   - `.rtxt` wording text styled with Geist/Inter sans typography (`font-sans text-sm font-semibold tracking-tight text-zinc-100`).
+   - Theme-aware category pill badges (`.rpill`) with Lucide icons.
+   - High-contrast action buttons (`.racts`, `[data-act="pin"]`, `[data-act="add"]`, `[data-act="edit"]`, `[data-act="del"]`).
+   - Grid layout: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4`.
+   - Table view: modern table header and glassmorphic container (`divide-y divide-zinc-800/40 border border-white/[0.08] bg-[#0c0e12]/90`).
+
+2. **Glassmorphic Side Drawer & Minimalist Floating Toasts (`BatchDrawer.tsx`, `ToastsContainer.tsx`, `src/index.css`)**:
+   - `BatchDrawer.tsx`: Backdrop `#backdrop` without hardcoded inline background, side drawer `#batchDrawer` with `backdrop-blur-xl bg-zinc-950/85` (or `bg-[#0c0e12]/90 backdrop-blur-2xl border-l border-white/[0.08]`), Lucide `<ArrowUp />`/`<ArrowDown />` icons for `.bup`/`.bdn`, styled select `#joinSel` and checkbox `#autoclear`.
+   - `ToastsContainer.tsx` & `src/index.css`: Onyx glassmorphic toast backgrounds (`rgba(12, 14, 18, 0.90)`, `backdrop-blur-16px`, `border border-white/[0.08]`), cyan halo shadow (`shadow-[0_0_20px_rgba(6,182,212,0.20)]`), cyan action button (`.tact`), animated progress bar (`.tprogress`).
+
+3. **STRICT DOM CONTRACT & SELECTOR PRESERVATION**:
+   - Preserve 100% of DOM IDs: `#batchDrawer`, `#toasts`, `#backdrop`, `#bbcount`, `#bcount`, `#joinSel`, `#autoclear`, `#blist`, `#bcopy`, `#bclear`, `#bpaste`, `#countLabel`, `#empty`, `#listwrap`, `#wordingContainer`.
+   - Preserve 100% of data attributes: `data-v="list|grid|table"`, `data-cat`, `data-bi`, `data-mvup`, `data-mvdn`, `data-bc`, `data-rm`, `data-act`, `data-layout`, `data-testid`.
+   - Preserve 100% of CSS classes used by tests: `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.fz`, `.racts`, `.pin-btn`, `.add-batch-btn`, `.edit-item-btn`, `.del-item-btn`, `.bitem`, `.bt`, `.bup`, `.bdn`, `.bcopy-item`, `.brm-item`, `.toast`, `.warn`, `.ticon`, `.toast-message`, `.tact`, `.tprogress`.
+
+4. **VERIFICATION**:
+   - Run `npm run build` to verify zero TypeScript or Vite build errors.
+   - Run `npm test` to verify 100% test pass rate across all tiers.
+   - Document verification commands and output in your handoff report:
+     `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m3\handoff.md`
+
+When complete, send a message to the orchestrator (parent) reporting completion.

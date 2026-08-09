@@ -1,11 +1,12 @@
-# Milestone 2 Progress — Worker M2
+# Progress Log - worker_m2
 
-## Current Status
-Last visited: 2026-08-07T01:01:30+08:00
-- [x] Read ORIGINAL_REQUEST.md, PROJECT.md, and Explorer reports
-- [x] Create `src/types/qc.ts` with complete type definitions
-- [x] Create `src/data/qcData.ts` with all 139 defect items, categories, code sub-chips, CATKEY, ALIAS
-- [x] Create `src/utils/searchEngine.ts` with fuzzy search algorithm & helpers
-- [x] Create `src/utils/searchEngine.test.ts` & `tests/searchEngine.test.ts` unit tests (15/15 passing)
-- [x] Run `npx tsc --noEmit` & `npm run build` (0 errors, build passed)
-- [x] Deliver handoff report to `.agents/worker_m2/handoff.md`
+Last visited: 2026-08-09T21:22:00Z
+
+- [x] Initialized workspace and briefing
+- [x] Read strategy reports and target source files
+- [x] Refactor CategoryChips.tsx (Linear/Vercel Dark Onyx aesthetic, Lucide category icons, 3 collapsible group sections, Pin Folder CRUD Manager)
+- [x] Refactor AppHeader.tsx (Onyx surface bg-[#0c0e12]/80, backdrop-blur-xl, ambient cyan glow search input #search, ⌘K badge #spotlightBtn, view switcher #setLayout with data-v, fixed FolderPin import)
+- [x] Refactor CommandDialog in App.tsx (Onyx surface bg-[#0c0e12]/95, cyan border glow, JetBrains Mono code badges, keyboard nav footer bar)
+- [x] Run build (`npm run build`) and typecheck (`npm run lint`) - PASSED (0 errors)
+- [x] Run test suite (`npm test`) - PASSED (55/55 tests passed)
+- [ ] Create handoff report

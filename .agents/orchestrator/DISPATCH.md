@@ -1,14 +1,15 @@
-## 2026-08-09T20:41:45+08:00
+## 2026-08-09T13:11:56Z
 
-<USER_REQUEST>
-You are the Project Orchestrator for the QC Standard Wording project overhaul and migration from Mantine UI to shadcn/ui.
+Execute the complete visual and UX overhaul of the QC Standard Wording application into a state-of-the-art 2026 web application inspired by Linear.app, Vercel, and Apple design standards, as specified in the latest prompt in ORIGINAL_REQUEST.md.
 
-Your instructions and scope:
-1. Working Directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
-2. Orchestrator Metadata Directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator
-3. Read the original user request at: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-4. Break down the work into milestones/phases, dispatch tasks to specialist workers/subagents as needed, monitor progress, maintain plan.md and progress.md in your metadata directory.
-5. When all requirements and acceptance criteria are fully met and verified (build passes, tests pass, zero @mantine packages remain, etc.), report project completion to Sentinel.
-
-Begin work by creating your directory c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator and setting up plan.md and progress.md.
-</USER_REQUEST>
+Requirements summary:
+1. Linear / Vercel 2026 Aesthetic Engine & Typography:
+   - Deep Void Midnight background (#050608), Onyx surface containers (#0c0e12), 1px razor-sharp borders (border-white/[0.08] / border-zinc-800), ambient cyan glow highlights (from-cyan-500/20 to-blue-500/10), Geist/Inter + JetBrains Mono fonts.
+   - High visual contrast, clear hover states (150ms ease), theme-aware cyan/emerald pill badges.
+2. Ultra-Clean Dashboard Layout & Component Refinement:
+   - Sticky left sidebar with category Lucide icons, count pills, custom user pin folder manager, collapsible groups.
+   - Top header with hero search bar (⌘K / Ctrl+K modal), view switcher (List, Grid Cards, Table), settings.
+   - Grid & Table redesigns with glowing hover states and clean action menus.
+   - Minimalist floating toasts & glassmorphic side drawer (backdrop-blur-xl bg-zinc-950/85).
+3. Performance & Build Integrity:
+   - Zero layout shift, instant search responsiveness, TypeScript safety, clean Cloudflare Pages build (`npm run build` and `npm run test` pass with 100% success rate).

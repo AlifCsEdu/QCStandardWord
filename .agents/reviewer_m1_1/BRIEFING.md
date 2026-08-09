@@ -1,49 +1,50 @@
-# BRIEFING — 2026-08-07T00:55:30Z
+# BRIEFING — 2026-08-09T13:16:45Z
 
 ## Mission
-Perform Architecture & Dependency Review for Milestone 1 scaffolding (React + Vite + Mantine v7 UI app setup) and issue verdict APPROVE or REQUEST_CHANGES.
+Review Milestone M1 code changes (Linear 2026 refactor of HistoryBar, EditToolbar, CodeSubChips, and index.css), verify build/tests, check DOM ID preservation and design system compliance, perform adversarial review, and issue verdict.
 
 ## 🔒 My Identity
-- Archetype: reviewer & critic
+- Archetype: reviewer_critic
 - Roles: reviewer, critic
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m1_1
-- Original parent: 09120402-a9dd-4913-a8ad-b0b3cfb8cb14
-- Milestone: M1 Scaffolding Review
+- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Milestone: M1
 - Instance: 1 of 1
 
 ## 🔒 Key Constraints
-- Review-only — do NOT modify implementation code directly
-- Adversarial critique for integrity violations, dummy implementations, missing Mantine v7 requirements, layout violations
-- Deliver review report to handoff.md and send_message to parent
+- Review-only — do NOT modify implementation code
+- Check for integrity violations (hardcoded tests, dummy facades, shortcuts, self-certifying work)
+- Verify DOM ID preservation (#histbar, #editstrip, #subchips)
+- Run `npm run build` and `npm test`
 
 ## Current Parent
-- Conversation ID: 09120402-a9dd-4913-a8ad-b0b3cfb8cb14
-- Updated: 2026-08-07T00:55:30Z
+- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Updated: 2026-08-09T13:16:45Z
 
 ## Review Scope
-- **Files to review**: package.json, vite.config.ts, tsconfig.json, tsconfig.app.json, tsconfig.node.json, postcss.config.cjs, index.html, src/main.tsx, src/App.tsx, and related workspace setup.
-- **Interface contracts**: PROJECT.md, ORIGINAL_REQUEST.md
-- **Review criteria**: correctness, Mantine v7 adherence, typescript completeness, code layout compliance, integrity violations, buildability.
+- **Files to review**: `src/index.css`, `HistoryBar.tsx`, `EditToolbar.tsx`, `CodeSubChips.tsx`
+- **Interface contracts**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md`
+- **Review criteria**: correctness, Linear 2026 aesthetics, DOM IDs preservation (#histbar, #editstrip, #subchips), clean CSS, build/test execution, integrity verification
 
 ## Key Decisions Made
-- Completed independent verification of Worker M1 scaffolding via `npx tsc --noEmit` and `npm run build`.
-- Issued verdict: **APPROVE**.
+- Independent code review completed: verified all 4 files.
+- `npm run build` verified: Exit code 0.
+- `npm test` verified: 55/55 passed across Tiers 1-5.
+- Verified DOM selector IDs (#histbar, #editstrip, #subchips, #hchips, #hclearAll, #addBtn, #exportBtn, #importBtn, #importFile, #resetBtn) and attributes (data-hcopy, data-sub, .show, .arm, .active).
+- Verdict: APPROVE.
 
 ## Review Checklist
-- **Items reviewed**: package.json, vite.config.ts, tsconfig.json, tsconfig.app.json, tsconfig.node.json, postcss.config.cjs, index.html, src/main.tsx, src/App.tsx, src/index.css, public/favicon.svg
+- **Items reviewed**: `src/index.css`, `src/components/HistoryBar.tsx`, `src/components/EditToolbar.tsx`, `src/components/CodeSubChips.tsx`
 - **Verdict**: APPROVE
-- **Unverified claims**: None (all claims verified via direct execution and inspection)
+- **Unverified claims**: None
 
 ## Attack Surface
-- **Hypotheses tested**: 
-  1. Missing Mantine CSS imports / PostCSS config breaks Mantine v7 components -> FALSE (verified @mantine/core/styles.css and postcss-preset-mantine).
-  2. Alias path '@/*' mismatch between Vite and TS -> FALSE (verified both mapped to ./src).
-  3. Strict TypeScript compilation failure -> FALSE (verified npx tsc --noEmit 0 errors).
-  4. Bundling / PWA build errors -> FALSE (verified npm run build output success).
-  5. Layout violation in .agents/ -> FALSE (verified .agents/ only contains metadata).
-- **Vulnerabilities found**: None. Note for M3: add `@mantine/notifications` when building toast/notification system.
-- **Untested angles**: None for M1.
+- **Hypotheses tested**: Hidden element rendering, armed reset timeout, dark mode CSS variables
+- **Vulnerabilities found**: None
+- **Untested angles**: None for M1 scope
 
 ## Artifact Index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m1_1\DISPATCH.md — Dispatch prompt record
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m1_1\handoff.md — Review Report & Verdict
+- `.agents/reviewer_m1_1/BRIEFING.md` — persistent memory briefing
+- `.agents/reviewer_m1_1/DISPATCH.md` — dispatch history log
+- `.agents/reviewer_m1_1/progress.md` — liveness heartbeat
+- `.agents/reviewer_m1_1/handoff.md` — M1 code review & handoff report (Verdict: APPROVE)

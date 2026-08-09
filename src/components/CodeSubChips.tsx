@@ -18,17 +18,8 @@ export const CodeSubChips: React.FC<CodeSubChipsProps> = ({
   return (
     <div
       id="subchips"
-      className={`subchips-container ${isVisible ? 'show' : ''}`}
-      style={{
-        display: isVisible ? 'flex' : 'none',
-        flexWrap: 'wrap',
-        gap: '6px',
-        padding: '10px 12px',
-        background: 'rgba(15, 23, 42, 0.4)',
-        borderRadius: '8px',
-        margin: '8px 10px',
-        border: '1px solid var(--border-contrast, #334155)',
-      }}
+      className={`subchips-container ${isVisible ? 'show flex' : 'hidden'} flex-wrap gap-1.5 p-2.5 bg-zinc-900/60 border border-zinc-800 rounded-lg mx-2.5 my-2`}
+      style={{ display: isVisible ? 'flex' : 'none' }}
     >
       {CODE_SUBS.map((sub) => {
         const isActive = selectedSubCategory === sub;
@@ -37,19 +28,7 @@ export const CodeSubChips: React.FC<CodeSubChipsProps> = ({
             key={sub}
             data-sub={sub}
             onClick={() => onSelectSubCategory(sub)}
-            className={`subchip-btn ${isActive ? 'active' : ''}`}
-            style={{
-              padding: '4px 10px',
-              borderRadius: '6px',
-              border: isActive ? '1px solid #7048e8' : '1px solid var(--border-contrast, #334155)',
-              background: isActive ? '#7048e8' : 'var(--container-charcoal, #1e293b)',
-              color: isActive ? '#ffffff' : 'var(--text-secondary, #94a3b8)',
-              fontWeight: isActive ? 600 : 500,
-              fontSize: '0.75rem',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease',
-            }}
+            className={`subchip-btn ${isActive ? 'active bg-cyan-600 text-white border-cyan-400 font-semibold shadow-xs' : 'bg-zinc-800/80 text-zinc-400 border-zinc-700/80 hover:bg-zinc-700/80 hover:text-zinc-200 font-medium'} px-2.5 py-1 rounded-md border text-xs cursor-pointer whitespace-nowrap transition-all duration-150`}
           >
             {sub}
           </button>
@@ -58,4 +37,3 @@ export const CodeSubChips: React.FC<CodeSubChipsProps> = ({
     </div>
   );
 };
-

@@ -1,50 +1,51 @@
-# BRIEFING — 2026-08-07T13:33:30Z
+# BRIEFING — 2026-08-09T21:24:37+08:00
 
 ## Mission
-Empirically challenge and stress-test Milestone 2: Deep Slate & Charcoal Theme & Design Tokens Setup implementation.
+Milestone M2 Verification & Stress Testing: empirical validation of sidebar category switching, pin folder management, header view switcher toggles, and full test suite execution.
 
 ## 🔒 My Identity
 - Archetype: EMPIRICAL CHALLENGER
 - Roles: critic, specialist
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m2_1
-- Original parent: de3631d7-8bea-4f55-9c79-e342363735e1
-- Milestone: Milestone 2 (Deep Slate & Charcoal Theme & Design Tokens Setup)
+- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Milestone: M2
 - Instance: 1 of 1
 
 ## 🔒 Key Constraints
-- Review-only — do NOT modify implementation code (report findings, don't fix implementation code directly)
-- Must empirically run verification: lint, build, test, and custom test checks
-- Must provide explicit APPROVE or REJECT verdict
+- Review-only — do NOT modify implementation code (report findings as APPROVE or REJECT)
+- Rely on empirical evidence: run builds and tests, write stress tests if needed
 
 ## Current Parent
-- Conversation ID: de3631d7-8bea-4f55-9c79-e342363735e1
-- Updated: 2026-08-07T13:33:30Z
+- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Updated: 2026-08-09T21:24:37+08:00
 
 ## Review Scope
-- **Files to review**: `src/theme/tokens.ts`, `src/theme/index.ts`, `src/index.css`, `src/App.tsx`, `src/hooks/useAppearance.ts`
-- **Interface contracts**: PROJECT.md, SCOPE.md
-- **Review criteria**: Design tokens integrity, Mantine theme object structure, CSS variable completeness, test suite execution, dark/light theme switching, color constants (#0f172a, #1e293b, #334155, #06b6d4, #0284c7)
+- **Files to review**: `CategoryChips.tsx`, `AppHeader.tsx`, `App.tsx`, `useQCState.ts`
+- **Interface contracts**: `PROJECT.md` DOM selectors `#sidebarNav`, `#nav`, `#chips`, `#appHeader`, `#search`, `#spotlightBtn`, `#setLayout`, `data-cat`, `data-folder`, `data-v`
+- **Review criteria**: Build execution, 100% test suite pass rate, empirical stress testing
+
+## Key Decisions Made
+- Executed `npm run build`: Exited 0 with clean Vite production build in `dist/`.
+- Executed full test suite (`npm test`): 55/55 test cases passed across 28 test suites (100% pass rate).
+- Authored & executed custom stress suite (`stress_m2.test.js`): 8/8 tests passed covering category switching, pin folder CRUD & XSS safety, and view switcher toggles.
+- Final Verdict: **APPROVE**.
+
+## Artifact Index
+- `.agents/challenger_m2_1/DISPATCH.md` — dispatch log
+- `.agents/challenger_m2_1/BRIEFING.md` — working memory
+- `.agents/challenger_m2_1/progress.md` — progress log
+- `.agents/challenger_m2_1/stress_m2.test.js` — empirical stress test suite for M2
+- `.agents/challenger_m2_1/handoff.md` — final verification & handoff report
 
 ## Attack Surface
 - **Hypotheses tested**:
-  - H1: Are 10-shade tuples properly formatted for Mantine v7 in `tokens.ts`? -> CONFIRMED (Pass)
-  - H2: Are all required color constants (#0f172a, #1e293b, #334155, #06b6d4, #0284c7) defined in tokens and CSS? -> CONFIRMED (Pass)
-  - H3: Does `index.css` support light mode without breaking theme switching? -> CONFIRMED (Pass)
-  - H4: Do `npm run lint`, `npm run build`, and `npm run test` pass cleanly? -> CONFIRMED (Pass)
-  - H5: Does custom empirical stress test pass? -> CONFIRMED (Pass)
+  1. Full build integrity: `npm run build` succeeds without type errors or bundler issues. (VERIFIED PASS)
+  2. Test suite coverage: 100% pass rate across Tiers 1-5 and Pin Folder tests. (VERIFIED PASS)
+  3. Sidebar Category Switching: smooth navigation across all 13 categories + 3 quick views. (VERIFIED PASS)
+  4. Pin Folder CRUD & XSS safety: folder creation, rename, deletion, localStorage persistence, and script injection safety. (VERIFIED PASS)
+  5. Header View Switcher & DOM Contracts: toggling `data-v="list|grid|table"`, `#spotlightBtn` ⌘K modal, and DOM IDs `#sidebarNav`, `#nav`, `#chips`, `#appHeader`, `#search`, `#setLayout`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`. (VERIFIED PASS)
 - **Vulnerabilities found**: None.
-- **Untested angles**: None.
+- **Untested angles**: M3 Grid/Table Card redesign and glassmorphic drawer polish (scheduled for M3).
 
 ## Loaded Skills
-- None loaded
-
-## Key Decisions Made
-- Executed `npm run lint`, `npm run build`, `npm run test`.
-- Created and executed `tests/m2_theme_tokens_challenge.test.ts` for deep empirical stress testing of theme tokens, component defaults, CSS variables, and light/dark theme selectors.
-- Formulated verdict: `APPROVE`.
-
-## Artifact Index
-- DISPATCH.md — Dispatch log
-- BRIEFING.md — Persistent memory index
-- handoff.md — Final Challenger Handoff Report with empirical evidence and verdict APPROVE
-- tests/m2_theme_tokens_challenge.test.ts — Custom empirical stress test suite for Milestone 2
+- None

@@ -1,79 +1,98 @@
-# Architecture & Dependency Review Report — Milestone 1 (M1)
+# Milestone M1 Code Review & Handoff Report
 
-**Reviewer**: Reviewer 1 (M1 Architecture & Dependency Reviewer)  
-**Date**: 2026-08-07  
-**Verdict**: **APPROVE**
+## Review Summary
 
----
+**Verdict**: APPROVE
 
-## Executive Summary
-
-Worker M1 has implemented the baseline scaffolding for the **QC Standard Wording Inspection Tool** web application. All required configuration files (`package.json`, `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`, `postcss.config.cjs`, `index.html`, `src/main.tsx`, `src/App.tsx`, `src/index.css`, `public/favicon.svg`) have been reviewed against project requirements in `PROJECT.md` and `ORIGINAL_REQUEST.md`.
-
-Independent compilation via `npx tsc --noEmit` and production build via `npm run build` were executed. Both passed cleanly with 0 errors.
+Milestone M1 changes in `src/index.css`, `src/components/HistoryBar.tsx`, `src/components/EditToolbar.tsx`, and `src/components/CodeSubChips.tsx` are fully verified. All inline light Mantine styles have been replaced with high-contrast Tailwind CSS v4 dark classes matching Linear 2026 aesthetics (Deep Void `#050608`, Onyx `#0c0e12`, razor borders `rgba(255, 255, 255, 0.08)`, and cyan accent highlights `#06b6d4`). All critical DOM IDs (`#histbar`, `#editstrip`, `#subchips`, `#hchips`, `#hclearAll`, `#addBtn`, `#exportBtn`, `#importBtn`, `#importFile`, `#resetBtn`) and data attributes (`data-hcopy`, `data-sub`, `.show`, `.arm`, `.active`) are strictly preserved. TypeScript compilation (`npm run build`) and test suites (`npm test`) pass with 100% success rate across all 5 tiers.
 
 ---
 
-## Quality & Adversarial Review Details
+## 1. Observation
 
-### 1. Correctness & Mantine v7 Standard Adherence
-- **Mantine Core CSS**: `src/index.css` correctly includes `@import '@mantine/core/styles.css';`, satisfying Mantine v7 mandatory stylesheet requirements.
-- **PostCSS Configuration**: `postcss.config.cjs` uses `postcss-preset-mantine` and sets Mantine breakpoint variables (`mantine-breakpoint-xs`, `sm`, `md`, `lg`, `xl`) via `postcss-simple-vars`.
-- **Root Provider**: `src/main.tsx` wraps the `<App />` root component with `<MantineProvider>`.
-- **Baseline UI Shell**: `src/App.tsx` imports Mantine v7 primitives (`AppShell`, `Container`, `Title`, `Text`, `Button`, `Paper`, `Group`, `Stack`) and Tabler Icons (`IconChecklist`, `IconShieldCheck`).
+### 1.1 Direct Source Code Observations
+- **`src/index.css`**:
+  - Global Google Font import (`Geist`, `Inter`, `JetBrains Mono`) active on Line 1.
+  - `@theme` block defines `--font-sans`, `--font-mono`, `--color-deep-void: #050608`, `--color-onyx: #0c0e12`, `--color-razor-border: rgba(255, 255, 255, 0.08)`, and `--color-glow-cyan: #06b6d4`.
+  - `:root`, `[data-theme='dark']`, and `.dark` blocks map `--background` to `#050608` and `--card` to `#0c0e12`.
+  - Ambient cyan glow utility classes (`.ambient-cyan-glow`, `.glow-cyan-subtle`, `.glow-cyan-border`) defined.
+  - Defect card high-contrast variables and hover state rules established.
+  - Zero legacy `--mantine-color-body` references or `[data-mantine-color-scheme]` rules remain.
 
-### 2. TypeScript Completeness & Path Resolution
-- Solution-style TypeScript setup configured with `tsconfig.json` referencing `tsconfig.app.json` and `tsconfig.node.json`.
-- `tsconfig.app.json` has `"strict": true`, `"moduleResolution": "bundler"`, and alias mapping `"@/*": ["src/*"]`.
-- `vite.config.ts` matches alias mapping `'@': path.resolve(__dirname, './src')`.
-- `npx tsc --noEmit` executed with zero errors.
+- **`src/components/HistoryBar.tsx`**:
+  - DOM ID `#histbar` preserved on hidden wrapper (Line 16) and visible container (Line 22).
+  - DOM ID `#hchips` (Line 31), `data-hcopy` attribute (Line 37), `.htxt` class (Line 42), and `#hclearAll` (Line 48) preserved.
+  - Inline yellow styles (`#fff9db`, `#ffe066`, `#f59f00`) replaced with dark Tailwind CSS v4 glassmorphic classes (`bg-amber-950/20`, `border-amber-500/20`, `text-amber-400`, `bg-zinc-800/80`).
 
-### 3. Buildability & PWA Configuration
-- `vite.config.ts` includes `@vitejs/plugin-react` and `vite-plugin-pwa` with automatic service worker updates and web app manifest metadata.
-- `npm run build` executed successfully, outputting bundles (`dist/index.html`, `dist/assets/index-*.css`, `dist/assets/index-*.js`, `dist/sw.js`, `dist/manifest.webmanifest`).
+- **`src/components/EditToolbar.tsx`**:
+  - DOM ID `#editstrip` preserved with dynamic `${editMode ? 'show flex' : 'hidden'}` visibility (Line 59).
+  - DOM IDs `#addBtn` (Line 67), `#exportBtn` (Line 77), `#importBtn` (Line 85), `#importFile` (Line 93), and `#resetBtn` (Line 101) preserved.
+  - Armed reset double-click confirmation state with `.arm` class preserved (Line 104).
+  - Light inline styles (`#e7f5ff`) replaced with dark cyan Tailwind glassmorphic styling (`bg-cyan-950/20`, `border-cyan-500/20`, `text-cyan-400`).
 
-### 4. Code Layout Compliance
-- Project follows directory structure defined in `PROJECT.md`.
-- No source, test, or data code present in `.agents/`. All `.agents/` directories strictly contain metadata.
+- **`src/components/CodeSubChips.tsx`**:
+  - DOM ID `#subchips` preserved with `${isVisible ? 'show flex' : 'hidden'}` visibility (Line 21).
+  - `data-sub={sub}` attribute (Line 29), `.subchip-btn` class, and `.active` class (Line 31) preserved.
+  - Violet inline style (`#7048e8`) replaced with dark zinc surface (`bg-zinc-900/60`) and cool cyan active highlight (`bg-cyan-600 text-white border-cyan-400`).
 
-### 5. Integrity & Critical Audit
-- **Hardcoded Test Results**: None found.
-- **Facade/Dummy Implementations**: `App.tsx` serves as the initial M1 baseline template and explicitly renders the initialized system status without cheating.
-- **Bypassed Requirements**: None found.
+### 1.2 Command Verification Results
+- **`npm run build`**: Executed cleanly with exit code 0. Generated production static bundle in `dist/` with 0 TypeScript compilation errors.
+- **`npm test`**: Executed node test runner across 55 test specifications in 28 suites across Tiers 1-5. Pass rate: 55/55 (100% pass, 0 failures).
 
 ---
 
-## 5-Component Handoff Report
+## 2. Logic Chain
 
-### 1. Observation
-- `package.json` line 18-20: `@mantine/core: ^7.15.0`, `@mantine/hooks: ^7.15.0`, `@tabler/icons-react: ^3.28.0`, `react: ^19.0.0`, `react-dom: ^19.0.0`.
-- `vite.config.ts` line 9-24: `VitePWA` configured with manifest (`QC Standard Wording Inspection Tool`). Line 27-29: `'@': path.resolve(__dirname, './src')`.
-- `src/index.css` line 1: `@import '@mantine/core/styles.css';`.
-- `src/main.tsx` line 9-11: `<MantineProvider><App /></MantineProvider>`.
-- `npx tsc --noEmit` command output: `The command exited with code 0`.
-- `npm run build` command output: `✓ built in 8.67s`, `dist/sw.js`, `dist/manifest.webmanifest`.
+1. **Observed**: Worker M1 modified `src/index.css`, `HistoryBar.tsx`, `EditToolbar.tsx`, and `CodeSubChips.tsx` to establish the Linear 2026 Deep Void dark theme.
+2. **Verified**: Inspection of `src/index.css` confirms Deep Void Midnight `#050608` and Onyx `#0c0e12` palette tokens, typography rules (`Geist`, `Inter`, `JetBrains Mono`), and utility classes, with total removal of legacy Mantine declarations.
+3. **Verified**: Inspection of component source files confirms exact preservation of required DOM element IDs (`#histbar`, `#editstrip`, `#subchips`, `#hchips`, `#hclearAll`, `#addBtn`, `#exportBtn`, `#importBtn`, `#importFile`, `#resetBtn`) and attributes (`data-hcopy`, `data-sub`, `.show`, `.arm`, `.active`).
+4. **Verified**: Independent execution of `npm run build` and `npm test` confirmed 0 build errors and 55/55 test pass rate.
+5. **Verified**: No integrity violations (hardcoded test facades, dummy implementations, or work bypasses) exist in the codebase.
+6. **Conclusion**: M1 implementation is fully verified and approved.
 
-### 2. Logic Chain
-1. *Observation*: `package.json` defines all core dependencies and Vite/TypeScript tools.
-2. *Observation*: Mantine v7 requires global CSS import and `postcss-preset-mantine`. `src/index.css` and `postcss.config.cjs` supply both.
-3. *Observation*: `tsconfig.app.json` has `strict: true` and path alias `@/*`. `vite.config.ts` mirrors `@` to `./src`.
-4. *Observation*: `npx tsc --noEmit` compiled without type errors, verifying strict TS compliance.
-5. *Observation*: `npm run build` produced `dist/` with PWA service worker `sw.js` without bundling errors.
-6. *Conclusion*: Milestone 1 setup and scaffolding is 100% complete, verified, and standards-compliant.
+---
 
-### 3. Caveats
-- `@mantine/notifications` package is not yet in `package.json`. When implementing M3 (UI Shell & Toasts), Worker M3 should add `@mantine/notifications` to `dependencies` and add `<Notifications />` inside `<MantineProvider>`. This is an expected progression for M3 and does not block M1 approval.
+## 3. Findings
 
-### 4. Conclusion
-Milestone 1 work product is **APPROVED**. The codebase is ready to proceed to Milestone 2 (Data & Fuzzy Search Engine).
+No findings requiring changes.
 
-### 5. Verification Method
-To independently verify:
-```bash
-# 1. Typecheck
-npx tsc --noEmit
+### Verified Claims
+- **Claim 1**: Deep Void Midnight (`#050608`) and Onyx (`#0c0e12`) theme variables declared in `src/index.css` → **PASS** (verified in `src/index.css` `@theme` and `:root` sections).
+- **Claim 2**: Purged all hardcoded Mantine light inline styles (`#fff9db`, `#e7f5ff`, `#7048e8`) → **PASS** (verified zero matches via file inspection).
+- **Claim 3**: Preserved all selector DOM IDs (`#histbar`, `#editstrip`, `#subchips`) and dataset attributes → **PASS** (verified exact string preservation).
+- **Claim 4**: Static production build succeeds → **PASS** (`npm run build` returned exit code 0).
+- **Claim 5**: Test suite passes 100% → **PASS** (`npm test` returned 55/55 passed across 28 suites).
 
-# 2. Production build
-npm run build
-```
-Verify exit code 0 and presence of `dist/index.html` and `dist/sw.js`.
+### Coverage Gaps
+- None. All 4 target files for Milestone M1 were directly inspected and verified.
+
+### Unverified Items
+- None.
+
+---
+
+## 4. Adversarial Stress-Test Assessment
+
+- **Attack Scenario 1**: Hidden state rendering breakdown for `#histbar`, `#editstrip`, or `#subchips` when inactive.
+  - *Result*: **PASS**. Components retain `style={{ display: 'none' }}` and `.hidden` classes while remaining mounted in DOM. Selector queries in test suites can locate element IDs regardless of active state.
+- **Attack Scenario 2**: Armed reset state timeout memory leaks or class omission.
+  - *Result*: **PASS**. `EditToolbar` uses `setTimeout` to clear `armedReset` after 4s, correctly applying the `.arm` class during armed mode for test Tier 4 verification.
+- **Attack Scenario 3**: CSS custom property fallback / dark theme inheritance.
+  - *Result*: **PASS**. `src/index.css` applies `--background: #050608` to `:root`, `[data-theme='dark']`, and `.dark`, guaranteeing robust rendering.
+
+---
+
+## 5. Conclusion
+
+**Verdict**: APPROVE
+
+Milestone M1 implementation fulfills all requirements from `ORIGINAL_REQUEST.md` and `PROJECT.md`. Milestone M2 may proceed without restriction.
+
+---
+
+## 6. Verification Method
+
+To re-verify independently:
+1. `npm run build` — verify Vite compilation succeeds with 0 errors.
+2. `npm test` — verify node test runner completes 55/55 passing tests.
+3. Inspect `src/index.css`, `HistoryBar.tsx`, `EditToolbar.tsx`, `CodeSubChips.tsx` for ID preservation and clean Tailwind styling.

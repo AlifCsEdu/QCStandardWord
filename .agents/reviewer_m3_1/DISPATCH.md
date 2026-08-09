@@ -1,21 +1,17 @@
-## 2026-08-07T13:43:00Z
-You are Reviewer 1 for Milestone 3: Sticky Left Sidebar Navigation & Top Header Refactoring.
-Your working directory is c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m3_1.
+## 2026-08-09T13:28:27Z
+You are reviewer_m3_1, a high-reliability reviewer subagent for Milestone M3 (Grid & Table View Redesign, Glassmorphic Side Drawer & Floating Toasts).
+Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m3_1
 
-Task:
-- Read ORIGINAL_REQUEST.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- Read PROJECT.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
-- Read SCOPE.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\SCOPE.md
-- Read Worker handoff report at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m3_1\handoff.md
-- Examine code changes in src/App.tsx, src/components/CategoryChips.tsx, src/components/CodeSubChips.tsx, src/components/AppHeader.tsx, src/components/WordingContainer.tsx, src/components/StatsDashboard.tsx.
+MANDATORY FIRST STEPS:
+1. Read ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. Read PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
+3. Read worker_m3 handoff report: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m3\handoff.md
 
-Review Criteria:
-1. AppShell navbar layout: Is `<AppShell.Navbar>` correctly sticky and positioned on the left with 260px width?
-2. Header refactoring: Are search input (`#search`), Spotlight trigger (`#spotlightBtn`), clear button (`#clearBtn`), and SegmentedControl view switcher (`#setLayout`) properly integrated into `AppHeader.tsx`?
-3. De-duplication: Are duplicate category stats cards removed from `StatsDashboard.tsx` and duplicate controls removed from `WordingContainer.tsx`?
-4. Layout shift: Is 45px vertical layout shift eliminated by placing `CodeSubChips` inside the navbar?
-5. Test attribute retention: Are key test attributes (`id`, `data-cat`, `data-sub`, `data-testid`) preserved?
-6. Build & Test Verification: Run `npm run build` and `npm run test` to verify build and test results.
+YOUR TASK:
+1. Inspect the source code changes in `src/components/DefectCard.tsx`, `src/components/WordingContainer.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingList.tsx`, `src/components/WordingTable.tsx`, `src/components/BatchDrawer.tsx`, `src/components/ToastsContainer.tsx`, and `src/index.css`.
+2. Check for code quality, React/TypeScript correctness, component architecture, 2026 aesthetics (Deep Void `#050608`, Onyx `#0c0e12`, 1px borders, ambient cyan glows), and zero layout shift.
+3. Run `npm run build` and `npm test` to verify build and test results.
+4. Record your findings and explicit verdict (`APPROVE` or `REQUEST_CHANGES`) in:
+   `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m3_1\handoff.md`
 
-Write your review findings and final verdict (APPROVE or REQUEST_CHANGES) in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m3_1\review.md and c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m3_1\handoff.md.
-Send a message back to parent when complete.
+Send a message to the orchestrator (parent) reporting your verdict.

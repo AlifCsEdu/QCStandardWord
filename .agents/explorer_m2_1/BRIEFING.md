@@ -1,46 +1,39 @@
-# BRIEFING — 2026-08-07T21:29:55Z
+# BRIEFING — 2026-08-09T13:20:23Z
 
 ## Mission
-Investigate existing Mantine theme setup, CSS styles, theme tokens, and component structure for Milestone 2: 2026 Deep Slate & Charcoal Theme & Design Tokens Setup.
+Investigate CategoryChips.tsx (Sticky Left Sidebar & Custom Pin Folder Manager) for Milestone M2 and formulate strategy_sidebar.md.
 
 ## 🔒 My Identity
-- Archetype: Teamwork explorer
-- Roles: Read-only investigator
+- Archetype: teamwork_preview_explorer
+- Roles: explorer
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1
-- Original parent: de3631d7-8bea-4f55-9c79-e342363735e1
-- Milestone: Milestone 2 - 2026 Deep Slate & Charcoal Theme & Design Tokens Setup
+- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Milestone: M2 - Sticky Left Sidebar & Custom Pin Folder Manager
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement code changes in src/
-- Follow Handoff Protocol (5 components in handoff.md)
-- Write output to handoff.md and send_message to parent orchestrator
+- Read-only investigation of source code (do NOT edit src/ components directly).
+- Produce strategy_sidebar.md and handoff.md in working directory.
+- Preserve #sidebarNav, data-cat, data-testid, and folder DOM contracts.
 
 ## Current Parent
-- Conversation ID: de3631d7-8bea-4f55-9c79-e342363735e1
-- Updated: 2026-08-07T21:29:55Z
+- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Updated: 2026-08-09T13:20:23Z
 
 ## Investigation State
-- **Explored paths**:
-  - `src/App.tsx`
-  - `src/index.css`
-  - `src/main.tsx`
-  - `src/hooks/useAppearance.ts`
-  - `src/components/AppHeader.tsx`
-  - `package.json`
-  - `tests/tier1-features.test.js`, `tests/tier2-boundary.test.js`, `tests/harness.js`
+- **Explored paths**: `src/components/CategoryChips.tsx`, `src/App.tsx`, `src/utils/categoryColors.ts`, `src/hooks/useQCState.ts`, `tests/harness.js`, `tests/m3-pin-folders.test.js`, `tests/tier1-features.test.js`
 - **Key findings**:
-  - `src/theme/` directory is missing and needs to be created (`colors.ts` & `index.ts`).
-  - Mantine UI v7 requires 10-shade color tuples for custom colors in `theme.colors`.
-  - Deep Slate (`#0f172a`), Charcoal (`#1e293b`), high-contrast border (`#334155`), and cyan accents (`#06b6d4` / `#0284c7`) mapped to 10-shade tuples.
-  - Overriding `theme.colors.dark` with `deepSlate` tuple applies Deep Slate & Charcoal theme automatically across Mantine components.
-  - Global CSS tokens to be added to `src/index.css` under `:root`, `[data-theme="dark"]`, and `[data-theme="light"]`.
-  - Default theme setting in `useAppearance.ts` should update to `theme: 'dark'`.
-- **Unexplored areas**: None for Milestone 2 theme setup scope.
+  - `CategoryChips.tsx` needs 3 collapsible group sections (Quick Views, Custom Pin Folders, Defect Categories).
+  - Pin Folder CRUD manager needs `onCreateFolder`, `onDeleteFolder`, `onRenameFolder` props connected to existing `useQCState` methods.
+  - Linear/Vercel 2026 dark theme palette: Onyx container surface `#0c0e12`, 1px razor borders `border-white/[0.08]`, ambient cyan glow `shadow-[0_0_12px_rgba(6,182,212,0.15)]`, 150ms ease hover transitions, theme-aware cyan/emerald pill badges.
+  - Strict preservation of `#sidebarNav`, `#nav`, `#chips`, `data-cat`, `data-folder`, `data-testid` is required for 100% test compatibility.
+- **Unexplored areas**: None.
 
 ## Key Decisions Made
-- Completed exploration and synthesized detailed 5-component handoff report in `handoff.md`.
+- Formulated complete refactoring strategy in `strategy_sidebar.md`.
+- Produced 5-component handoff report in `handoff.md`.
 
 ## Artifact Index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1\DISPATCH.md` — Dispatch prompt record
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1\BRIEFING.md` — Persistent memory briefing index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1\handoff.md` — Completed Explorer 1 Handoff Report
+- DISPATCH.md — Initial dispatch prompt
+- BRIEFING.md — Working briefing index
+- strategy_sidebar.md — Comprehensive refactoring strategy & code blueprint for CategoryChips.tsx
+- handoff.md — 5-component handoff report

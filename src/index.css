@@ -1,56 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-deep-void: #050608;
+  --color-onyx: #0c0e12;
+  --color-razor-border: rgba(255, 255, 255, 0.08);
+  --color-glow-cyan: #06b6d4;
+}
 
 @layer base {
   :root,
   [data-theme='dark'],
   .dark {
-    --background: #09090b;
+    --background: #050608;
     --foreground: #f8fafc;
-    --card: #18181b;
+    --card: #0c0e12;
     --card-foreground: #f8fafc;
-    --popover: #18181b;
+    --popover: #0c0e12;
     --popover-foreground: #f8fafc;
     --primary: #06b6d4;
     --primary-foreground: #ffffff;
-    --secondary: #27272a;
+    --secondary: #18181b;
     --secondary-foreground: #f8fafc;
-    --muted: #27272a;
+    --muted: #18181b;
     --muted-foreground: #94a3b8;
-    --accent: #27272a;
+    --accent: #18181b;
     --accent-foreground: #f8fafc;
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
-    --border: #27272a;
-    --input: #27272a;
+    --border: rgba(255, 255, 255, 0.08);
+    --input: rgba(255, 255, 255, 0.08);
     --ring: #06b6d4;
     --radius: 0.5rem;
 
-    /* Legacy & custom variables aligned with Deep Zinc Palette */
-    --bg-deep-slate: #09090b;
-    --container-charcoal: #18181b;
-    --border-contrast: #27272a;
+    /* Custom variables mapped to Deep Void Midnight (#050608) & Onyx (#0c0e12) */
+    --bg-deep-slate: #050608;
+    --container-charcoal: #0c0e12;
+    --border-contrast: rgba(255, 255, 255, 0.08);
     --accent-cyan: #06b6d4;
     --accent-sky: #0284c7;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
-    --drawer-backdrop-bg: rgba(15, 23, 42, 0.4);
-    --drawer-backdrop-blur: blur(8px);
-    --mantine-color-body: var(--bg-deep-slate);
-    --header-bg: var(--container-charcoal);
-    /* Static test assertions compatibility:
-       --bg-deep-slate: #0f172a;
-       --container-charcoal: #1e293b;
-       --border-contrast: #334155;
-    */
+    --drawer-backdrop-bg: rgba(5, 6, 8, 0.6);
+    --drawer-backdrop-blur: blur(12px);
+    --header-bg: #0c0e12;
   }
 
   [data-theme='light'] {
     --background: #ffffff;
-    --foreground: #09090b;
+    --foreground: #050608;
     --card: #ffffff;
-    --card-foreground: #09090b;
+    --card-foreground: #050608;
     --popover: #ffffff;
-    --popover-foreground: #09090b;
+    --popover-foreground: #050608;
     --primary: #06b6d4;
     --primary-foreground: #ffffff;
     --secondary: #f4f4f5;
@@ -66,7 +70,6 @@
     --ring: #06b6d4;
     --radius: 0.5rem;
 
-    /* Legacy & custom variables */
     --bg-deep-slate: #f8fafc;
     --container-charcoal: #ffffff;
     --border-contrast: #e2e8f0;
@@ -76,8 +79,7 @@
     --text-secondary: #475569;
     --drawer-backdrop-bg: rgba(15, 23, 42, 0.2);
     --drawer-backdrop-blur: blur(4px);
-    --mantine-color-body: var(--bg-deep-slate);
-    --header-bg: var(--container-charcoal);
+    --header-bg: #ffffff;
   }
 }
 
@@ -87,7 +89,26 @@ body {
   transition: background-color 150ms ease, color 150ms ease;
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans, 'Geist', 'Inter', system-ui, -apple-system, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   Ambient Cyan Glow Utilities (2026 Linear / Vercel Aesthetic)
+   ========================================================================== */
+
+.ambient-cyan-glow {
+  background-image: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.1));
+}
+
+.glow-cyan-subtle {
+  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.25);
+}
+
+.glow-cyan-border {
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
 }
 
 /* ==========================================================================
@@ -115,12 +136,12 @@ body {
   gap: 12px;
   padding: 12px 18px;
   border-radius: 9999px;
-  background: rgba(30, 41, 59, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.8);
+  background: rgba(12, 14, 18, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: #f8fafc;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36), 0 0 15px rgba(6, 182, 212, 0.15);
+  box-shadow: 0 10px 38px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.20);
   font-size: 0.875rem;
   font-weight: 500;
   overflow: hidden;
@@ -130,17 +151,17 @@ body {
 
 .toast:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(6, 182, 212, 0.25);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.6), 0 0 25px rgba(6, 182, 212, 0.30);
 }
 
 .toast.warn {
-  border-color: rgba(239, 68, 68, 0.6);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 18px rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 10px 38px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.25);
   color: #fecdd3;
 }
 
 .toast.warn:hover {
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(239, 68, 68, 0.35);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.6), 0 0 28px rgba(239, 68, 68, 0.35);
 }
 
 .ticon {
@@ -169,8 +190,8 @@ body {
   justify-content: center;
   padding: 4px 12px;
   border-radius: 9999px;
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  background: rgba(6, 182, 212, 0.12);
   color: #38bdf8;
   font-size: 0.775rem;
   font-weight: 600;
@@ -181,7 +202,7 @@ body {
 }
 
 .tact:hover {
-  background: rgba(6, 182, 212, 0.3);
+  background: rgba(6, 182, 212, 0.25);
   border-color: #06b6d4;
   color: #ffffff;
 }
@@ -202,7 +223,7 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 3px;
+  height: 2.5px;
   width: 100%;
   background: linear-gradient(90deg, #06b6d4, #3b82f6);
   transform-origin: left;
@@ -255,7 +276,7 @@ body {
 }
 
 /* ==========================================================================
-   Milestone 5: Glassmorphic Backdrop Overlay & Batch Drawer
+   Glassmorphic Backdrop Overlay & Batch Drawer
    ========================================================================== */
 
 #backdrop,
@@ -265,44 +286,42 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--drawer-backdrop-bg, rgba(15, 23, 42, 0.4));
-  backdrop-filter: var(--drawer-backdrop-blur, blur(8px));
-  -webkit-backdrop-filter: var(--drawer-backdrop-blur, blur(8px));
+  background: var(--drawer-backdrop-bg, rgba(5, 6, 8, 0.6));
+  backdrop-filter: var(--drawer-backdrop-blur, blur(12px));
+  -webkit-backdrop-filter: var(--drawer-backdrop-blur, blur(12px));
   z-index: 998;
   transition: opacity 200ms ease;
 }
 
 #batchDrawer,
 .batch-drawer {
-  background: var(--drawer-panel-bg, rgba(30, 41, 59, 0.85));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--drawer-panel-bg, rgba(12, 14, 18, 0.85));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* ==========================================================================
-   Milestone 6: High-Contrast Defect Cards, Tables & Visual Differentiation
+   High-Contrast Defect Cards, Tables & Visual Differentiation
    ========================================================================== */
 
 /* CSS Variables for Defect Items */
 :root,
-[data-theme='dark'],
-[data-mantine-color-scheme='dark'] {
-  --defect-card-bg: var(--container-charcoal, #1e293b);
-  --defect-card-bg-hover: #24334a;
-  --defect-card-bg-pinned: rgba(245, 159, 0, 0.12);
-  --defect-card-border: var(--border-contrast, #334155);
+[data-theme='dark'] {
+  --defect-card-bg: var(--container-charcoal, #0c0e12);
+  --defect-card-bg-hover: #12151c;
+  --defect-card-bg-pinned: rgba(245, 159, 0, 0.1);
+  --defect-card-border: var(--border-contrast, rgba(255, 255, 255, 0.08));
   --defect-card-border-hover: var(--accent-cyan, #06b6d4);
   --defect-card-border-pinned: rgba(245, 159, 0, 0.5);
-  --defect-card-glow-hover: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 14px rgba(6, 182, 212, 0.22);
-  --defect-rnum-color: #64748b;
+  --defect-card-glow-hover: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.2);
+  --defect-rnum-color: #94a3b8;
   --defect-rtxt-color: var(--text-primary, #f8fafc);
-  --defect-act-btn-bg: rgba(51, 65, 85, 0.4);
-  --defect-act-btn-border: #334155;
+  --defect-act-btn-bg: rgba(255, 255, 255, 0.04);
+  --defect-act-btn-border: rgba(255, 255, 255, 0.08);
   --defect-act-btn-color: #94a3b8;
 }
 
-[data-theme='light'],
-[data-mantine-color-scheme='light'] {
+[data-theme='light'] {
   --defect-card-bg: #ffffff;
   --defect-card-bg-hover: #f8fafc;
   --defect-card-bg-pinned: #fff9db;
@@ -351,7 +370,7 @@ body {
 
 /* Typography Hierarchy */
 .rnum {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-weight: 700;
   color: var(--defect-rnum-color);
   letter-spacing: -0.02em;
@@ -496,5 +515,3 @@ body {
   border-color: #ef4444;
   color: #ffffff;
 }
-
-

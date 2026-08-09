@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "deploy": "npx wrangler pages deploy ./dist",
     "deploy:pages": "npx wrangler pages deploy ./dist",
-    "test": "node --test tests/**/*.test.js",
+    "test": "npx tsx --test \"tests/**/*.{js,ts}\"",
     "test:tier1": "node --test tests/tier1-features.test.js",
     "test:tier2": "node --test tests/tier2-boundary.test.js",
     "test:tier3": "node --test tests/tier3-combinations.test.js",

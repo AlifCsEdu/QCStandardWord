@@ -38,10 +38,10 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
   isPinnedInFolder,
 }) => {
   return (
-    <div className="wording-container p-4 sm:p-5">
-      <div className="flex items-center justify-between mb-4">
-        <div id="countLabel" className="text-xs sm:text-sm font-semibold text-zinc-400 whitespace-nowrap">
-          {results.length} {results.length === 1 ? 'wording' : 'wordings'}
+    <div id="wordingContainer" className="wording-container p-4 sm:p-6 space-y-4">
+      <div className="flex items-center justify-between mb-2 sm:mb-4">
+        <div id="countLabel" className="text-xs sm:text-sm font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+          <span>{results.length} {results.length === 1 ? 'wording' : 'wordings'}</span>
         </div>
       </div>
 
@@ -50,9 +50,10 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
         {results.length === 0 ? (
           <div
             id="empty"
-            className="p-10 text-center text-zinc-400 text-sm border-2 border-dashed border-zinc-800 rounded-lg bg-zinc-900"
+            className="p-12 text-center border border-dashed border-zinc-800/80 rounded-xl bg-[#0c0e12]/80 backdrop-blur-md text-zinc-400 text-sm flex flex-col items-center justify-center gap-3 min-h-[220px]"
           >
-            No matching QC wording defects found.
+            <p className="font-semibold text-zinc-300">No matching QC wording defects found</p>
+            <p className="text-xs text-zinc-500 max-w-sm">Try adjusting your search query or selecting a different category filter.</p>
           </div>
         ) : layoutMode === 'grid' ? (
           <WordingGrid

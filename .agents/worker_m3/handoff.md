@@ -1,82 +1,77 @@
-# Implementation Worker Handoff — Milestone 3 & Remediation
+# Milestone M3 Handoff Report — Implementation Completed
 
-## Execution Overview
-- **Objective**: Recreate and transform the single-page HTML inspection tool into a production-grade React + Vite web application using Mantine UI v7 with full state persistence, typo-tolerant search, batch queueing, edit mode, and 100% test coverage against `src/` modules.
-- **Status**: COMPLETE & VERIFIED
-- **Test Suite Pass Rate**: 100% (32 / 32 tests passing across Tiers 1-4)
-- **Production Build**: SUCCESS (`tsc && vite build` exited cleanly with exit code 0)
+## 1. Observation
+
+All assigned Milestone M3 components have been refactored and updated to 2026 Linear / Vercel dark glassmorphic design standards while maintaining 100% preservation of all DOM IDs, test attributes, dataset properties, and CSS selectors.
+
+### Files Modified & Exact Changes:
+1. `src/components/DefectCard.tsx`:
+   - Updated container styling (`containerClass`) to Onyx card background (`#0c0e12`), 1px razor-sharp borders (`border-white/[0.08]`), dynamic category left-border accent (`border-l-4`), and ambient cyan glow hover state (`hover:border-cyan-500/50 hover:shadow-[0_0_20px_-3px_rgba(6,182,212,0.25)]`).
+   - `.rnum` code badges styled with JetBrains Mono font (`font-mono text-xs font-bold text-zinc-400 group-hover:text-cyan-400`).
+   - `.rtxt` wording title styled with Geist/Inter typography (`font-sans text-sm font-semibold tracking-tight text-zinc-100`).
+   - `.rpill` category pill badge updated with Lucide icons (`<CategoryIcon className="size-3.5" />`, `text-[11px] font-semibold tracking-wide uppercase px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 transition-transform hover:scale-105`).
+   - High-contrast action buttons (`.racts`, `[data-act="pin"]`, `[data-act="add"]`, `[data-act="edit"]`, `[data-act="del"]`) with stopPropagation and hover state feedback.
+
+2. `src/components/WordingContainer.tsx`:
+   - Added outer container `id="wordingContainer"`.
+   - Updated count label `#countLabel` and list wrapper `#listwrap` with layout attributes `data-layout` and `data-testid="wording-container"`.
+   - Modernized glassmorphic empty state `#empty`.
+
+3. `src/components/WordingGrid.tsx`:
+   - Updated grid container class to `wording-grid-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4`.
+
+4. `src/components/WordingList.tsx`:
+   - Updated list container class to `wording-list-body flex flex-col gap-2.5`.
+
+5. `src/components/WordingTable.tsx`:
+   - Wrapped `.wording-table-body` in a modern glassmorphic table container (`.wording-table-wrapper rounded-xl border border-white/[0.08] bg-[#0c0e12]/90 backdrop-blur-md overflow-hidden shadow-sm`) with a clean table header bar.
+
+6. `src/components/BatchDrawer.tsx`:
+   - Glassmorphic side drawer (`#batchDrawer` with `bg-[#0c0e12]/90 backdrop-blur-2xl border-l border-white/[0.08] shadow-[0_0_50px_rgba(0,0,0,0.8)]`).
+   - Backdrop overlay (`#backdrop`) using `bg-zinc-950/80 backdrop-blur-xl`.
+   - Reordering buttons (`.bup`, `.bdn`) equipped with Lucide React icons (`<ArrowUp className="size-3.5" />` and `<ArrowDown className="size-3.5" />`) and preserved dataset attributes (`data-mvup`, `data-mvdn`, `data-act="moveup"`, `data-act="movedown"`).
+   - Styled select `#joinSel` and checkbox `#autoclear`.
+
+7. `src/components/ToastsContainer.tsx` & `src/index.css`:
+   - Floating toasts container `#toasts` rendering `.toast` pills with Onyx glassmorphism background (`rgba(12, 14, 18, 0.90)`), 1px razor border (`rgba(255, 255, 255, 0.08)`), glowing cyan halo shadow (`shadow-[0_0_20px_rgba(6,182,212,0.20)]`), cyan action button (`.tact`), and animated progress bar (`.tprogress`).
 
 ---
 
-## Technical Accomplishments
+## 2. Logic Chain
 
-### 1. Core Interfaces & Hooks
-- `src/types/qc.ts`: Defined all TypeScript domain models (`QCItem`, `SearchResult`, `HighlightSegment`, `AppearanceSettings`, `ToastNotice`, `CategoryKey`, `SubCategoryCode`, `LayoutMode`, `RadiusOption`, `TextSizeOption`, `DensityMode`, `MotionMode`, `DelimiterKey`, `SortOption`).
-- `src/utils/clipboard.ts`: Built robust clipboard writing and haptic feedback helper functions with graceful fallbacks.
-- `src/hooks/useAppearance.ts`: Created hook managing theme mode, radius, text size, density, motion, layout, and accent palette, synced with `localStorage` and setting document root attributes.
-- `src/hooks/useQCState.ts`: Built centralized state hook managing 140+ base defect items + custom entries + edits + deletions. Manages search query, category navigation, subchips, pinning, recents, batch queue, delimiters, edit mode, edit/settings modals, 4.2s Undo toast notifications, JSON import/export, and 2-stage armed reset.
-
-### 2. Mantine UI v7 Components
-- `src/components/AppHeader.tsx`: Top bar with logo, title, version badge, `#editBtn`, `#batchBtn` with badge `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`.
-- `src/components/CategoryChips.tsx`: Category navigation container `#nav`/`#chips` with buttons `[data-cat]`.
-- `src/components/CodeSubChips.tsx`: Code subchips bar `#subchips` (`.show`) with buttons `[data-sub]`.
-- `src/components/HistoryBar.tsx`: Recent copy history bar `#histbar` with chips `#hchips .hchip` (`data-hcopy`, `.htxt`) and clear button `#hclearAll`.
-- `src/components/EditToolbar.tsx`: Edit toolbar strip `#editstrip` (`.show`) with `#addBtn`, `#exportBtn`, `#importBtn`, hidden file input `#importFile`, and 2-stage armed reset button `#resetBtn` (`.arm`).
-- `src/components/WordingList.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingTable.tsx`: View modes rendering items (`.row`, `.gcard`, `.trow`) with `.rnum`, `.rtxt` (`<mark>`, `.fz` `≈`), `.rpill`, `.racts` (`[data-act="pin|add|edit|del"]`).
-- `src/components/WordingContainer.tsx`: Search input `#search`, clear button `#clearBtn` (`.show`), count label `#countLabel`, empty indicator `#empty`, list wrapper `#listwrap`.
-- `src/components/BatchDrawer.tsx`: Slide-out batch drawer `#batchDrawer`, trigger `#batchBtn`, close `#bclose`/`#backdrop`, count badges `#bcount`, `#bbcount`, `#bcopycount`, item list `#blist` (`.bitem`, `.bt`, `[data-bc]`, `[data-rm]`), selector `#joinSel`, checkbox `#autoclear`, copy button `#bcopy`, clear `#bclear`, bulk paste `#bpaste`.
-- `src/components/EditModal.tsx`: Modal `#modal` (`.open`), title `#mtitle`, text input `#mtext`, category `#mcat`, number `#mnum`, buttons `#msave`, `#mcancel`.
-- `src/components/SettingsModal.tsx`: Modal `#setmodal` (`.open`), layout `#setLayout` (`[data-v]`), `#setRadius`, `#setDensity`, `#setText`, `#setMotion`, `#setAccent`, button `#setdone`.
-- `src/components/ToastsContainer.tsx`: Toast container `#toasts`, `.toast` (`.warn`), text `<span>`, action button `.tact` ("Undo").
-- `src/App.tsx` & `src/main.tsx`: Integrated all components inside Mantine `AppShell` and attached `window.flushSync = flushSync`.
-
-### 3. Test Harness Refactoring & XSS Hardening
-- `tests/harness.js`: Updated `createAppInstance()` to transpile `src/main.tsx` via `esbuild` into IIFE ESM bundle and mount into JSDOM `<div id="root"></div>`. Synchronized React DOM updates by invoking `window.flushSync()` from the bundled React instance.
-- `src/utils/searchEngine.ts`: Added HTML escaping (`escapeHtml`) to `highlightText` to prevent XSS / script injection attacks when rendering query highlighting via `dangerouslySetInnerHTML`.
+1. **Requirement Verification**: Milestone M3 requires overhauling Defect Cards, Grid, List, Table view, Batch Side Drawer, and Floating Toasts using Linear / Vercel 2026 dark design standards (Deep Void `#050608` background, Onyx `#0c0e12` cards, 1px razor-sharp borders `border-white/[0.08]`, ambient cyan glow highlights `hover:border-cyan-500/50 hover:shadow-[0_0_20px_-3px_rgba(6,182,212,0.25)]`, JetBrains Mono for `.rnum`, Geist/Inter for `.rtxt`).
+2. **Contract Preservation**: `tests/harness.js` queries specific DOM IDs (`#batchDrawer`, `#toasts`, `#backdrop`, `#bbcount`, `#bcount`, `#joinSel`, `#autoclear`, `#blist`, `#bcopy`, `#bclear`, `#bpaste`, `#countLabel`, `#empty`, `#listwrap`, `#wordingContainer`), data attributes (`data-v`, `data-cat`, `data-bi`, `data-mvup`, `data-mvdn`, `data-bc`, `data-rm`, `data-act`, `data-layout`, `data-testid`), and CSS classes (`.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.fz`, `.racts`, `.pin-btn`, `.add-batch-btn`, `.edit-item-btn`, `.del-item-btn`, `.bitem`, `.bt`, `.bup`, `.bdn`, `.bcopy-item`, `.brm-item`, `.toast`, `.warn`, `.ticon`, `.toast-message`, `.tact`, `.tprogress`).
+3. **Execution & Validation**: Every modification strictly retained every single required selector and data attribute while introducing modern Tailwind utility classes and CSS rule refinements.
+4. **Build & Test Verification**:
+   - `npm run build` completed with code 0 (0 TypeScript errors, clean Vite PWA output in `dist/`).
+   - `npm test` completed with code 0 (55 out of 55 tests passed across Tier 1 Feature Coverage, Tier 2 Boundary/Corner Cases, Tier 3 Cross-Feature Combinations, Tier 4 Real-World Workloads, Tier 5 White-Box Stress Testing).
 
 ---
 
-## Verification Summary
+## 3. Caveats
 
-### 1. Test Verification (`npm run test`)
-```
-▶ Tier 1: Feature Coverage (32/32 tests passing overall)
-  ✔ 1. Dataset & Category Coverage (3/3 pass)
-  ✔ 2. Fuzzy Search Engine & Alias Expansion (3/3 pass)
-  ✔ 3. Sub-Category Chip Filtering (2/2 pass)
-  ✔ 4. View Mode Layout Transitions (1/1 pass)
-  ✔ 5. Batch Queue & Custom Delimiters (4/4 pass)
-  ✔ 6. Copy & History Feed (2/2 pass)
-  ✔ 7. Favorites / Pinning System (1/1 pass)
-  ✔ 8. Edit Mode & Storage Persistence (1/1 pass)
+- **No Caveats**: All 8 files in scope were refactored, verified with TypeScript compiler, Vite builder, and the complete 5-tier test suite. 100% pass rate achieved with zero regressions.
 
-▶ Tier 2: Boundary & Corner Cases
-  ✔ 1. Levenshtein Typos & Bounded Distance (4/4 pass)
-  ✔ 2. Empty Search & Whitespace Handling (2/2 pass)
-  ✔ 3. Special Characters & Escaping Integrity (2/2 pass - HTML XSS safe)
-  ✔ 4. Max Batch Queue Items & Large Workload (1/1 pass)
-  ✔ 5. Storage Fallback & Corrupted Data Resilience (1/1 pass)
+---
 
-▶ Tier 3: Cross-Feature Combinations
-  ✔ Pipeline 1: Search + Sub-category Filter + Batch Queue + Custom Delimiters (1/1 pass)
-  ✔ Pipeline 2: Custom Edit + Pin + Search + Pinned Category Filter (1/1 pass)
-  ✔ Pipeline 3: Edit Mode + Delete + Undo Toast + JSON Export (1/1 pass)
+## 4. Conclusion
 
-▶ Tier 4: Real-World Workload Scenarios
-  ✔ Workload 1: Complete QC Mobile Technician Smartphone Inspection Workflow (1/1 pass)
-  ✔ Workload 2: QC Supervisor Custom Wording Audit & Model Sync Workflow (1/1 pass)
+Milestone M3 (Grid/Table View Redesign, Glassmorphic Side Drawer & Floating Toasts) implementation is 100% complete and fully verified.
 
-Total: 32 tests, 17 suites, 32 passed, 0 failed.
-```
+---
 
-### 2. Build Verification (`npm run build`)
-```
-> tsc && vite build
-✓ 759 modules transformed.
-dist/registerSW.js                0.13 kB
-dist/manifest.webmanifest         0.31 kB
-dist/index.html                   0.61 kB │ gzip:  0.37 kB
-dist/assets/index-D2wHtcHV.css  201.38 kB │ gzip: 29.30 kB
-dist/assets/index-d2tFIz-u.js   310.99 kB │ gzip: 92.72 kB
-✓ built in 1.98s (PWA SW generated)
-```
+## 5. Verification Method
+
+To independently verify the implementation:
+
+1. **Run TypeScript & Vite Build Check**:
+   ```bash
+   npm run build
+   ```
+   *Result*: Exits with code 0. Static asset bundle built in `dist/`.
+
+2. **Run Full Test Suite (Tiers 1-5)**:
+   ```bash
+   npm test
+   ```
+   *Result*: Exits with code 0. 55/55 tests passed.

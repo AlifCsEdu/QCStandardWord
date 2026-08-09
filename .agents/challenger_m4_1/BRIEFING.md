@@ -1,51 +1,54 @@
-# BRIEFING — 2026-08-07T21:49:00+08:00
+# BRIEFING — 2026-08-09T21:33:20+08:00
 
 ## Mission
-Stress-test Milestone 4 (Floating Toast Notifications) empirically, verify system stability, and provide an APPROVE or REJECT verdict.
+Empirically challenge, stress-test, and verify Milestone M4 (Build & E2E Test Hardening) implementation across Tiers 1-5.
 
 ## 🔒 My Identity
-- Archetype: EMPIRICAL CHALLENGER
+- Archetype: challenger
 - Roles: critic, specialist
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1
-- Original parent: 151f7714-d424-4621-8e22-df7b0e1c1f96
-- Milestone: Milestone 4 (Floating Toast Notifications)
+- Original parent: 255eba13-2966-4712-9788-f007aeebaa06
+- Milestone: M4
 - Instance: 1 of 1
 
 ## 🔒 Key Constraints
-- Stress test toast notification system under rapid actions, long toast messages, warning toasts, and undo action triggers.
-- Must run verification code empirically; do NOT trust worker claims or logs.
-- Do NOT fix code implementation errors directly; report findings in handoff report.
+- Adversarial challenge & empirical verification — run all builds, typechecks, and tests directly.
+- Do NOT fix bugs directly in implementation code if found (report findings as verification failure).
+- Must provide explicit APPROVE or REJECT verdict based on empirical findings.
 
 ## Current Parent
-- Conversation ID: 151f7714-d424-4621-8e22-df7b0e1c1f96
-- Updated: 2026-08-07T21:49:00+08:00
+- Conversation ID: 255eba13-2966-4712-9788-f007aeebaa06
+- Updated: 2026-08-09T21:33:20+08:00
 
 ## Review Scope
-- **Files to review**: Toast notification system (`src/utils/notifications.ts`, `src/components/ToastsContainer.tsx`, `src/index.css`), `useQCState.ts`, worker handoff.
-- **Interface contracts**: SCOPE.md, PROJECT.md (`#toasts .toast`, `.warn`, `.ticon`, `.tact`, `.tprogress`)
-- **Review criteria**: Empirical stability under rapid actions, text boundary limits, warning toast visual distinction, undo trigger restorations, test suite pass rate.
+- **Files to review**:
+  - ORIGINAL_REQUEST.md
+  - PROJECT.md
+  - worker_m4/handoff.md
+  - All test files across Tiers 1-5 (`tests/*.js`, `tests/*.ts`)
+  - Build scripts and source files
+- **Interface contracts**: PROJECT.md
+- **Review criteria**: TypeScript compilation, build execution, test suite pass counts/assertions, zero layout shift, instant search responsiveness, tier coverage.
 
 ## Attack Surface
 - **Hypotheses tested**:
-  - Rapid action queuing & auto-dismiss race conditions (VERIFIED PASS: 4.2s window cleans up properly)
-  - Long message formatting & XSS payload injection (VERIFIED PASS: React string escaping prevents script execution; copy/batch texts are safely truncated)
-  - Warning toast styling & Tabler icon resolution (VERIFIED PASS: `.toast.warn` with `AlertTriangle` icon rendered cleanly)
-  - Undo action trigger & state restoration (VERIFIED PASS: restores deleted items and updates local storage)
-- **Vulnerabilities found**: None. System is resilient.
-- **Untested angles**: All major dimensions (rapid actions, boundary text, warnings, undo triggers) empirically stress-tested.
+  - `npx tsc --noEmit` clean compile -> PASS (0 errors)
+  - `npm run build` static bundle generation -> PASS (3.93s build duration, valid `dist/`)
+  - `npm test` 80 test cases -> PASS (80/80 passed, 0 failed)
+  - Zero layout shift constraint -> PASS (0px jump on sub-code chip panel toggle)
+  - Search engine responsiveness -> PASS (<1.5ms per query)
+- **Vulnerabilities found**: None. All edge cases, XSS payloads, and corrupted storage recovery suites passed.
+- **Untested angles**: None. Full Tier 1-5 suite executed.
 
 ## Loaded Skills
-- None loaded.
+- None.
 
 ## Key Decisions Made
-- Executed `npm run build` and confirmed zero TypeScript compilation errors.
-- Created `tests/m4_challenger_toast_stress.test.js` to stress test all 4 required challenge dimensions.
-- Confirmed 100% pass rate across all 13 stress test cases.
-- Final Verdict: **APPROVE**.
+- Confirmed empirical evidence for build integrity and 100% test pass rate across 40 test suites (80 assertions).
+- Rendered verdict: `APPROVE`.
 
 ## Artifact Index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\DISPATCH.md
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\BRIEFING.md
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\progress.md
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\tests\m4_challenger_toast_stress.test.js
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\handoff.md
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\DISPATCH.md — Dispatch log
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\BRIEFING.md — Persistent memory
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\progress.md — Progress heartbeat log
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m4_1\handoff.md — Handoff report with APPROVE verdict

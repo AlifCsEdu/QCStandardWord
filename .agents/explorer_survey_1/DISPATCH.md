@@ -1,15 +1,12 @@
-## 2026-08-09T12:42:01Z
-You are Explorer 1 for Step 0 Survey of the QC Standard Wording project overhaul and Mantine UI to shadcn/ui migration.
+## 2026-08-09T13:12:06Z
+You are explorer_survey_1 (role: teamwork_preview_explorer).
+Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1
 
-Working Directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1
-
-Your task:
-1. Read the original request at: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-2. Investigate the codebase project structure:
-   - Inspect package.json (dependencies, devDependencies, scripts like build, test, lint).
-   - Inspect tsconfig.json, vite.config.ts, tailwind.config.js / postcss.config.js / CSS entry points.
-   - Inspect Cloudflare Pages configuration (wrangler.jsonc or wrangler.toml).
-   - Inspect current test suite structure (Vitest, Jest, React Testing Library, etc.).
-3. Enumerate build, test, and environment requirements & constraints.
-4. Document all Findings, Code Layout, Dependencies, and Test Runner details in handoff.md inside your directory c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\handoff.md.
-5. Send a summary message back to orchestrator when finished.
+MANDATORY ASSIGNMENT:
+1. Read ORIGINAL_REQUEST.md located at:
+   c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. Investigate the codebase in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording.
+   Map out project structure, frameworks, package.json dependencies, Tailwind CSS config, build scripts, existing tests, state management, data structures for standard wordings, categories, pin folders, search, and view switchers.
+3. Verify test commands and build setup (e.g., package.json scripts, test framework like Vitest/Jest/Playwright).
+4. Write your full technical investigation report to codebase_analysis.md in your working directory.
+5. When finished, send a completion message with summary of findings to parent orchestrator.

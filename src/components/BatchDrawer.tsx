@@ -61,19 +61,10 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
       <div
         id="backdrop"
         data-testid="drawer-overlay"
-        className={`drawer-backdrop ${isOpen ? 'show' : ''}`}
+        className={`drawer-backdrop ${isOpen ? 'show' : ''} fixed inset-0 bg-zinc-950/80 backdrop-blur-xl transition-opacity duration-200 z-[998]`}
         onClick={onClose}
         style={{
           display: isOpen ? 'block' : 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(9, 9, 11, 0.7)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          zIndex: 998,
         }}
       />
 
@@ -81,22 +72,22 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
       <div
         id="batchDrawer"
         data-testid="batch-drawer"
-        className={`batch-drawer ${isOpen ? 'open' : ''} fixed top-0 right-0 w-[380px] max-w-[90vw] h-full bg-zinc-900/95 backdrop-blur-md border-l border-zinc-800 z-[999] flex flex-col p-4 gap-4 box-border overflow-y-auto shadow-2xl transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`batch-drawer ${
+          isOpen ? 'open translate-x-0' : 'translate-x-full'
+        } fixed top-0 right-0 w-[400px] max-w-[90vw] h-full bg-[#0c0e12]/90 backdrop-blur-2xl border-l border-white/[0.08] z-[999] flex flex-col p-4 sm:p-5 gap-4 box-border overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-out`}
         style={{
           display: isOpen ? 'flex' : 'none',
         }}
       >
         {/* Top Header Controls Bar */}
-        <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-base text-zinc-100">
+        <div className="flex justify-between items-center border-b border-white/[0.08] pb-3.5">
+          <div className="flex items-center gap-2.5">
+            <span className="font-bold text-sm sm:text-base text-zinc-100 tracking-tight">
               Batch Queue & Operations
             </span>
             <span
               id="bbcount"
-              className="bg-cyan-500 text-zinc-950 px-2 py-0.5 rounded-full text-xs font-bold"
+              className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold"
             >
               {batchQueue.length}
             </span>
@@ -113,16 +104,16 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-100 h-8 w-8"
+            className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80 h-8 w-8 rounded-lg"
           >
             <IconX className="size-4" />
           </Button>
         </div>
 
         {/* Settings Section: Delimiter & Auto-clear */}
-        <div className="p-3 rounded-lg border border-zinc-800 bg-zinc-950 flex flex-col gap-2.5">
-          <div className="flex justify-between items-center">
-            <label htmlFor="joinSel" className="text-xs font-semibold text-zinc-200">
+        <div className="p-3.5 rounded-xl border border-white/[0.08] bg-[#12151c]/80 flex flex-col gap-3 shadow-inner">
+          <div className="flex justify-between items-center gap-2">
+            <label htmlFor="joinSel" className="text-xs font-semibold text-zinc-300">
               Delimiter:
             </label>
             <select
@@ -131,7 +122,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               data-testid="delimiter-select"
               value={delimiter}
               onChange={(e) => onSetDelimiter(e.target.value as DelimiterKey)}
-              className="px-2.5 py-1 rounded-md border border-zinc-800 bg-zinc-900 text-zinc-100 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="px-3 py-1.5 rounded-lg border border-white/[0.08] bg-zinc-900/90 text-zinc-200 text-xs font-medium focus:outline-none focus:border-cyan-500/50 cursor-pointer transition-colors"
             >
               <option value="nl">Newline (\n)</option>
               <option value="comma">Comma (, )</option>
@@ -142,8 +133,8 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
             </select>
           </div>
 
-          <div className="flex justify-between items-center">
-            <label htmlFor="autoclear" className="text-xs font-semibold text-zinc-200 cursor-pointer">
+          <div className="flex justify-between items-center gap-2">
+            <label htmlFor="autoclear" className="text-xs font-semibold text-zinc-300 cursor-pointer">
               Auto-clear on copy:
             </label>
             <input
@@ -152,7 +143,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               type="checkbox"
               checked={autoclear}
               onChange={(e) => onSetAutoclear(e.target.checked)}
-              className="size-4 rounded border-zinc-800 accent-cyan-500 cursor-pointer"
+              className="size-4 rounded border-zinc-700 bg-zinc-900 accent-cyan-500 cursor-pointer focus:ring-cyan-500/30"
             />
           </div>
         </div>
@@ -160,11 +151,12 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
         {/* Queued Items List */}
         <div
           id="blist"
-          className="flex-1 overflow-y-auto flex flex-col gap-2 min-h-[200px]"
+          className="flex-1 overflow-y-auto flex flex-col gap-2.5 min-h-[200px] pr-0.5"
         >
           {batchQueue.length === 0 ? (
-            <div className="text-center py-8 text-zinc-500 text-xs">
-              No items in batch queue. Click "+ Batch" on wording rows to add.
+            <div className="p-8 text-center border border-dashed border-zinc-800/80 rounded-xl text-zinc-500 text-xs flex flex-col items-center justify-center gap-2 my-auto">
+              <p className="font-semibold text-zinc-400">Batch Queue Empty</p>
+              <p className="text-zinc-500">Click "+ Batch" on defect cards to add items for batch copy.</p>
             </div>
           ) : (
             batchQueue.map((itemText, idx) => (
@@ -172,15 +164,15 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                 key={idx}
                 data-bi={idx}
                 data-testid="batch-item"
-                className="bitem p-2.5 rounded-lg border border-zinc-800 bg-zinc-950 flex items-center justify-between gap-2"
+                className="bitem p-3 rounded-xl border border-white/[0.08] bg-[#12151c]/90 hover:border-cyan-500/30 flex items-center justify-between gap-2.5 transition-all duration-150 shadow-sm"
               >
                 <span className="bt flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium text-zinc-200">
                   {itemText}
                 </span>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <button
-                    className="bup px-1.5 py-0.5 rounded border border-zinc-800 text-xs font-bold transition-colors"
+                    className="bup p-1.5 rounded-md border border-white/[0.08] text-xs font-bold transition-all flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 hover:border-cyan-500/40"
                     data-mvup={idx}
                     data-mup={idx}
                     data-up={idx}
@@ -189,17 +181,12 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                     disabled={idx === 0}
                     onClick={() => handleMoveUp?.(idx)}
                     title="Move Up"
-                    style={{
-                      background: idx === 0 ? 'rgba(39, 39, 42, 0.4)' : 'rgba(6, 182, 212, 0.1)',
-                      color: idx === 0 ? '#64748b' : '#38bdf8',
-                      cursor: idx === 0 ? 'not-allowed' : 'pointer',
-                    }}
                   >
-                    ▲
+                    <ArrowUp className="size-3.5" />
                   </button>
 
                   <button
-                    className="bdn px-1.5 py-0.5 rounded border border-zinc-800 text-xs font-bold transition-colors"
+                    className="bdn p-1.5 rounded-md border border-white/[0.08] text-xs font-bold transition-all flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 hover:border-cyan-500/40"
                     data-mvdn={idx}
                     data-mdown={idx}
                     data-down={idx}
@@ -208,18 +195,13 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                     disabled={idx === batchQueue.length - 1}
                     onClick={() => handleMoveDown?.(idx)}
                     title="Move Down"
-                    style={{
-                      background: idx === batchQueue.length - 1 ? 'rgba(39, 39, 42, 0.4)' : 'rgba(6, 182, 212, 0.1)',
-                      color: idx === batchQueue.length - 1 ? '#64748b' : '#38bdf8',
-                      cursor: idx === batchQueue.length - 1 ? 'not-allowed' : 'pointer',
-                    }}
                   >
-                    ▼
+                    <ArrowDown className="size-3.5" />
                   </button>
 
                   <button
                     data-bc={idx}
-                    className="bcopy-item border border-cyan-500/30 bg-cyan-500/15 text-cyan-400 hover:bg-cyan-500/25 px-2 py-0.5 rounded text-xs font-semibold cursor-pointer"
+                    className="bcopy-item border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer"
                     onClick={async () => {
                       if (typeof navigator !== 'undefined' && navigator.clipboard) {
                         await navigator.clipboard.writeText(itemText);
@@ -233,7 +215,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                   <button
                     data-rm={idx}
                     data-testid={`remove-batch-item-${idx}`}
-                    className="brm-item border border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25 px-2 py-0.5 rounded text-xs font-semibold cursor-pointer"
+                    className="brm-item border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
                     onClick={() => onRemoveItem(idx)}
                     title="Remove item"
                   >
@@ -246,13 +228,13 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
         </div>
 
         {/* Footer Action Buttons */}
-        <div className="flex flex-col gap-2 border-t border-zinc-800 pt-3">
+        <div className="flex flex-col gap-2.5 border-t border-white/[0.08] pt-3.5">
           <Button
             id="bcopy"
             data-testid="copy-batch-btn"
             onClick={onCopyBatch}
             disabled={batchQueue.length === 0}
-            className="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-sm gap-2 h-10"
+            className="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-sm gap-2 h-10 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-150 rounded-lg flex items-center justify-center"
           >
             <IconCopy className="size-4" />
             <span>Copy Batch (<span id="bcopycount">{batchQueue.length}</span>)</span>
@@ -266,7 +248,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               size="sm"
               onClick={onClearBatch}
               disabled={batchQueue.length === 0}
-              className="flex-1 bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 gap-1.5 h-9"
+              className="flex-1 bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 hover:border-rose-400 transition-all h-9 rounded-lg flex items-center justify-center gap-1.5 text-xs font-semibold"
             >
               <IconTrash className="size-3.5" />
               Clear Queue
@@ -277,7 +259,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               variant="outline"
               size="sm"
               onClick={() => setPasteModalOpen(true)}
-              className="flex-1 bg-zinc-950 border-zinc-800 text-zinc-200 hover:bg-zinc-800 gap-1.5 h-9"
+              className="flex-1 bg-zinc-900 border border-white/[0.08] text-zinc-200 hover:bg-zinc-800 hover:border-zinc-700 transition-all h-9 rounded-lg flex items-center justify-center gap-1.5 text-xs font-semibold"
             >
               <IconFileImport className="size-3.5" />
               Bulk Paste
@@ -288,7 +270,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
 
       {/* Bulk Paste Dialog */}
       <Dialog open={pasteModalOpen} onOpenChange={setPasteModalOpen}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-md">
+        <DialogContent className="bg-[#0c0e12] border border-white/[0.08] text-zinc-100 max-w-md shadow-2xl backdrop-blur-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-zinc-100">
               Bulk Import Defect Lines
@@ -301,7 +283,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               onChange={(e) => setPasteText(e.target.value)}
               placeholder="Paste defect lines (one per line)..."
               rows={6}
-              className="w-full bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
+              className="w-full bg-zinc-950/90 border border-white/[0.08] text-zinc-100 text-sm focus-visible:ring-cyan-500"
             />
           </div>
 
@@ -315,7 +297,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
             </Button>
             <Button
               onClick={handleBulkSubmit}
-              className="bg-cyan-500 text-zinc-950 font-semibold hover:bg-cyan-400"
+              className="bg-cyan-500 text-zinc-950 font-semibold hover:bg-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
             >
               Import Lines
             </Button>

@@ -13,56 +13,31 @@ export const HistoryBar: React.FC<HistoryBarProps> = ({
 }) => {
   if (!recents || recents.length === 0) {
     return (
-      <div id="histbar" style={{ display: 'none' }} />
+      <div id="histbar" className="history-bar-container hidden" style={{ display: 'none' }} />
     );
   }
 
   return (
     <div
       id="histbar"
-      className="history-bar-container"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '8px 20px',
-        background: '#fff9db',
-        borderBottom: '1px solid #ffe066',
-      }}
+      className="history-bar-container flex items-center gap-3 px-5 py-2 bg-amber-950/20 border-b border-amber-500/20 backdrop-blur-md"
+      style={{ display: 'flex' }}
     >
-      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f59f00', whiteSpace: 'nowrap' }}>
+      <span className="text-xs font-bold text-amber-400 whitespace-nowrap">
         History:
       </span>
 
       <div
         id="hchips"
-        style={{
-          display: 'flex',
-          gap: '6px',
-          overflowX: 'auto',
-          flex: 1,
-          scrollbarWidth: 'thin',
-        }}
+        className="flex items-center gap-1.5 overflow-x-auto flex-1 scrollbar-thin"
       >
         {recents.map((text, idx) => (
           <button
             key={idx}
             data-hcopy={text}
             onClick={() => onCopyRecent(text)}
-            className="hchip"
+            className="hchip bg-zinc-800/80 hover:bg-zinc-700/80 text-zinc-200 border border-zinc-700/80 hover:border-amber-500/50 rounded-full px-2.5 py-0.5 text-xs transition-colors duration-150 inline-flex items-center cursor-pointer whitespace-nowrap"
             title="Click to re-copy"
-            style={{
-              padding: '3px 10px',
-              borderRadius: '12px',
-              border: '1px solid #fcc419',
-              background: '#ffffff',
-              color: '#343a40',
-              fontSize: '0.8rem',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              display: 'inline-flex',
-              alignItems: 'center',
-            }}
           >
             <span className="htxt">{text}</span>
           </button>
@@ -73,17 +48,7 @@ export const HistoryBar: React.FC<HistoryBarProps> = ({
         id="hclearAll"
         onClick={onClearHistory}
         title="Clear copy history"
-        style={{
-          padding: '2px 8px',
-          borderRadius: '4px',
-          border: '1px solid #fcc419',
-          background: '#fff3bf',
-          color: '#e67700',
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          cursor: 'pointer',
-          whiteSpace: 'nowrap',
-        }}
+        className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded px-2 py-0.5 text-xs font-semibold cursor-pointer whitespace-nowrap transition-colors duration-150"
       >
         Clear History
       </button>

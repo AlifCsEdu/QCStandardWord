@@ -1,17 +1,14 @@
-## 2026-08-06T16:53:32Z
-You are assigned to perform empirical build stability and type safety testing for Challenger 1 (M1 Build Stability & Type Safety Challenger).
+## 2026-08-09T13:15:59Z
+You are challenger_m1_1 (role: teamwork_preview_challenger).
+Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m1_1
 
-Target project directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
-Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m1_1
-
-Context documents:
+MANDATORY INPUTS:
 - ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
+- worker_m1 handoff: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1\handoff.md
 
-Instructions:
-1. Run `npx tsc --noEmit` in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording and record complete stdout/stderr and exit code.
-2. Run `npm run build` in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording and record complete stdout/stderr and exit code.
-3. Inspect `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\dist` directory contents, checking for JS/CSS bundles, index.html, static assets, and PWA manifest generation.
-4. Verify whether the build succeeded cleanly without errors or type issues.
-5. Provide a detailed report of findings and an explicit verdict: APPROVE or REJECT.
-6. Send your findings back to the parent agent.
+ASSIGNMENT (Milestone M1 Verification & Stress Testing):
+1. Run npm run build and npm test across all test suites (Tiers 1-5).
+2. Stress test UI state toggles, DOM element presence, and CSS variable integrity under test conditions.
+3. Record verdict (APPROVE or REJECT) with test execution details in handoff.md in your working directory.
+4. When finished, send a completion message with verdict to parent.

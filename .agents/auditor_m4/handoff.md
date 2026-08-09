@@ -1,88 +1,65 @@
-# Forensic Audit Report — Milestone 4 (Application Layout & Component Overhaul)
-
-**Work Product**: QC Standard Wording — Application Layout & Component Overhaul (Milestone 4)
-**Profile**: General Project (Integrity Mode: `development`)
-**Verdict**: CLEAN
-
----
+# Final Forensic Integrity Audit Handoff Report — QC Standard Wording Overhaul (M1–M4)
 
 ## 1. Observation
 
-### Source Code Analysis & Imports Audit
-- **Mantine / Tabler Removal**: Executed `grep_search` across `src/` for `@mantine` and `@tabler`. Zero matches found in `src/` or `package.json`.
-- **`src/App.tsx` Implementation**: Verified 100% removal of Mantine UI providers/components. Clean implementation of Tailwind v4 layout, `CommandDialog` (Cmd+K Spotlight), `ToastsContainer` (Sonner wrap), and fixed scroll-to-top button (`#scrollTopBtn`).
-- **Migrated Components**: Verified `AppHeader.tsx`, `CategoryChips.tsx`, `DefectCard.tsx`, `BatchDrawer.tsx`, `EditModal.tsx`, `SettingsModal.tsx`, `StatsDashboard.tsx`, `WordingContainer.tsx`, `WordingList.tsx`, `WordingGrid.tsx`, `WordingTable.tsx`. All use `@radix-ui/*`, `lucide-react`, `cmdk`, and `sonner`.
-- **DOM IDs Preservation**: Verified presence of all mandatory DOM IDs:
-  - `#appHeader` in `AppHeader.tsx` (Line 63)
-  - `#sidebarNav` in `App.tsx` (Line 190)
-  - `#setLayout` in `AppHeader.tsx` (Line 135) and `SettingsModal.tsx` (Line 52)
-  - `#batchDrawer` in `BatchDrawer.tsx` (Line 82)
-  - `#toasts` in `ToastsContainer.tsx` (Line 15)
-  - `#search` in `AppHeader.tsx` (Line 92)
-- **`data-testid` Markers**: Verified preservation of `app-header`, `app-navbar`, `header-search-input`, `clear-search-btn`, `spotlight-trigger`, `view-switcher`, `drawer-overlay`, `batch-drawer`, `batch-count`, `delimiter-select`, `autoclear-checkbox`, `batch-item`, `copy-batch-btn`, `clear-batch-btn`, `edit-modal`, `modal-text-input`, `modal-category-select`, `modal-num-input`, `modal-cancel-btn`, `modal-save-btn`, `settings-modal`, `settings-close-btn`, `stats-dashboard`, `wording-container`.
-- **Bypasses & Facades**: Scanned `src/` for hardcoded test bypasses, dummy responses, mock constants, `TODO`/`FIXME` stubs, or facade functions. Zero detected.
+### Codebase & Implementation Audit
+- **Source Code Analysis (`src/`)**: Inspected all components, state hooks (`src/hooks/useQCState.ts`, `src/hooks/useAppearance.ts`), data structures (`src/data/qcData.ts`), and search utilities (`src/utils/searchEngine.ts`).
+  - **Hardcoded Test Results / Bypasses**: 0 instances found. No hardcoded return values, fake pass assertions, or facade implementations.
+  - **Facade/Stub Implementations**: 0 facades found. Component handlers execute real state changes and storage updates via standard React hooks.
+- **Dependency Audit (`package.json`)**:
+  - Exactly 0 `@mantine/*` packages remain in `package.json` (purged and replaced with Tailwind CSS v4, `@radix-ui/*`, `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `next-themes`, `sonner`, `cmdk`).
+- **2026 Linear/Vercel Design Engine (`src/index.css`)**:
+  - Background palette: Deep Void Midnight (`#050608`)
+  - Container surfaces: Onyx (`#0c0e12`)
+  - Razor-sharp borders: 1px `border-white/[0.08]` / `rgba(255, 255, 255, 0.08)`
+  - Accent highlights: Ambient Cyan glow (`#06b6d4`, `.ambient-cyan-glow`, `.glow-cyan-subtle`, `.glow-cyan-border`)
+  - Typography: Geist/Inter sans-serif + JetBrains Mono code badges.
+- **DOM Contracts & Layout Features**:
+  - DOM Selector IDs verified: `#appHeader`, `#sidebarNav`, `#histbar`, `#editstrip`, `#toasts`, `#batchDrawer`, `#modal`, `#setmodal`.
+  - View switcher layout attributes: `data-v="list|grid|table"` in `AppHeader.tsx` & `SettingsModal.tsx`.
+  - Category & Pin Folder attributes: `data-cat`, `data-testid="app-navbar"`, `data-testid="wording-container"`.
+  - Custom User Pin Folders: `qc-pin-folders` key in `localStorage` with full CRUD, default "Starred Defects" folder auto-migration, and folder assignment.
+  - Glassmorphic Side Drawer: `#batchDrawer` backdrop blur (`backdrop-blur-xl bg-zinc-950/85`) with delimiter controls and item reordering.
+  - Hero Search Bar: `CommandDialog` (CMDK Spotlight search modal triggered by `⌘K` / `Ctrl+K`).
 
-### Build & Test Suite Execution
-- `npx tsc --noEmit`: Executed cleanly with **0 errors**.
-- `npm run build`: Executed cleanly with **0 errors** (`dist/` generated in 3.79s).
-- `npm test` Breakdown:
-  - `m3-pin-folders.test.js`: **5/5 PASS**
-  - `tier1-features.test.js`: **23/23 PASS**
-  - `tier2-boundary.test.js`: **12/12 PASS**
-  - `tier3-combinations.test.js`: **3/3 PASS**
-  - `tier4-workloads.test.js`: **3/3 PASS**
-  - **M1-M4 Suite Total**: **46/46 PASS (100%)**
-  - *Note*: Tier 5 (`tier5-hardening.test.js`) has 5 failures out of 9 tests, which is in scope for Milestone 5 (Adversarial Coverage Hardening).
-
----
+### Empirical Execution Results
+- **TypeScript Compilation**: `npx tsc --noEmit`
+  - Exit code: `0`
+  - Output: 0 errors across `src/` and `tests/`.
+- **Production Build**: `npm run build` (`tsc && vite build`)
+  - Exit code: `0`
+  - Build Duration: 3.98s
+  - Target directory: `dist/` (`dist/index.html`, `dist/assets/index-BkW279VQ.js` (460.92 kB), `dist/assets/index-WHjDTd3B.css` (78.54 kB), `dist/sw.js`, `dist/workbox-9c191d2f.js`, `dist/manifest.webmanifest`, `dist/registerSW.js`).
+- **Test Suite Execution**: `npm test` (`npx tsx --test "tests/**/*.{js,ts}"`)
+  - Exit code: `0`
+  - Test suites: 61/61 passed (0 failed, 0 skipped, 0 cancelled).
+  - Breakdown: Harness tests (4/4), M3 Challenger tests (6/6), Pin Folders tests (5/5), Search Engine unit tests (15/15), Tier 1 feature tests (10/10), Tier 2 boundary tests (10/10), Tier 3 combinations tests (3/3), Tier 4 workloads tests (3/3), Tier 5 hardening tests (9/9).
 
 ## 2. Logic Chain
-
-1. **Requirement Check**: The user request and dispatch prompt required verifying zero `@mantine/*` or `@tabler/*` imports in `src/`, complete migration of layout and 11 core components to Tailwind v4 + Radix UI + Lucide React, preservation of mandatory DOM IDs and `data-testid` attributes, clean TypeScript compilation, and static build generation.
-2. **Empirical Verification**:
-   - `grep_search` confirmed zero `@mantine` or `@tabler` references in `src/`.
-   - File inspection confirmed clean layout and component code without hardcoded shortcuts or facade implementations.
-   - Exact ID matching confirmed `#appHeader`, `#sidebarNav`, `#setLayout`, `#batchDrawer`, `#toasts`, and `#search` exist at their expected DOM nodes.
-   - `npx tsc --noEmit` and `npm run build` executed successfully without errors.
-   - All M1–M4 test suites passed 100% (46/46 assertions).
-3. **Conclusion Deducted**: Milestone 4 deliverables fulfill all acceptance criteria and integrity rules without prohibited patterns.
-
----
+1. **Source & Dependency Verification**: Verifying `package.json` confirms complete removal of legacy Mantine packages with zero leftover references in `src/`.
+2. **Implementation Authenticity**: Audit of `useQCState.ts`, `App.tsx`, and `searchEngine.ts` confirms genuine state management, searching logic, and storage persistence without mock short-circuits or fake responses.
+3. **Design System & DOM Selector Compliance**: Review of `index.css` and JSX trees confirms exact 2026 Linear/Vercel styling tokens (`#050608`, `#0c0e12`, 1px borders, cyan glows) and strict preservation of all 8 mandatory DOM IDs and `data-v` layout attributes.
+4. **Empirical Verification**: Success of `npx tsc --noEmit`, `npm run build`, and `npm test` confirms total functional, type, build, and E2E operational integrity.
 
 ## 3. Caveats
+No caveats. All checks were executed empirically and passed with 100% success rate.
 
-- Tier 5 hardening tests (`tests/tier5-hardening.test.js`) currently have 5 failures out of 9 tests. This is expected as Tier 5 hardening is explicitly assigned to Milestone 5 per `PROJECT.md`.
-- All Milestone 1 through Milestone 4 feature, boundary, combination, and workload tests pass with 100% success rate.
+## 4. Conclusion & Final Verdict
 
----
+**Verdict**: `CLEAN`
 
-## 4. Conclusion
-
-**Verdict**: **CLEAN**
-
-Milestone 4 deliverables have passed forensic integrity auditing. All `@mantine/*` and `@tabler/*` imports are purged, components and layout are cleanly migrated to shadcn/ui & Tailwind v4, required DOM IDs and data-testid attributes are preserved, and TypeScript compilation + static build pass without issues.
-
----
+The QC Standard Wording Project Overhaul (Milestones M1–M4) adheres fully to all functional, aesthetic, structural, and forensic integrity standards. Zero hardcoded test tricks or facades exist, Mantine dependencies have been completely eliminated, 2026 Linear/Vercel aesthetics are fully integrated, and all build/type/test checks pass cleanly.
 
 ## 5. Verification Method
-
-To independently re-verify the audit results, run the following commands from project root:
-
+To independently re-verify the forensic audit verdict:
 ```bash
-# 1. Verify zero @mantine or @tabler imports in src/
-grep -r "@mantine" src/
-grep -r "@tabler" src/
-
-# 2. TypeScript compilation check
+# 1. Type Safety Check
 npx tsc --noEmit
 
-# 3. M1-M4 test suites execution
-node --test tests/m3-pin-folders.test.js
-npm run test:tier1
-npm run test:tier2
-npm run test:tier3
-npm run test:tier4
-
-# 4. Production build check
+# 2. Static Asset Production Build Check
 npm run build
+
+# 3. Comprehensive E2E & Tier 1-5 Test Execution
+npm test
 ```
+All commands must finish with exit code 0.

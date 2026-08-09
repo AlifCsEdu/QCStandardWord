@@ -1,22 +1,17 @@
-## 2026-08-07T13:28:34Z
+## 2026-08-09T13:19:13Z
 <USER_REQUEST>
-You are Explorer 2 for Milestone 2: 2026 Deep Slate & Charcoal Theme & Design Tokens Setup.
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2.
+You are explorer_m2_2 (role: teamwork_preview_explorer).
+Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2
 
-Objective:
-Investigate CSS custom properties, global styles, Mantine v7 design tokens, and root attributes (`data-theme`) setup for requirement R1.
+MANDATORY INPUTS:
+- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
 
-Required Reads:
-- ORIGINAL_REQUEST.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
-- SCOPE.md at c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m2\SCOPE.md
-
-Specific Focus:
-1. Inspect `src/index.css`, `src/App.css`, or equivalent CSS files for custom CSS variables (e.g. `--bg-deep-slate`, `--container-charcoal`, `--border-contrast`, `--accent-cyan`).
-2. Analyze how Mantine CSS variables (`@mantine/core/styles.css`) interact with custom styles and root elements (`:root`, `[data-mantine-color-scheme="dark"]`, `[data-theme="dark"]`).
-3. Identify how container components (Card, Paper, AppShell, Header, Navbar, Drawer, Modal) derive background, border, and text colors.
-4. Provide precise CSS / TypeScript design token specifications for the worker.
-
-Write your detailed findings to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\handoff.md`.
-Communicate your completion to the parent orchestrator via send_message.
+ASSIGNMENT (Milestone M2: Top Header, Hero Search & Spotlight Command Modal):
+1. Read ORIGINAL_REQUEST.md and PROJECT.md.
+2. Investigate src/components/AppHeader.tsx and src/App.tsx (CommandDialog modal) in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording.
+   Analyze sticky top header navbar, hero search input, ⌘K / Ctrl+K shortcut badge, view switcher (List, Grid, Table), Edit mode toggle, batch drawer toggle with count badge, settings trigger, and the CommandDialog modal component.
+3. Formulate precise refactoring strategy for 2026 Linear/Vercel aesthetics (glassmorphic top header backdrop-blur-xl, Onyx container surfaces #0c0e12, ambient cyan glow border for hero search & modal, Geist/Inter typography) while strictly preserving #appHeader, data-v="list|grid|table", search input handlers, and modal trigger keybindings.
+4. Write your analysis to strategy_header_search.md in your working directory.
+5. When finished, send a completion message with summary to parent.
 </USER_REQUEST>

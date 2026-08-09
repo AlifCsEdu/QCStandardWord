@@ -1,47 +1,39 @@
-# BRIEFING — 2026-08-09T12:43:30Z
+# BRIEFING — 2026-08-09T13:13:16Z
 
 ## Mission
-Survey codebase structure, dependencies, configuration files, test suite, and environment constraints for Step 0 of the QC Standard Wording project overhaul and Mantine UI to shadcn/ui migration.
+Investigate codebase structure, dependencies, frameworks, scripts, state management, UI components, and test/build setup for QCStandardWording, producing a comprehensive analysis in codebase_analysis.md.
 
 ## 🔒 My Identity
-- Archetype: Teamwork explorer
-- Roles: Explorer 1 (Step 0 Survey)
+- Archetype: teamwork_preview_explorer
+- Roles: codebase investigation, technical report generation, handoff synthesis
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1
-- Original parent: ab4d18e8-e0b8-4828-86c9-78ea6701f987
-- Milestone: Step 0 - Project Survey & Environment Setup
+- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Milestone: codebase_investigation
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement code changes in the main repo
-- Document findings in handoff.md inside explorer_survey_1 directory
-- Send summary message back to parent orchestrator when finished
+- Read-only investigation — do NOT implement application code changes (only write report files inside working directory)
 
 ## Current Parent
-- Conversation ID: ab4d18e8-e0b8-4828-86c9-78ea6701f987
-- Updated: 2026-08-09T12:43:30Z
+- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
+- Updated: 2026-08-09T13:13:16Z
 
 ## Investigation State
-- **Explored paths**:
-  - `package.json`
-  - `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`
-  - `vite.config.ts`, `postcss.config.cjs`, `wrangler.jsonc`
-  - `PROJECT.md`, `TEST_INFRA.md`, `ORIGINAL_REQUEST.md`
-  - `src/main.tsx`, `src/App.tsx`, `src/index.css`
-  - `src/types/qc.ts`, `src/data/qcData.ts`, `src/hooks/useQCState.ts`
-  - `tests/harness.js`
+- **Explored paths**: `package.json`, `PROJECT.md`, `TEST_INFRA.md`, `TEST_READY.md`, `src/App.tsx`, `src/types/qc.ts`, `src/hooks/useQCState.ts`, `src/hooks/useAppearance.ts`, `src/data/qcData.ts`, `src/utils/categoryColors.ts`, `src/utils/searchEngine.ts`, `tests/*`
 - **Key findings**:
-  - Current stack uses React 19.2.8 + Vite 6 + TypeScript 5.7 + Mantine UI 7.17.8.
-  - Target migration stack: Tailwind CSS v4 + Radix UI primitives + Lucide React + CVA + clsx + tailwind-merge + cmdk + sonner + next-themes.
-  - Path alias `@/*` -> `src/*` configured in `tsconfig.app.json` and `vite.config.ts`.
-  - Cloudflare Pages configuration in `wrangler.jsonc` builds to `./dist`.
-  - Test runner is Node test runner (`node --test tests/**/*.test.js`) + JSDOM + `esbuild.buildSync` harness.
-  - TypeScript compilation baseline `npx tsc --noEmit` passes with 0 errors.
-- **Unexplored areas**: None for Step 0 survey.
+  1. 0 `@mantine/*` packages in `package.json`; fully migrated to Radix UI + Lucide + Tailwind CSS v4 + Sonner + CMDK.
+  2. Deep Zinc Dark Palette (`#09090b` bg, `#18181b` cards, `#27272a` borders, `#06b6d4` cyan accents).
+  3. `useQCState` and `useAppearance` manage 14 `localStorage` keys with custom pin folder CRUD support.
+  4. `npm run build` succeeds (exit code 0 in 3.55s, output `./dist/`).
+  5. `npm test` passes 100% (55 pass across 28 test suites, including Tier 5 hardening).
+- **Unexplored areas**: None. Codebase survey complete.
 
 ## Key Decisions Made
-- Survey completed and documented in handoff.md.
+- Executed `npm run build`, `npm test`, and `npm run test:tier5` commands to verify build and test outputs.
+- Compiled technical investigation report into `codebase_analysis.md`.
+- Authored 5-component hard handoff report into `handoff.md`.
 
 ## Artifact Index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\DISPATCH.md` — Dispatch prompt log
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\BRIEFING.md` — Working memory briefing index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\progress.md` — Progress heartbeat
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\handoff.md` — Handoff report
+- DISPATCH.md — Dispatch log
+- BRIEFING.md — Working memory index
+- codebase_analysis.md — Comprehensive technical investigation report
+- handoff.md — 5-component handoff report

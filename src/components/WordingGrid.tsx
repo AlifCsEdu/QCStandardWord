@@ -30,7 +30,7 @@ export const WordingGrid: React.FC<WordingViewProps> = ({
   isPinnedInFolder,
 }) => {
   return (
-    <div className="wording-grid-body grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
+    <div className="wording-grid-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
       {results.map(({ item, isApprox, highlightedText }) => {
         const isPinned = pinsSet.has(item.id) || pinsSet.has(item.n);
         return (

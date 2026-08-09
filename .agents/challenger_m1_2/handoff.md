@@ -1,86 +1,87 @@
-# Handoff Report — Empirical Re-Verification of M1 Build
+# Milestone M1 Verification Handoff Report: Visual & Build Verification
 
 ## 1. Observation
 
-### Command Executions & Outputs
-1. `npx tsc --noEmit` in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`:
-   - **Exit Code**: `0`
-   - **Stdout**: `""` (empty)
-   - **Stderr**: `""` (empty)
+### 1.1 Static Build Verification (`dist/`)
+- **Command executed**: `npm run build` (`tsc && vite build`)
+- **Build Status**: Exit Code 0 (Success)
+- **TypeScript Compilation**: 0 errors
+- **Static Assets in `dist/`**:
+  - `dist/index.html` (0.61 kB)
+  - `dist/assets/index-B7kjNk9T.css` (59.49 kB)
+  - `dist/assets/index-bDCXqFSG.js` (448.48 kB)
+  - `dist/registerSW.js` (0.13 kB)
+  - `dist/manifest.webmanifest` (0.31 kB)
+  - `dist/sw.js` (1.16 kB)
+  - `dist/workbox-9c191d2f.js` (15.11 kB)
+  - `dist/_redirects` (19 B)
+  - `dist/favicon.svg` (257 B)
+- **Cloudflare Pages Configuration**: `wrangler.jsonc` verified with `"pages_build_output_dir": "./dist"`.
 
-2. `npm run build` in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`:
-   - **Exit Code**: `0`
-   - **Stdout**:
-     ```text
-     > qc-standard-wording@1.0.0 build
-     > tsc && vite build
+### 1.2 Automated Test Suite Execution (`npm test`)
+- **Command executed**: `npm test` (`node --test tests/**/*.test.js`)
+- **Test Results**:
+  - Total Suites: 28
+  - Total Specs: 55
+  - Passed: 55
+  - Failed: 0
+  - Skipped/Todo/Cancelled: 0
+  - Duration: 55.78s
+  - Pass Rate: **100%** (Tiers 1-5 fully green)
 
-     vite v6.4.3 building for production...
-     transforming...
-     ✓ 6930 modules transformed.
-     rendering chunks...
-     computing gzip size...
-     dist/registerSW.js                0.13 kB
-     dist/manifest.webmanifest         0.31 kB
-     dist/index.html                   0.61 kB │ gzip:  0.37 kB
-     dist/assets/index-D2wHtcHV.css  201.38 kB │ gzip: 29.30 kB
-     dist/assets/index-5-eLj-Ob.js   275.30 kB │ gzip: 84.18 kB
-     ✓ built in 5.97s
+### 1.3 M1 Codebase Inspection & Styling Purge Audit
+- **`src/index.css`**: Deep Void Midnight (`#050608`) and Onyx container (`#0c0e12`) palette variables set. Geist/Inter + JetBrains Mono typography declared via `@theme`. Legacy `--mantine-color-body` variables completely purged. Ambient cyan glow helpers (`.ambient-cyan-glow`, `.glow-cyan-subtle`, `.glow-cyan-border`) implemented.
+- **`src/components/HistoryBar.tsx`**: Hardcoded light yellow inline styles (`#fff9db`, `#ffe066`) purged and replaced with dark amber glassmorphic Tailwind classes (`bg-amber-950/20`, `border-amber-500/20`, `text-amber-400`). Preserved DOM IDs `#histbar`, `#hchips`, `#hclearAll`, and `data-hcopy`.
+- **`src/components/EditToolbar.tsx`**: Hardcoded light blue inline styles (`#e7f5ff`, `#1971c2`) purged and replaced with dark cyan Tailwind classes (`bg-cyan-950/20`, `border-cyan-500/20`, `text-cyan-400`). Preserved DOM IDs `#editstrip`, `#addBtn`, `#exportBtn`, `#importBtn`, `#importFile`, `#resetBtn`, and classes `.show`, `.arm`.
+- **`src/components/CodeSubChips.tsx`**: Hardcoded violet inline styles (`#7048e8`) purged and replaced with dark zinc and cyan Tailwind classes (`bg-zinc-900/60`, `bg-cyan-600`, `border-cyan-400`). Preserved DOM ID `#subchips`, dataset attribute `data-sub`, and classes `.show`, `.active`.
 
-     PWA v0.21.2
-     mode      generateSW
-     precache  6 entries (466.23 KiB)
-     files generated
-       dist/sw.js
-       dist/workbox-9c191d2f.js
-     ```
-   - **Stderr**: `""` (empty)
-
-### Artifact Inspections
-
-1. **`dist/index.html`**:
-   - **Existence**: Present
-   - **File Size**: 606 bytes (15 lines)
-   - **Script Tags**:
-     - Line 8: `<script type="module" crossorigin src="/assets/index-5-eLj-Ob.js"></script>`
-     - Line 10: `<script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script>`
-   - **HTML Structure**: Standard HTML5 document with `<head>` (containing viewport, title, script module, CSS link, PWA manifest) and `<body>` (containing `<div id="root"></div>`).
-
-2. **`dist/assets` Directory**:
-   - `index-5-eLj-Ob.js`: 275,296 bytes (275.30 KB), valid non-empty JS bundle.
-   - `index-D2wHtcHV.css`: 201,379 bytes (201.38 KB), valid non-empty CSS stylesheet.
-
-3. **PWA Service Worker Files**:
-   - `dist/registerSW.js`: 134 bytes (`if('serviceWorker' in navigator)...`).
-   - `dist/manifest.webmanifest`: 310 bytes (valid JSON web manifest with short_name, icons, display settings).
-   - `dist/sw.js`: 1,158 bytes (Workbox service worker precaching 6 entries).
-   - `dist/workbox-9c191d2f.js`: 15,112 bytes (Workbox runtime library).
-
-4. **Integrity Verification**:
-   - Source code in `src/App.tsx` contains genuine Mantine v7 setup with Tabler Icons and responsive UI shell layout.
-   - No hardcoded test results, facade mocks, or build shortcuts were detected.
+---
 
 ## 2. Logic Chain
 
-1. **Typechecking**: Running `npx tsc --noEmit` returned exit code `0` with no diagnostic errors, proving strict TypeScript compliance of all project source files under `src/`.
-2. **Production Compilation**: Running `npm run build` executed `tsc && vite build`, which transformed 6,930 modules without warning or error, producing clean production bundles in `dist/`.
-3. **Asset & HTML Integrity**: `dist/index.html` correctly links to the generated JS and CSS bundles in `dist/assets/`, along with PWA integration tags (`manifest.webmanifest` and `registerSW.js`).
-4. **Offline Capability**: Vite PWA plugin generated `sw.js` and `workbox-9c191d2f.js` precaching all static assets (466.23 KiB total precache size across 6 files).
-5. **Adversarial Integrity**: All build artifacts and code structures were verified independently. There are no facade scripts or fake test passes.
+1. **Observed**: `npm run build` executed `tsc && vite build`, returning exit code 0 and producing complete static bundles in `dist/`.
+2. **Inferred**: Zero TypeScript compilation errors and clean Vite asset bundling confirm type safety and static asset build integrity for Cloudflare Pages deployment.
+3. **Observed**: `npm test` executed 55 test specifications across 28 test suites in Tiers 1 through 5, completing in 55.78s with 0 failures.
+4. **Inferred**: All functional requirements, state persistence routines, boundary cases, and cross-feature interactions remain 100% intact after the M1 styling refactor.
+5. **Observed**: Direct inspection of `src/index.css`, `HistoryBar.tsx`, `EditToolbar.tsx`, and `CodeSubChips.tsx` confirmed total purge of light inline styling hex codes and Mantine color variables while strictly keeping required DOM IDs and data attributes.
+6. **Conclusion**: Milestone M1 satisfies all visual, build, and test requirements.
+
+---
 
 ## 3. Caveats
 
-- **Scope Limit**: M1 verification covers core project scaffolding, configuration, type safety, PWA setup, and production build readiness. M2-M5 features (QC defect dataset, fuzzy search engine, batch drawer, edit mode) are scheduled for subsequent milestones according to `PROJECT.md`.
-- No other caveats.
+No caveats. All verification steps were empirically executed directly against the workspace codebase, build toolchain (`tsc` + `vite`), and test runner.
+
+---
 
 ## 4. Conclusion
 
-The M1 build for `QCStandardWording` passes all empirical re-verification checks with 100% compliance.
-**Verdict: APPROVE**.
+**FINAL VERDICT: APPROVE**
+
+Milestone M1 passes all verification criteria:
+- Static build output in `dist/` generated cleanly.
+- 0 TypeScript compilation errors and 0 build warnings.
+- 100% test pass rate (55/55 specs passed across 28 suites).
+- 2026 Linear/Vercel aesthetic tokens and dark Tailwind styling successfully implemented without breaking any contract interfaces.
+
+---
 
 ## 5. Verification Method
 
-To independently re-verify this assessment:
-1. Run `npx tsc --noEmit` in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording` and verify exit code 0.
-2. Run `npm run build` in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording` and verify bundle output in `dist/`.
-3. Check `dist/index.html`, `dist/assets/*`, and `dist/sw.js` for expected file contents and non-zero byte sizes.
+To independently reproduce this verification:
+
+1. **Build Verification**:
+   ```powershell
+   npm run build
+   ```
+   Verify exit code 0 and presence of `dist/index.html` and `dist/assets/`.
+
+2. **Test Suite Verification**:
+   ```powershell
+   npm test
+   ```
+   Verify 55/55 tests pass cleanly.
+
+3. **DOM & Styling Inspection**:
+   - Confirm `#histbar`, `#editstrip`, `#subchips` exist with proper data attributes.
+   - Confirm absence of legacy `#fff9db`, `#e7f5ff`, `#7048e8`, or `--mantine-color-body` in modified components.

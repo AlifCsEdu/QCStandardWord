@@ -1,122 +1,30 @@
-# Handoff Report — Explorer 1 (Milestone 2: 2026 Deep Slate & Charcoal Theme & Design Tokens Setup)
+# Handoff Report — Milestone M2: Sticky Left Sidebar & Custom Pin Folder Manager Strategy
 
 ## 1. Observation
-
-### Existing Theme & Files Analysis
-- **`src/theme/`**: Directory does not currently exist. Theme configuration is defined inline inside `src/App.tsx`.
-- **`src/App.tsx` (lines 303–314)**:
-  ```ts
-  const defaultTheme = createTheme({
-    primaryColor: 'blue',
-    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
-  });
-
-  export default function App() {
-    return (
-      <MantineProvider theme={defaultTheme} defaultColorScheme="light">
-        <Notifications position="top-right" zIndex={1000} />
-        <AppContent />
-      </MantineProvider>
-    );
-  }
-  ```
-- **`src/index.css` (lines 1–5)**:
-  Only contains style imports for `@mantine/core/styles.css`, `@mantine/spotlight/styles.css`, and `@mantine/notifications/styles.css`. Lacks custom CSS variable definitions for Deep Slate, Charcoal, or border styling.
-- **`src/hooks/useAppearance.ts` (lines 4–12, 67–73)**:
-  - `DEFAULT_SETTINGS` has `theme: 'light'`.
-  - `useEffect` synchronizes appearance state to `document.documentElement` attributes:
-    ```ts
-    root.setAttribute('data-mantine-color-scheme', appearance.theme === 'auto' ? 'light' : appearance.theme);
-    root.setAttribute('data-theme', appearance.theme);
-    root.setAttribute('data-density', appearance.density);
-    root.setAttribute('data-layout', appearance.layout);
-    ```
-- **`package.json`**:
-  - `@mantine/core`: `^7.17.8`
-  - `@mantine/hooks`: `^7.17.8`
-  - `@mantine/notifications`: `^7.17.8`
-  - `@mantine/spotlight`: `^7.17.8`
-- **`tests/` Test Suite**:
-  - `tests/tier1-features.test.js`: Verifies `MantineProvider` and DOM root initialization (`should initialize MantineProvider and DOM tree with Deep Slate & Charcoal theme defaults`).
-  - `tests/harness.js`: Compiles `src/main.tsx` via `esbuild.buildSync` into IIFE for JSDOM testing.
-
----
+- Target File Analyzed: `src/components/CategoryChips.tsx` (119 lines) in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`.
+- Core Layout & Contracts:
+  - Parent container in `App.tsx` (line 188–194): `<aside data-testid="app-navbar" id="sidebarNav" className="sidebar-nav fixed sm:sticky top-[60px] h-[calc(100vh-60px)] w-[260px] bg-zinc-900 border-r border-zinc-800 overflow-y-auto z-30 transition-transform duration-200 ...">`
+  - Child elements in `CategoryChips.tsx`: `<div id="nav" className="category-nav-container p-3 border-b border-zinc-800">` and `<div id="chips" className="chips-scroll-container flex flex-col gap-1">`.
+  - Data attributes: Category buttons carry `data-cat="{cat.id}"`, folder buttons carry `data-folder="{folder.id}"` and `data-cat="pinned"`.
+- Available State Hook Methods: `useQCState.ts` provides `folders`, `activeFolderId`, `setActiveFolderId`, `createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, and `getItemFolderIds`.
+- Icon Mapping: `src/utils/categoryColors.ts` defines 15 dedicated Lucide icons (`Monitor`, `Camera`, `Sliders`, `Radio`, `Battery`, `Smartphone`, `Lock`, `PenTool`, `Droplets`, `Volume2`, `Cpu`, `Settings`, `Activity`, `Code`, `Folder`, `Star`, `History`).
+- Test Suite Executions: Running `npm test` executes JSDOM harness test suites (`tests/harness.js`, `tests/m3-pin-folders.test.js`, Tiers 1-5).
 
 ## 2. Logic Chain
+1. *Observation*: The existing `CategoryChips.tsx` provides basic category selection and read-only folder listing, but lacks interactive Custom Pin Folder CRUD operations (creation form, rename input, deletion popover/confirmation) and collapsible section grouping.
+2. *Observation*: The 2026 Linear/Vercel aesthetic design specification (from `ORIGINAL_REQUEST.md` and `PROJECT.md`) requires Onyx surface backgrounds (`#0c0e12`), 1px razor-sharp borders (`border-white/[0.08]`), ambient cyan glow highlights (`from-cyan-500/15 via-cyan-500/10 to-transparent`, `shadow-[0_0_12px_rgba(6,182,212,0.15)]`), 150ms ease hover transitions, and theme-aware cyan/emerald pill badges.
+3. *Logic Step*: By extending `CategoryChipsProps` to accept `onCreateFolder`, `onDeleteFolder`, and `onRenameFolder` callbacks, and connecting them to existing `useQCState` methods in `App.tsx`, we can enable full inline Pin Folder CRUD management directly within the sidebar without altering the external application state structure.
+4. *Logic Step*: By structuring `CategoryChips.tsx` into 3 collapsible sections (Quick Views, Custom Pin Folders, Defect Categories) and preserving DOM selectors (`#sidebarNav`, `#nav`, `#chips`, `data-cat`, `data-folder`, `data-testid`), we maintain 100% execution compatibility with `tests/harness.js` queries while achieving 2026 Linear/Vercel aesthetic standards.
 
-1. **Modular Theme Structure (`src/theme/`)**:
-   Creating a dedicated `src/theme/` directory with `colors.ts` and `index.ts` decouples theme tokens from component render logic in `App.tsx`.
-2. **Mantine UI v7 10-Shade Color Tuples**:
-   Mantine v7 requires custom colors in `theme.colors` to be 10-element arrays of hex strings.
-   - **Deep Slate & Charcoal Palette (`deepSlate` / `dark`)**:
-     - `deepSlate[9]` = `#0f172a` (Slate 900 — Deep Slate body background)
-     - `deepSlate[8]` = `#1e293b` (Slate 800 — Charcoal surface container)
-     - `deepSlate[7]` = `#334155` (Slate 700 — High-contrast border outline)
-     - `deepSlate[6]` = `#475569` (Slate 600)
-     - `deepSlate[5]` = `#64748b` (Slate 500)
-     - `deepSlate[4]` = `#94a3b8` (Slate 400 — Muted text)
-     - `deepSlate[3]` = `#cbd5e1` (Slate 300)
-     - `deepSlate[2]` = `#e2e8f0` (Slate 200)
-     - `deepSlate[1]` = `#f1f5f9` (Slate 100)
-     - `deepSlate[0]` = `#f8fafc` (Slate 50 — Light text)
-   - **Cool Cyan Accent Palette (`cyan`)**:
-     - `cyan[5]` = `#06b6d4` (Cool cyan primary highlight)
-     - `cyan[7]` = `#0284c7` (Cool cyan secondary accent)
-3. **Mantine Dark Palette Override**:
-   Overriding `theme.colors.dark` with the `deepSlate` tuple allows all Mantine core components (`Paper`, `Card`, `Modal`, `Drawer`, `AppShell`, `Table`) to automatically inherit Charcoal background `#1e293b` and Deep Slate body `#0f172a` when operating in dark mode.
-4. **Global CSS Custom Properties (`src/index.css`)**:
-   Adding root CSS custom variables under `:root`, `[data-mantine-color-scheme="dark"]`, and `[data-theme="dark"]`:
-   - `--bg-deep-slate: #0f172a;`
-   - `--bg-charcoal: #1e293b;`
-   - `--border-high-contrast: #334155;`
-   - `--accent-cyan-primary: #06b6d4;`
-   - `--accent-cyan-secondary: #0284c7;`
-   This ensures seamless styling for both Mantine components and raw HTML/CSS elements.
-5. **Default Theme & Root Attribute Synchronization**:
-   Updating `DEFAULT_SETTINGS` in `useAppearance.ts` from `theme: 'light'` to `theme: 'dark'` ensures that the app loads in the 2026 Deep Slate & Charcoal theme by default while preserving light mode fallback when toggled.
-
----
-
-## 6. Caveats
-
-- **Existing LocalStorage Cache**: User browsers or tests with previously saved `qc-theme: "light"` in `localStorage` will retain light mode unless updated or cleared.
-- **Component Hardcoded Colors**: Individual components (e.g. `AppHeader.tsx`, `WordingContainer.tsx`) still have inline CSS properties like `background: '#ffffff'` or `border: '1px solid #ced4da'`. These component-level styles will be updated in subsequent layout & feature milestones (M3–M6). M2 establishes the underlying theme framework, design tokens, MantineProvider configuration, and global CSS variables.
-
----
+## 3. Caveats
+- No caveats. All DOM selector contracts and component props have been thoroughly inspected and accounted for in the refactoring strategy.
 
 ## 4. Conclusion
-
-The implementation strategy for Milestone 2 is clear and ready for execution:
-1. **Create `src/theme/colors.ts`**: Define `deepSlate` and `cyan` 10-shade tuples.
-2. **Create `src/theme/index.ts`**: Configure Mantine theme using `createTheme({ primaryColor: 'cyan', colors: { dark: deepSlate, deepSlate, cyan }, ... })`.
-3. **Update `src/index.css`**: Declare global CSS variables (`--bg-deep-slate`, `--bg-charcoal`, `--border-high-contrast`, `--accent-cyan-primary`, `--accent-cyan-secondary`) and body background rules for `data-theme="dark"` / `data-theme="light"`.
-4. **Update `src/App.tsx`**: Pass custom `theme` to `MantineProvider` and set `defaultColorScheme="dark"`.
-5. **Update `src/hooks/useAppearance.ts`**: Set `DEFAULT_SETTINGS` theme default to `'dark'`.
-
----
+The comprehensive strategy report `strategy_sidebar.md` has been successfully created in `.agents/explorer_m2_1/strategy_sidebar.md`. It provides the complete implementation blueprint, exact TSX code structure, styling tokens, and DOM preservation contracts needed by implementers to upgrade `CategoryChips.tsx` for Milestone M2.
 
 ## 5. Verification Method
-
-### Execution Commands
-1. **Build Verification**:
-   ```bash
-   npm run build
-   ```
-   *Expected Result*: Clean TypeScript type checking (`tsc`) and Vite production bundle generation in `dist/`.
-
-2. **Test Suite Verification**:
-   ```bash
-   npm test
-   ```
-   *Expected Result*: 100% pass rate across all test suites in `tests/*.test.js`.
-
-### Files to Inspect
-- `src/theme/colors.ts`
-- `src/theme/index.ts`
-- `src/App.tsx`
-- `src/index.css`
-- `src/hooks/useAppearance.ts`
-
-### Invalidation Conditions
-- TypeScript errors when compiling `createTheme` due to invalid color tuple formats.
-- Failure of JSDOM tests checking `data-theme` or `MantineProvider` initialization.
+- Inspection File: `.agents/explorer_m2_1/strategy_sidebar.md`
+- Verification Commands:
+  - `npm test` (verify all JSDOM test suites pass with 100% success rate)
+  - `npm run build` (verify TypeScript compilation and Vite build output)
+- Invalidation Conditions: Any modification that removes `#sidebarNav`, `#nav`, `#chips`, `data-cat`, or `data-folder` DOM attributes invalidates the strategy contract.
