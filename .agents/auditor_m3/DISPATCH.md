@@ -1,11 +1,16 @@
-## 2026-08-07T01:21:07Z
-You are Auditor 3 (Forensic Integrity Auditor 3).
-Your working directory is c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m3\.
-Read c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md and c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md.
-Read the previous forensic audit finding in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m1_2\subagent_audit_report.md.
-Perform forensic audit on all files in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording to verify:
-1. Genuine React application implementation in src/App.tsx, src/components/, src/hooks/.
-2. tests/harness.js tests src/ modules (not legacy HTML).
-3. npm run test passes 32/32 tests with zero errors.
-4. Zero facades, cheating, or hardcoded shortcuts.
-Deliver your audit report and explicit verdict (CLEAN or INTEGRITY VIOLATION) to c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m3\handoff.md.
+## 2026-08-09T12:54:05Z
+You are teamwork_preview_auditor for Milestone 3 (M3: Custom Pin Folders & State Layer Overhaul) of the QC Standard Wording project overhaul.
+
+Working Directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m3
+
+Your task:
+1. Read original request at: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. Read project scope document at: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+3. Audit Milestone 3 deliverables:
+   - Inspect `src/types/qc.ts`: Verify `CustomPinFolder` schema definition.
+   - Inspect `src/hooks/useQCState.ts`: Verify `qc-pin-folders` localStorage key implementation (14 keys total), legacy pin migration, folder CRUD operations (`createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, `getItemFolderIds`).
+   - Inspect `src/hooks/useAppearance.ts`: Verify removal of all `@mantine/*` references and proper dark mode class toggling.
+   - Check for hardcoded test bypasses, dummy facades, or fake implementations.
+   - Perform test & build execution checks (`npx tsc --noEmit`, `npm test`).
+4. Document full evidence chain in `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m3\handoff.md`.
+5. Send verdict message back to orchestrator: CLEAN or INTEGRITY VIOLATION.

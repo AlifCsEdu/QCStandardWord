@@ -292,7 +292,7 @@ export function searchQCItems(
       item,
       score: 100,
       isApprox: false,
-      highlightedText: item.t,
+      highlightedText: escapeHtml(item.t),
     }));
   }
 

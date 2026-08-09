@@ -56,10 +56,12 @@ function getCompiledAppCode() {
   const entryPath = path.join(projectRoot, 'src', 'main.tsx');
   const result = esbuild.buildSync({
     entryPoints: [entryPath],
+    absWorkingDir: projectRoot,
     bundle: true,
     write: false,
     format: 'iife',
     target: 'es2020',
+    mainFields: ['main', 'module'],
     loader: { '.tsx': 'tsx', '.ts': 'ts', '.css': 'empty' },
     define: { 'process.env.NODE_ENV': '"test"' },
   });
@@ -650,20 +652,34 @@ export function createAppInstance(options = {}) {
     },
 
     // Layout Settings & View Switcher (Feature 4 & Feature 9)
-    setLayoutView: (layoutMode) => {
+    setLayoutView: async (layoutMode) => {
       runWithFlush(() => {
-        const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
-        if (setBtn) setBtn.click();
-
         const layoutGroup = document.querySelector('#setLayout, [data-testid="view-switcher"], [data-testid="segmented-control-view"], .mantine-SegmentedControl-root');
         if (layoutGroup) {
-          const btn = layoutGroup.querySelector(`[data-v="${layoutMode}"], [data-value="${layoutMode}"], [value="${layoutMode}"], [data-testid="view-mode-${layoutMode}"]`);
+          let btn = layoutGroup.querySelector(`[data-v="${layoutMode}"], [data-value="${layoutMode}"], [value="${layoutMode}"], [data-testid="view-mode-${layoutMode}"]`);
+          if (!btn) {
+            const buttons = Array.from(layoutGroup.querySelectorAll('button'));
+            btn = buttons.find((b) => b.textContent.trim().toLowerCase() === layoutMode.toLowerCase());
+          }
           if (btn) btn.click();
+        } else {
+          const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
+          if (setBtn) setBtn.click();
+          const modalLayoutGroup = document.querySelector('[data-testid="settings-modal"] #setLayout, #setLayout');
+          if (modalLayoutGroup) {
+            let btn = modalLayoutGroup.querySelector(`[data-v="${layoutMode}"], [data-value="${layoutMode}"], [value="${layoutMode}"], [data-testid="view-mode-${layoutMode}"]`);
+            if (!btn) {
+              const buttons = Array.from(modalLayoutGroup.querySelectorAll('button'));
+              btn = buttons.find((b) => b.textContent.trim().toLowerCase() === layoutMode.toLowerCase());
+            }
+            if (btn) btn.click();
+          }
+          const setDone = document.querySelector('#setdone, [data-testid="settings-close-btn"]');
+          if (setDone) setDone.click();
         }
-
-        const setDone = document.querySelector('#setdone, [data-testid="settings-close-btn"]');
-        if (setDone) setDone.click();
       });
+      await waitAsync(30);
+      ensureFlushed();
 
       return helpers;
     },

@@ -66,7 +66,14 @@ export function useAppearance() {
 
     if (typeof document !== 'undefined') {
       const root = document.documentElement;
-      root.setAttribute('data-mantine-color-scheme', appearance.theme === 'auto' ? 'light' : appearance.theme);
+      const isDark =
+        appearance.theme === 'dark' ||
+        (appearance.theme === 'auto' &&
+          typeof window !== 'undefined' &&
+          window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+      root.classList.toggle('dark', isDark);
       root.setAttribute('data-theme', appearance.theme);
       root.setAttribute('data-density', appearance.density);
       root.setAttribute('data-layout', appearance.layout);

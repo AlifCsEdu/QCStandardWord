@@ -1,72 +1,56 @@
-# BRIEFING — 2026-08-07T13:39:19Z
+# BRIEFING — 2026-08-09T20:54:00Z
 
 ## Mission
-Sub-Orchestrator for Milestone 3: Sticky Left Sidebar Navigation & Top Header Refactoring of the QC Standard Wording application.
+Execute Milestone 3 (M3: Custom Pin Folders & State Layer Overhaul) for QC Standard Wording project.
 
 ## 🔒 My Identity
-- Archetype: teamwork_preview_sub_orch
-- Roles: orchestrator, user_liaison, human_reporter, successor
+- Archetype: implementer/qa/specialist
+- Roles: implementer, qa, specialist
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3
-- Original parent: parent
-- Original parent conversation ID: fcf662c2-d4d7-4d12-88fa-7633e1a226db
-
-## 🔒 My Workflow
-- **Pattern**: Project (Sub-Orchestrator)
-- **Scope document**: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\SCOPE.md
-1. **Decompose**: Milestone 3 scope assessment and task plan
-2. **Dispatch & Execute**: Direct iteration loop (Explorer -> Worker -> Reviewers -> Challengers -> Forensic Auditor -> Gate Check)
-3. **On failure**: Retry -> Replace -> Skip -> Redistribute -> Redesign -> Escalate
-4. **Succession**: Self-succeed at 20 spawns
-- **Work items**:
-  1. Survey & Plan (Explorer investigation) [in-progress]
-  2. Implementation (Worker) [pending]
-  3. Review & Challenge (Reviewers & Challengers) [pending]
-  4. Forensic Integrity Audit (Auditor) [pending]
-  5. Gate Check & Scope Update [pending]
-- **Current phase**: 2B (Iteration Loop - Iteration 1)
-- **Current focus**: Explorer Investigation for Milestone 3
+- Original parent: ab4d18e8-e0b8-4828-86c9-78ea6701f987
+- Milestone: M3 (Custom Pin Folders & State Layer Overhaul)
 
 ## 🔒 Key Constraints
-- DO NOT write source code directly. Delegate ALL work to subagents.
-- Mandatory Integrity Warning MUST be included in worker prompt.
-- Perform Forensic Audit with teamwork_preview_auditor before passing gate.
-- Zero build errors (`npm run build`) and 100% test pass rate (`npm run test`).
-- Update SCOPE.md and PROJECT.md milestone status to DONE upon gate pass.
+- Preserve all existing 13 localStorage keys while adding `qc-pin-folders` (14th key).
+- In `src/types/qc.ts`: define `CustomPinFolder` (`id`, `name`, `color`, `itemIds`, `createdAt`).
+- In `src/hooks/useQCState.ts`: implement auto-migration from legacy `qc-pins` to default "Starred Defects" folder if no folders exist. Add state & action methods: `folders`, `activeFolderId`, `setActiveFolderId`, `createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, `getItemFolderIds`.
+- In `src/hooks/useAppearance.ts`: remove all `@mantine/*` references (`data-mantine-color-scheme`, etc.). Support dark class (`classList.toggle('dark')`) and `data-theme` attribute management for Deep Zinc Dark Theme.
+- DO NOT CHEAT or hardcode test results.
+- Verify with `npx tsc --noEmit` and `npm test`.
 
 ## Current Parent
-- Conversation ID: fcf662c2-d4d7-4d12-88fa-7633e1a226db
-- Updated: 2026-08-07T13:39:19Z
+- Conversation ID: ab4d18e8-e0b8-4828-86c9-78ea6701f987
+- Updated: 2026-08-09T20:54:00Z
+
+## Task Summary
+- **What to build**: Custom Pin Folders data structure, migration, hook methods, and appearance hook overhaul.
+- **Success criteria**: TypeScript compilation succeeds, test suite passes, pin folder operations work, migration works, theme attributes work.
+- **Interface contracts**: PROJECT.md & ORIGINAL_REQUEST.md
+
+## Change Tracker
+- **Files modified**:
+  - `src/types/qc.ts` — Defined CustomPinFolder interface.
+  - `src/hooks/useQCState.ts` — Added qc-pin-folders (14th key), auto-migration, folder CRUD methods, activeFolderId state.
+  - `src/hooks/useAppearance.ts` — Removed @mantine attributes, added classList.toggle('dark'), preserved data-theme.
+  - `tests/m3-pin-folders.test.js` — Added test suite for M3 custom pin folders, schema, migration, and theme attributes.
+- **Build status**: Pass (`npx tsc --noEmit` exit 0, `npm test` exit 0).
+- **Pending issues**: None.
+
+## Quality Status
+- **Build/test result**: Pass (46 tests passed).
+- **Lint status**: Pass (0 type errors).
+- **Tests added/modified**: `tests/m3-pin-folders.test.js` created.
+
+## Loaded Skills
+- None loaded explicitly
 
 ## Key Decisions Made
-- Milestone 3 decomposed into single iteration loop (Explorer -> Worker -> Reviewers -> Challengers -> Auditor -> Gate).
-
-## Team Roster
-| Agent | Type | Work Item | Status | Conv ID |
-|-------|------|-----------|--------|---------|
-| explorer_m3_1 | teamwork_preview_explorer | AppShell Navbar & Sidebar Layout | completed | 82dabaa3-93fb-406e-a86e-2224d17777cd |
-| explorer_m3_2 | teamwork_preview_explorer | AppHeader Refactoring & Stats Cleanup | completed | eaa9ca1a-f8e4-4009-adb6-135498f25f9b |
-| explorer_m3_3 | teamwork_preview_explorer | Layout Shift & Test Audit | completed | 9f473894-dec7-400b-9997-9d68803bcb00 |
-| worker_m3_1 | teamwork_preview_worker | Milestone 3 Refactoring Implementation | completed | eb4be4c1-fc0f-4164-9a21-6388ee16e1d4 |
-| reviewer_m3_1 | teamwork_preview_reviewer | Code & Layout Review | in-progress | bb47178f-fb17-4662-a04d-4b421a74bf7d |
-| reviewer_m3_2 | teamwork_preview_reviewer | Interface & Test Contracts Review | in-progress | f8542cd6-af33-4589-9414-91225e72863e |
-| challenger_m3_1 | teamwork_preview_challenger | Empirical Layout & Harness Verification | in-progress | de11a5cc-d634-439f-a765-4dd792abfcc5 |
-| challenger_m3_2 | teamwork_preview_challenger | Header & View Switcher Stress Test | in-progress | 58fd93b0-d5fc-49a6-bc93-a693442f0d4a |
-| auditor_m3_1 | teamwork_preview_auditor | Forensic Integrity Audit | in-progress | 82808e25-ff79-4ea8-9c23-269caa82a8a9 |
-
-## Succession Status
-- Succession required: no
-- Spawn count: 9 / 20
-- Pending subagents: bb47178f-fb17-4662-a04d-4b421a74bf7d, f8542cd6-af33-4589-9414-91225e72863e, de11a5cc-d634-439f-a765-4dd792abfcc5, 58fd93b0-d5fc-49a6-bc93-a693442f0d4a, 82808e25-ff79-4ea8-9c23-269caa82a8a9
-- Predecessor: none
-- Successor: not yet spawned
-
-## Active Timers
-- Heartbeat cron: not started
-- Safety timer: none
+- Maintained legacy `qc-pins` synchronization with union of folder `itemIds` for complete backwards compatibility.
+- Auto-migrated legacy `qc-pins` to a default "Starred Defects" folder (`#06b6d4` cyan accent) on first boot when `qc-pin-folders` is absent.
+- Removed `@mantine` DOM attribute references from `useAppearance.ts` while supporting Tailwind `.dark` class toggling.
 
 ## Artifact Index
-- ORIGINAL_REQUEST.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
-- SCOPE.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\SCOPE.md
-- DISPATCH.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\DISPATCH.md
-- progress.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\progress.md
+- `.agents/sub_orch_m3/DISPATCH.md` — Dispatch log
+- `.agents/sub_orch_m3/BRIEFING.md` — Persistent briefing
+- `.agents/sub_orch_m3/progress.md` — Progress heartbeat
+- `.agents/sub_orch_m3/handoff.md` — Detailed handoff report

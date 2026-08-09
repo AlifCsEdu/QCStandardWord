@@ -1,36 +1,84 @@
-# Sub-Orchestrator Handoff Report — Milestone 3
+# Handoff Report — Milestone 3 (Custom Pin Folders & State Layer Overhaul)
 
-## 1. Milestone State
-- **Milestone 3 (Sticky Left Sidebar Navigation & Top Header Refactoring)**: **DONE**
-- **SCOPE.md**: Updated to DONE
-- **PROJECT.md**: Updated to DONE
+## 1. Observation
 
-## 2. Active Subagents & Team Roster
-| Agent | Role | Status | Conv ID | Verdict |
-|-------|------|--------|---------|---------|
-| explorer_m3_1 | AppShell Navbar & Sidebar Layout | completed | 82dabaa3-93fb-406e-a86e-2224d17777cd | Complete |
-| explorer_m3_2 | AppHeader Refactoring & Stats Cleanup | completed | eaa9ca1a-f8e4-4009-adb6-135498f25f9b | Complete |
-| explorer_m3_3 | Layout Shift & Test Audit | completed | 9f473894-dec7-400b-9997-9d68803bcb00 | Complete |
-| worker_m3_1 | Milestone 3 Implementation | completed | eb4be4c1-fc0f-4164-9a21-6388ee16e1d4 | DONE (Build & test pass) |
-| reviewer_m3_1 | Code & Layout Review | completed | bb47178f-fb17-4662-a04d-4b421a74bf7d | APPROVE |
-| reviewer_m3_2 | Interface & Test Contracts Review | completed | f8542cd6-af33-4589-9414-91225e72863e | APPROVE |
-| challenger_m3_1 | Empirical Layout & Harness Verification | completed | de11a5cc-d634-439f-a765-4dd792abfcc5 | APPROVE |
-| challenger_m3_2 | Header & View Switcher Stress Test | completed | 58fd93b0-d5fc-49a6-bc93-a693442f0d4a | APPROVE |
-| auditor_m3_1 | Forensic Integrity Audit | completed | 82808e25-ff79-4ea8-9c23-269caa82a8a9 | CLEAN |
+### Source Code Modifications & File Paths
+- **`src/types/qc.ts`** (Lines 39-45):
+  Defined `CustomPinFolder` interface:
+  ```ts
+  export interface CustomPinFolder {
+    id: string;
+    name: string;
+    color?: string;
+    itemIds: (string | number)[];
+    createdAt: number;
+  }
+  ```
 
-## 3. Key Achievements & Verification
-1. **Sticky Left Sidebar Navigation**: Integrated sticky `<AppShell.Navbar data-testid="app-navbar" id="sidebarNav">` (width: 260px desktop) hosting `CategoryChips.tsx` (vertical stack) and `CodeSubChips.tsx`.
-2. **Top Header Refactoring**: Consolidated global search bar (`#search`, `data-testid="header-search-input"`), clear button (`#clearBtn`), Cmd+K Spotlight trigger (`#spotlightBtn`, `data-testid="spotlight-trigger"`), and view switcher (`SegmentedControl`, `data-testid="view-switcher"`, `#setLayout`) into `AppHeader.tsx`.
-3. **De-duplication**: Removed duplicate category badges (`categoriesToShow.map`) from `StatsDashboard.tsx` and redundant controls from `WordingContainer.tsx`.
-4. **0px Layout Shift**: Housed `CodeSubChips` inside fixed navbar container below category tabs, eliminating 45px vertical jump.
-5. **Build & Test Verification**:
-   - `npm run build`: Passed cleanly with 0 errors.
-   - `npm run test`: 100% pass rate (49/49 tests passed across 20 test suites).
-6. **Forensic Audit**: Verdict CLEAN (zero hardcoding, facade implementations, or cheating).
+- **`src/hooks/useQCState.ts`** (Lines 35-71, 226-319, 636-645):
+  - Added `qc-pin-folders` localStorage key as the 14th key.
+  - Implemented auto-migration: if `qc-pin-folders` is empty, reads legacy `qc-pins` and creates default folder:
+    `{ id: 'starred', name: 'Starred Defects', color: '#06b6d4', itemIds: legacyPins, createdAt: Date.now() }`.
+  - Added state variables: `folders` (`CustomPinFolder[]`), `activeFolderId` (`string | null`).
+  - Added helper `updateFoldersAndPins` to sync folder changes to `qc-pin-folders` and aggregate all folder item IDs to `pins` (`qc-pins` key).
+  - Implemented action methods: `createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, `getItemFolderIds`.
+  - Exposed all folder states and action methods in the returned hook interface object.
+  - Retained all existing 13 localStorage keys (`qc-pins`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`) alongside `qc-pin-folders`.
 
-## 4. Key Artifacts
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md`
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\SCOPE.md`
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\GATE_STATUS.md`
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\progress.md`
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\sub_orch_m3\BRIEFING.md`
+- **`src/hooks/useAppearance.ts`** (Lines 66-76):
+  - Removed `@mantine/*` DOM attribute reference (`data-mantine-color-scheme`).
+  - Added Tailwind `.dark` CSS class management via `root.classList.toggle('dark', isDark)`.
+  - Preserved `data-theme`, `data-density`, and `data-layout` attributes on `document.documentElement` for Deep Zinc Dark Theme palette styling.
+
+- **`tests/m3-pin-folders.test.js`**:
+  - Created dedicated test suite covering `CustomPinFolder` auto-migration, custom folder loading, 14 localStorage keys, and `useAppearance` theme DOM class/attribute behavior.
+
+### Verification Execution Results
+- Command: `npx tsc --noEmit`
+  Result: Exit code 0 (0 compilation errors).
+- Command: `npm test`
+  Result: Exit code 0 (All test suites passed).
+
+---
+
+## 2. Logic Chain
+
+1. **Schema & Types**: Requirement R3 & PROJECT.md M3 specified custom user pin categories/folders. Defining `CustomPinFolder` with `id`, `name`, `color`, `itemIds`, `createdAt` in `src/types/qc.ts` establishes the strongly-typed foundation.
+2. **State & Migration Layer**: In `src/hooks/useQCState.ts`, reading `qc-pin-folders` on initialization with fallback auto-migration ensures existing user starred defects from legacy `qc-pins` are seamlessly preserved in a default "Starred Defects" folder without data loss.
+3. **Folder Operations**: `createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, `getItemFolderIds` provide full CRUD capability. Keeping `pins` in sync with the aggregate set of all folder `itemIds` guarantees 100% backward compatibility with legacy components and `searchQCItems` search filtering.
+4. **Theme Overhaul**: Removing `data-mantine-color-scheme` in `src/hooks/useAppearance.ts` and toggling `documentElement.classList.toggle('dark', isDark)` completes the decoupling from Mantine UI while enabling Tailwind v4 dark theme styles and Deep Zinc palette variables (`data-theme`).
+
+---
+
+## 3. Caveats
+
+No caveats. All 14 localStorage keys are active, legacy migration functions cleanly, and all unit/integration tests compile and pass without issues.
+
+---
+
+## 4. Conclusion
+
+Milestone 3 (Custom Pin Folders & State Layer Overhaul) is fully implemented, verified, and complete. All type contracts, state hooks, theme handlers, and test suites fulfill the requirements of `ORIGINAL_REQUEST.md` and `PROJECT.md`.
+
+---
+
+## 5. Verification Method
+
+To independently verify this implementation:
+
+1. **TypeScript Compilation Check**:
+   ```bash
+   npx tsc --noEmit
+   ```
+   *Expected output*: Exit code 0 with zero type errors.
+
+2. **Automated Test Suite Execution**:
+   ```bash
+   npm test
+   ```
+   *Expected output*: Exit code 0 with all test suites passing.
+
+3. **Code & Interface Inspection**:
+   - Inspect `src/types/qc.ts` for `CustomPinFolder` interface.
+   - Inspect `src/hooks/useQCState.ts` for `qc-pin-folders` 14th key, auto-migration, and folder CRUD methods.
+   - Inspect `src/hooks/useAppearance.ts` for removal of `@mantine` attributes and addition of `classList.toggle('dark', isDark)`.

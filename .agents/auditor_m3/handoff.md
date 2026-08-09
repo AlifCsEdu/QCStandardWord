@@ -1,100 +1,90 @@
-# Forensic Integrity Audit 3 — Final Handoff Report
+# Forensic Audit Handoff Report — Milestone 3 Audit
 
-**Working Directory**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m3`  
-**Auditor**: Auditor 3 (Forensic Integrity Auditor 3)  
-**Explicit Verdict**: **CLEAN**
+**Work Product**: Milestone 3: Custom Pin Folders & State Layer Overhaul
+**Auditor**: teamwork_preview_auditor
+**Working Directory**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\auditor_m3`
+**Integrity Mode**: `development`
+**Verdict**: CLEAN
 
 ---
 
 ## 1. Observation
 
-### Observation 1: Genuine React Application Implementation
-- **`src/App.tsx` (212 lines)**: Full Mantine UI v7 `AppShell` container integrating `AppHeader`, `CategoryChips`, `CodeSubChips`, `HistoryBar`, `EditToolbar`, `WordingContainer`, `BatchDrawer`, `EditModal`, `SettingsModal`, and `ToastsContainer`.
-- **`src/hooks/useQCState.ts` (474 lines)**: Custom state hook managing 13 LocalStorage keys (`qc-pins`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`), toast state with 4.2s auto-dismiss and undo, batch drawer logic with customizable delimiters, bulk JSON import/export, and reset features.
-- **`src/hooks/useAppearance.ts` (143 lines)**: Appearance hook managing light/dark theme, accent palettes, corner radii, text size, cozy/compact density, motion preferences, and view modes.
-- **`src/components/` (13 components)**: Fully implemented modular components rendering List, Grid, and Table layouts, modals, drawers, and toast containers.
-- **`src/data/qcData.ts` (292 lines)**: Complete 139+ QC defect items across 13 categories, 10 panel sub-code chips, keyword tags (`CATKEY`), and search aliases (`ALIAS`).
-- **`src/utils/searchEngine.ts` (367 lines)**: Pure Levenshtein fuzzy distance (`lev`), subsequence matching (`subseq`), alias expansion, token scoring, and substring highlighting (`highlightSegments`).
+### Source Code Inspection
+1. `src/types/qc.ts`:
+   - Lines 39–45: `CustomPinFolder` interface is explicitly defined with `id: string`, `name: string`, `color?: string`, `itemIds: (string | number)[]`, and `createdAt: number`.
+2. `src/hooks/useQCState.ts`:
+   - State hook manages 14 `localStorage` keys: `qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`.
+   - Auto-migration (lines 35–52): When `qc-pin-folders` is uninitialized or empty, legacy `qc-pins` are automatically migrated into a default folder (`{ id: 'starred', name: 'Starred Defects', color: '#06b6d4', itemIds: legacyPins, createdAt: Date.now() }`) and persisted to `qc-pin-folders`.
+   - Folder CRUD functions implemented & exported:
+     - `createFolder(name: string, color?: string): string` (lines 238–252)
+     - `deleteFolder(folderId: string)` (lines 254–260)
+     - `renameFolder(folderId: string, newName: string)` (lines 262–270)
+     - `togglePinToFolder(itemId: string | number, folderId: string)` (lines 272–286)
+     - `isPinnedInFolder(itemId: string | number, folderId: string): boolean` (lines 288–295)
+     - `getItemFolderIds(itemId: string | number): string[]` (lines 297–304)
+   - `updateFoldersAndPins` (lines 65–77) recalculates the union of all pinned item IDs across custom pin folders, syncing both `qc-pin-folders` and `qc-pins` state and storage keys.
+3. `src/hooks/useAppearance.ts`:
+   - Search for `@mantine` across `src/` returned 0 results. Zero `@mantine/*` packages exist in `package.json`.
+   - Theme management (lines 62–81): Syncs `qc-appearance`, `qc-theme`, `qc-density`, and `qc-sort`. Dynamically toggles class `'dark'` on `document.documentElement` (`root.classList.toggle('dark', isDark)`) and sets attributes `data-theme`, `data-density`, and `data-layout`.
 
-### Observation 2: Test Harness Architecture (`tests/harness.js`)
-- `tests/harness.js` dynamically compiles `src/main.tsx` via `esbuild.buildSync` into an IIFE bundle:
-  ```js
-  const entryPath = path.join(projectRoot, 'src', 'main.tsx');
-  const result = esbuild.buildSync({
-    entryPoints: [entryPath],
-    bundle: true,
-    write: false,
-    format: 'iife',
-    target: 'es2020',
-    loader: { '.tsx': 'tsx', '.ts': 'ts', '.css': 'empty' },
-    define: { 'process.env.NODE_ENV': '"test"' },
-  });
-  ```
-- Bundled React app code is mounted and executed directly inside JSDOM `<div id="root"></div>`.
-- Legacy `standardwording.html` is no longer loaded or referenced by the test harness.
+### Prohibited Pattern Analysis
+- Hardcoded test results: None found.
+- Facade implementations: None found (all CRUD functions operate directly on React state and `localStorage`).
+- Pre-populated artifacts: 0 `.log` or pre-baked result files found.
 
-### Observation 3: Test Suite Execution (`npm run test`)
-- Executed `npm run test` (`node --test tests/**/*.test.js`).
-- **Results**: 32/32 tests passed across 17 suites (Tier 1: 14 tests, Tier 2: 11 tests, Tier 3: 3 tests, Tier 4: 2 tests, SearchEngine unit tests: 2 tests).
-- Duration: ~18.28 seconds.
-- Exit code: **0** (Zero test failures or cancellations).
-
-### Observation 4: Production Build Verification (`npm run build`)
-- Executed `npm run build` (`tsc && vite build`).
-- **Results**: 759 modules transformed cleanly, producing production dist bundle with PWA WebManifest and Service Worker (`registerSW.js`).
-- Exit code: **0** (Zero TypeScript or bundling errors).
-
-### Observation 5: Zero Facades, Cheating, or Hardcoded Shortcuts
-- Scanned all core files in `src/` for hardcoded test responses, mock bypasses, or conditional branches.
-- Confirmed zero facades or cheating mechanisms. State mutations, search scoring, and storage persistence function genuinely.
+### Build and Test Execution
+1. TypeScript compilation (`npx tsc --noEmit`): Exited with code 0 (0 type errors).
+2. Test suite (`npm test` running `node --test tests/**/*.test.js`): Exited with code 0.
+   - Total test suites: 22
+   - Total tests: 46
+   - Passed: 46, Failed: 0, Cancelled: 0, Skipped: 0
+   - `m3-pin-folders.test.js`: Passed 100% of tests including schema auto-migration, existing folder retention, 14 storage key availability, and dark class toggling.
 
 ---
 
 ## 2. Logic Chain
 
-1. **Remediation Verification**: Previous audit (`.agents/auditor_m1_2/subagent_audit_report.md`) identified a static 51-line stub in `src/App.tsx`, test harness targeting legacy HTML, and 2 test failures.
-2. **React Target Verification**: Inspection of `tests/harness.js` confirms `esbuild.buildSync` compiles `src/main.tsx` into JSDOM, ensuring tests execute against production React code in `src/`.
-3. **Architecture Verification**: Source inspection of `src/App.tsx`, `src/hooks/`, `src/components/`, `src/utils/`, and `src/data/` confirms full React + Vite + Mantine UI v7 implementation with real hooks, fuzzy search engine, and LocalStorage state persistence.
-4. **Execution & Build Verification**: `npm run test` passes 32/32 tests cleanly (exit code 0), and `npm run build` compiles without TypeScript or Vite errors (exit code 0).
-5. **Anti-Cheat Verification**: Forensic code scans across `src/` confirmed zero hardcodes, fake stubs, or test bypasses.
-6. **Verdict**: The project is authentic, production-ready, clean, and fully compliant.
+1. **Schema & Migration Verification**:
+   - Observation: `CustomPinFolder` is exported from `src/types/qc.ts`. `useQCState` reads `qc-pin-folders` on boot; if missing, it parses `qc-pins` and wraps existing pinned items inside a new `CustomPinFolder` under `'starred'`.
+   - Deducted: Backward compatibility with legacy pin state is maintained seamlessly without data loss.
+
+2. **State Layer Integrity (14 Keys)**:
+   - Observation: `useQCState` and `useAppearance` reference all 14 required storage keys (`qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`). `m3-pin-folders.test.js` verifies key access without throwing.
+   - Deducted: The persistence layer contract specified in `PROJECT.md` Feature 7 & Milestone 3 is fully honored.
+
+3. **CRUD Operations & Reactive Updates**:
+   - Observation: `createFolder`, `deleteFolder`, `renameFolder`, `togglePinToFolder`, `isPinnedInFolder`, `getItemFolderIds` update state immutably via `updateFoldersAndPins` and write to `localStorage`.
+   - Deducted: Pin folders are fully functional, reactive, and persisted.
+
+4. **Appearance & Dark Mode Refactoring**:
+   - Observation: `useAppearance` toggles `document.documentElement.classList.toggle('dark', isDark)` without any `@mantine/*` dependency. `grep_search` confirms 0 occurrences of `@mantine` in `src/` and `package.json`.
+   - Deducted: Mantine UI cleanup for theme management is complete and functional.
+
+5. **Build and Test Verification**:
+   - Observation: `npx tsc --noEmit` and `npm test` execute with zero errors/failures.
+   - Deducted: The deliverable meets all criteria for Milestone 3 completion.
 
 ---
 
 ## 3. Caveats
 
-- **JSDOM DOM Environment**: In-memory JSDOM DOM testing verifies state updates, events, and LocalStorage accurately, while visual box model rendering relies on Vite/PostCSS compilation verified during `npm run build`.
-- **Clipboard Mocking in Harness**: Headless JSDOM environment safely mocks `navigator.clipboard.writeText` in `tests/harness.js` to capture copy actions for assertions, standard for headless testing.
+- Milestone 3 scope covers the state layer and schema definitions for pin folders and appearance settings. Full visual rendering of custom folder selector UI components in the AppShell layout occurs in Milestone 4.
+- No other caveats identified.
 
 ---
 
 ## 4. Conclusion
 
-**Explicit Verdict: CLEAN**
+Milestone 3 (M3: Custom Pin Folders & State Layer Overhaul) deliverables satisfy all user requirements and acceptance criteria in `ORIGINAL_REQUEST.md` and `PROJECT.md`. The implementation is genuine, clean of prohibited facade patterns, and verified empirically through static analysis, type checking, and unit testing.
 
-1. **Genuine React application**: Verified in `src/App.tsx`, `src/components/`, `src/hooks/`.
-2. **Test harness target**: `tests/harness.js` tests `src/` modules directly via dynamic `esbuild` compilation.
-3. **Test suite status**: `npm run test` passes 32/32 tests with zero errors.
-4. **Codebase integrity**: Zero facades, cheating, or hardcoded shortcuts detected.
+**Final Verdict**: CLEAN
 
 ---
 
 ## 5. Verification Method
 
-To independently verify this audit report:
-
-1. **Run Test Suite**:
-   ```powershell
-   cd "c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording"
-   npm run test
-   ```
-   *Expected Output*: `pass 32`, `fail 0`, exit code 0.
-
-2. **Run Production Build**:
-   ```powershell
-   npm run build
-   ```
-   *Expected Output*: Clean Vite compilation with PWA service worker, exit code 0.
-
-3. **Verify Harness Entry Point**:
-   Check lines 49–61 of `tests/harness.js` to confirm `src/main.tsx` is the bundled entry point.
+To independently verify this audit:
+1. Run `npx tsc --noEmit` from project root to verify 0 TypeScript type errors.
+2. Run `npm test` to execute the node test runner suite across `tests/*.test.js` including `m3-pin-folders.test.js`.
+3. Inspect `src/types/qc.ts`, `src/hooks/useQCState.ts`, and `src/hooks/useAppearance.ts`.

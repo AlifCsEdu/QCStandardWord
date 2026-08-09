@@ -1,5 +1,5 @@
 import React from 'react';
-import type { LayoutMode, QCItem, SearchResult } from '../types/qc.ts';
+import type { LayoutMode, QCItem, SearchResult, CustomPinFolder } from '../types/qc.ts';
 import { WordingGrid } from './WordingGrid.tsx';
 import { WordingList } from './WordingList.tsx';
 import { WordingTable } from './WordingTable.tsx';
@@ -18,6 +18,9 @@ interface WordingContainerProps {
   onAddToBatch: (text: string) => void;
   onOpenEdit: (item: QCItem) => void;
   onDeleteItem: (item: QCItem) => void;
+  folders?: CustomPinFolder[];
+  onTogglePinToFolder?: (itemId: string | number, folderId: string) => void;
+  isPinnedInFolder?: (itemId: string | number, folderId: string) => boolean;
 }
 
 export const WordingContainer: React.FC<WordingContainerProps> = ({
@@ -30,29 +33,24 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
   onAddToBatch,
   onOpenEdit,
   onDeleteItem,
+  folders,
+  onTogglePinToFolder,
+  isPinnedInFolder,
 }) => {
   return (
-    <div className="wording-container" style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-        <div id="countLabel" style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary, #94a3b8)', whiteSpace: 'nowrap' }}>
+    <div className="wording-container p-4 sm:p-5">
+      <div className="flex items-center justify-between mb-4">
+        <div id="countLabel" className="text-xs sm:text-sm font-semibold text-zinc-400 whitespace-nowrap">
           {results.length} {results.length === 1 ? 'wording' : 'wordings'}
         </div>
       </div>
 
       {/* Main List/Grid/Table Wrapper */}
-      <div id="listwrap" className={`listwrap ${layoutMode}`}>
+      <div id="listwrap" data-testid="wording-container" data-layout={layoutMode} className={`listwrap ${layoutMode}`}>
         {results.length === 0 ? (
           <div
             id="empty"
-            style={{
-              padding: '40px 20px',
-              textAlign: 'center',
-              color: 'var(--text-secondary, #94a3b8)',
-              fontSize: '1rem',
-              border: '2px dashed var(--border-contrast, #334155)',
-              borderRadius: '8px',
-              background: 'var(--container-charcoal, #1e293b)',
-            }}
+            className="p-10 text-center text-zinc-400 text-sm border-2 border-dashed border-zinc-800 rounded-lg bg-zinc-900"
           >
             No matching QC wording defects found.
           </div>
@@ -66,6 +64,9 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
             onAddToBatch={onAddToBatch}
             onOpenEdit={onOpenEdit}
             onDeleteItem={onDeleteItem}
+            folders={folders}
+            onTogglePinToFolder={onTogglePinToFolder}
+            isPinnedInFolder={isPinnedInFolder}
           />
         ) : layoutMode === 'table' ? (
           <WordingTable
@@ -77,6 +78,9 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
             onAddToBatch={onAddToBatch}
             onOpenEdit={onOpenEdit}
             onDeleteItem={onDeleteItem}
+            folders={folders}
+            onTogglePinToFolder={onTogglePinToFolder}
+            isPinnedInFolder={isPinnedInFolder}
           />
         ) : (
           <WordingList
@@ -88,10 +92,14 @@ export const WordingContainer: React.FC<WordingContainerProps> = ({
             onAddToBatch={onAddToBatch}
             onOpenEdit={onOpenEdit}
             onDeleteItem={onDeleteItem}
+            folders={folders}
+            onTogglePinToFolder={onTogglePinToFolder}
+            isPinnedInFolder={isPinnedInFolder}
           />
         )}
       </div>
     </div>
   );
 };
+
 

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { CATEGORIES } from '../data/qcData.ts';
 import type { CategoryKey, QCItem } from '../types/qc.ts';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog.tsx';
+import { Button } from './ui/button.tsx';
+import { Input } from './ui/input.tsx';
 
 interface EditModalProps {
   isOpen: boolean;
@@ -43,141 +46,99 @@ export const EditModal: React.FC<EditModalProps> = ({
   );
 
   return (
-    <div
-      id="modal"
-      className={`modal-container ${isOpen ? 'open' : ''}`}
-      style={{
-        display: isOpen ? 'flex' : 'none',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0,0,0,0.5)',
-        zIndex: 1000,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <>
+      {/* Container wrapper for backward compatibility with tests querying #modal */}
       <div
-        style={{
-          background: '#ffffff',
-          width: '420px',
-          maxWidth: '90vw',
-          borderRadius: '8px',
-          padding: '24px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-        }}
+        id="modal"
+        data-testid="edit-modal"
+        className={`modal-container ${isOpen ? 'open' : ''}`}
+        style={{ display: isOpen ? 'block' : 'none' }}
       >
-        <h3 id="mtitle" style={{ margin: '0 0 16px 0', fontSize: '1.15rem', fontWeight: 700 }}>
-          {editingItem ? `Edit Defect #${editingItem.n}` : 'Add Custom Defect Wording'}
-        </h3>
+        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+          <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-md">
+            <DialogHeader>
+              <DialogTitle id="mtitle" className="text-lg font-bold text-zinc-100">
+                {editingItem ? `Edit Defect #${editingItem.n}` : 'Add Custom Defect Wording'}
+              </DialogTitle>
+            </DialogHeader>
 
-        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div>
-            <label htmlFor="mtext" style={{ display: 'block', marginBottom: '4px', fontSize: '0.85rem', fontWeight: 600 }}>
-              Wording Text:
-            </label>
-            <input
-              id="mtext"
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="e.g. Screen Scratched Heavy"
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                borderRadius: '6px',
-                border: '1px solid #ced4da',
-                fontSize: '0.9rem',
-                boxSizing: 'border-box',
-              }}
-            />
-          </div>
+            <form onSubmit={handleSave} className="flex flex-col gap-4 py-2">
+              <div>
+                <label htmlFor="mtext" className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                  Wording Text:
+                </label>
+                <Input
+                  id="mtext"
+                  data-testid="modal-text-input"
+                  type="text"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="e.g. Screen Scratched Heavy"
+                  className="w-full bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
+                />
+              </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <div style={{ flex: 1 }}>
-              <label htmlFor="mcat" style={{ display: 'block', marginBottom: '4px', fontSize: '0.85rem', fontWeight: 600 }}>
-                Category:
-              </label>
-              <select
-                id="mcat"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as CategoryKey)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid #ced4da',
-                  fontSize: '0.9rem',
-                  boxSizing: 'border-box',
-                }}
-              >
-                {categoriesOptions.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <label htmlFor="mcat" className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                    Category:
+                  </label>
+                  <select
+                    id="mcat"
+                    data-testid="modal-category-select"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value as CategoryKey)}
+                    className="w-full h-9 px-3 py-1 rounded-md border border-zinc-800 bg-zinc-950 text-zinc-100 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                  >
+                    {categoriesOptions.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            <div style={{ width: '100px' }}>
-              <label htmlFor="mnum" style={{ display: 'block', marginBottom: '4px', fontSize: '0.85rem', fontWeight: 600 }}>
-                Number:
-              </label>
-              <input
-                id="mnum"
-                type="number"
-                value={number}
-                onChange={(e) => setNumber(parseInt(e.target.value, 10) || 0)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid #ced4da',
-                  fontSize: '0.9rem',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-          </div>
+                <div className="w-24">
+                  <label htmlFor="mnum" className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                    Number:
+                  </label>
+                  <Input
+                    id="mnum"
+                    data-testid="modal-num-input"
+                    type="number"
+                    value={number}
+                    onChange={(e) => setNumber(parseInt(e.target.value, 10) || 0)}
+                    className="w-full bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
+                  />
+                </div>
+              </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-            <button
-              type="button"
-              id="mcancel"
-              onClick={onClose}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '6px',
-                border: '1px solid #ced4da',
-                background: '#ffffff',
-                color: '#495057',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              id="msave"
-              onClick={handleSave}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '6px',
-                border: 'none',
-                background: '#1971c2',
-                color: '#ffffff',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              Save Changes
-            </button>
-          </div>
-        </form>
+              <DialogFooter className="gap-2 sm:gap-0 pt-2">
+                <Button
+                  type="button"
+                  id="mcancel"
+                  data-testid="modal-cancel-btn"
+                  variant="outline"
+                  onClick={onClose}
+                  className="bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 font-semibold"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  id="msave"
+                  data-testid="modal-save-btn"
+                  onClick={handleSave}
+                  className="bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400"
+                >
+                  Save Changes
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
-    </div>
+    </>
   );
 };
+

@@ -1,17 +1,5 @@
-import React, { useMemo } from 'react';
-import {
-  AppShell,
-  MantineProvider,
-  Affix,
-  Button,
-  Transition,
-  useMantineColorScheme,
-} from '@mantine/core';
-import { theme } from './theme';
-import { Notifications, notifications } from '@mantine/notifications';
-import { Spotlight, spotlight, type SpotlightActionData } from '@mantine/spotlight';
-import { useWindowScroll, useDisclosure } from '@mantine/hooks';
-import { IconArrowUp, IconSearch } from '@tabler/icons-react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { ArrowUp, Search as IconSearch, Folder, Copy, Star } from 'lucide-react';
 
 import { AppHeader } from './components/AppHeader.tsx';
 import { BatchDrawer } from './components/BatchDrawer.tsx';
@@ -24,6 +12,15 @@ import { SettingsModal } from './components/SettingsModal.tsx';
 import { StatsDashboard } from './components/StatsDashboard.tsx';
 import { ToastsContainer } from './components/ToastsContainer.tsx';
 import { WordingContainer } from './components/WordingContainer.tsx';
+import { Button } from './components/ui/button.tsx';
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from './components/ui/command.tsx';
 import { useAppearance } from './hooks/useAppearance.ts';
 import { useQCState } from './hooks/useQCState.ts';
 
@@ -40,6 +37,9 @@ if (typeof window !== 'undefined') {
       unobserve() {}
       disconnect() {}
     } as any;
+  }
+  if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
+    Element.prototype.scrollIntoView = function () {};
   }
 }
 
@@ -59,8 +59,6 @@ export const AppContent: React.FC = () => {
     setAccent,
   } = useAppearance();
 
-  const { setColorScheme } = useMantineColorScheme();
-
   const {
     searchQuery,
     setSearchQuery,
@@ -70,6 +68,14 @@ export const AppContent: React.FC = () => {
     setSelectedSubCategory,
     activeItems,
     searchResults,
+    folders,
+    activeFolderId,
+    setActiveFolderId,
+    createFolder,
+    deleteFolder,
+    renameFolder,
+    togglePinToFolder,
+    isPinnedInFolder,
     pinsSet,
     togglePin,
     recents,
@@ -107,8 +113,31 @@ export const AppContent: React.FC = () => {
     resetAllChanges,
   } = useQCState();
 
-  const [scroll, scrollTo] = useWindowScroll();
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [mobileOpened, setMobileOpened] = useState(false);
+  const [spotlightOpen, setSpotlightOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Keyboard shortcut listener for Cmd+K / Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSpotlightOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const toggleMobile = () => setMobileOpened((prev) => !prev);
 
   // Compute category item counts
   const categoryCounts = useMemo(() => {
@@ -126,204 +155,204 @@ export const AppContent: React.FC = () => {
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    setColorScheme(nextTheme);
   };
 
-  // Build spotlight actions for Cmd+K search modal
-  const spotlightActions: SpotlightActionData[] = useMemo(() => {
-    return activeItems.map((item) => ({
-      id: String(item.id),
-      label: item.t,
-      description: `Category: ${item.c.toUpperCase()} ${item.n ? `#${item.n}` : ''}`,
-      onClick: () => {
-        copySingleItem(item.t);
-        notifications.show({
-          title: 'Wording Copied',
-          message: item.t,
-          color: 'teal',
-        });
-      },
-      leftSection: <IconSearch size={16} />,
-    }));
-  }, [activeItems, copySingleItem]);
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 260, breakpoint: 'sm', collapsed: { mobile: !mobileOpened } }}
-      padding="0"
-    >
-      <AppShell.Header id="appHeader" data-testid="app-header" className="app-header">
-        <AppHeader
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onClearSearch={() => setSearchQuery('')}
-          layoutMode={layout}
-          onSetLayout={setLayout}
-          onOpenSpotlight={() => spotlight.open()}
-          editMode={editMode}
-          onToggleEditMode={toggleEditMode}
-          batchCount={batchQueue.length}
-          onOpenBatchDrawer={() => setBatchDrawerOpen(true)}
-          onOpenSettings={() => setSettingsModalOpen(true)}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
-          mobileOpened={mobileOpened}
-          onToggleMobile={toggleMobile}
-        />
-      </AppShell.Header>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
+      {/* Header */}
+      <AppHeader
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onClearSearch={() => setSearchQuery('')}
+        layoutMode={layout}
+        onSetLayout={setLayout}
+        onOpenSpotlight={() => setSpotlightOpen(true)}
+        editMode={editMode}
+        onToggleEditMode={toggleEditMode}
+        batchCount={batchQueue.length}
+        onOpenBatchDrawer={() => setBatchDrawerOpen(true)}
+        onOpenSettings={() => setSettingsModalOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+        mobileOpened={mobileOpened}
+        onToggleMobile={toggleMobile}
+        folderCount={folders.length}
+      />
 
-      <AppShell.Navbar data-testid="app-navbar" id="sidebarNav" className="sidebar-nav" style={{ overflowY: 'auto' }}>
-        <CategoryChips
-          selectedCategory={selectedCategory}
-          onSelectCategory={(cat) => {
-            setSelectedCategory(cat);
-            setSelectedSubCategory('ALL');
-          }}
-          categoryCounts={categoryCounts}
-        />
-        <CodeSubChips
-          selectedCategory={selectedCategory}
-          selectedSubCategory={selectedSubCategory}
-          onSelectSubCategory={setSelectedSubCategory}
-        />
-      </AppShell.Navbar>
+      <div className="flex flex-1 relative">
+        {/* Sidebar Navigation */}
+        <aside
+          data-testid="app-navbar"
+          id="sidebarNav"
+          className={`sidebar-nav fixed sm:sticky top-[60px] h-[calc(100vh-60px)] w-[260px] bg-zinc-900 border-r border-zinc-800 overflow-y-auto z-30 transition-transform duration-200 ${
+            mobileOpened ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
+          }`}
+        >
+          <CategoryChips
+            selectedCategory={selectedCategory}
+            onSelectCategory={(cat) => {
+              setSelectedCategory(cat);
+              setSelectedSubCategory('ALL');
+            }}
+            categoryCounts={categoryCounts}
+            folders={folders}
+            activeFolderId={activeFolderId}
+            onSelectFolder={setActiveFolderId}
+          />
+          <CodeSubChips
+            selectedCategory={selectedCategory}
+            selectedSubCategory={selectedSubCategory}
+            onSelectSubCategory={setSelectedSubCategory}
+          />
+        </aside>
 
-      <AppShell.Main style={{ paddingTop: '60px' }}>
-        {/* Inspection Stats Dashboard Header */}
-        <StatsDashboard
-          categoryCounts={categoryCounts}
-          selectedCategory={selectedCategory}
-          selectedSubCategory={selectedSubCategory}
-          searchQuery={searchQuery}
-          totalFilteredCount={searchResults.length}
-          batchCount={batchQueue.length}
-          pinnedCount={pinsSet.size}
-          onOpenSpotlight={() => spotlight.open()}
-          onSelectCategory={(cat) => {
-            setSelectedCategory(cat);
-            setSelectedSubCategory('ALL');
-          }}
-        />
+        {/* Main Content Area */}
+        <main className="flex-1 min-w-0 flex flex-col bg-zinc-950">
+          {/* Inspection Stats Dashboard Header */}
+          <StatsDashboard
+            categoryCounts={categoryCounts}
+            selectedCategory={selectedCategory}
+            selectedSubCategory={selectedSubCategory}
+            searchQuery={searchQuery}
+            totalFilteredCount={searchResults.length}
+            batchCount={batchQueue.length}
+            pinnedCount={pinsSet.size}
+            onOpenSpotlight={() => setSpotlightOpen(true)}
+            onSelectCategory={(cat) => {
+              setSelectedCategory(cat);
+              setSelectedSubCategory('ALL');
+            }}
+          />
 
-        {/* Copy History Feed Bar */}
-        <HistoryBar
-          recents={recents}
-          onCopyRecent={copySingleItem}
-          onClearHistory={clearRecents}
-        />
+          {/* Copy History Feed Bar */}
+          <HistoryBar
+            recents={recents}
+            onCopyRecent={copySingleItem}
+            onClearHistory={clearRecents}
+          />
 
-        {/* Edit Mode Toolbar */}
-        <EditToolbar
-          editMode={editMode}
-          onOpenAddModal={openAddModal}
-          onExport={exportChanges}
-          onImport={importChanges}
-          onReset={resetAllChanges}
-        />
+          {/* Edit Mode Toolbar */}
+          <EditToolbar
+            editMode={editMode}
+            onOpenAddModal={openAddModal}
+            onExport={exportChanges}
+            onImport={importChanges}
+            onReset={resetAllChanges}
+          />
 
-        {/* Search & Wording Items Container */}
-        <WordingContainer
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onClearSearch={() => setSearchQuery('')}
-          results={searchResults}
-          layoutMode={layout}
-          onSetLayout={setLayout}
-          pinsSet={pinsSet}
-          editMode={editMode}
-          onCopyItem={copySingleItem}
-          onTogglePin={togglePin}
-          onAddToBatch={addToBatch}
-          onOpenEdit={openEditModal}
-          onDeleteItem={deleteWordingItem}
-        />
+          {/* Search & Wording Items Container */}
+          <WordingContainer
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onClearSearch={() => setSearchQuery('')}
+            results={searchResults}
+            layoutMode={layout}
+            onSetLayout={setLayout}
+            pinsSet={pinsSet}
+            editMode={editMode}
+            onCopyItem={copySingleItem}
+            onTogglePin={togglePin}
+            onAddToBatch={addToBatch}
+            onOpenEdit={openEditModal}
+            onDeleteItem={deleteWordingItem}
+            folders={folders}
+            onTogglePinToFolder={togglePinToFolder}
+            isPinnedInFolder={isPinnedInFolder}
+          />
 
+          {/* Batch Drawer */}
+          <BatchDrawer
+            isOpen={batchDrawerOpen}
+            onClose={() => setBatchDrawerOpen(false)}
+            batchQueue={batchQueue}
+            onRemoveItem={removeFromBatch}
+            onClearBatch={clearBatch}
+            onMoveItemUp={moveBatchItemUp}
+            onMoveItemDown={moveBatchItemDown}
+            moveBatchItemUp={moveBatchItemUp}
+            moveBatchItemDown={moveBatchItemDown}
+            delimiter={delimiter}
+            onSetDelimiter={setDelimiter}
+            autoclear={autoclear}
+            onSetAutoclear={setAutoclear}
+            onCopyBatch={copyBatch}
+            onBulkImport={bulkImportBatch}
+          />
 
-        {/* Batch Drawer */}
-        <BatchDrawer
-          isOpen={batchDrawerOpen}
-          onClose={() => setBatchDrawerOpen(false)}
-          batchQueue={batchQueue}
-          onRemoveItem={removeFromBatch}
-          onClearBatch={clearBatch}
-          onMoveItemUp={moveBatchItemUp}
-          onMoveItemDown={moveBatchItemDown}
-          moveBatchItemUp={moveBatchItemUp}
-          moveBatchItemDown={moveBatchItemDown}
-          delimiter={delimiter}
-          onSetDelimiter={setDelimiter}
-          autoclear={autoclear}
-          onSetAutoclear={setAutoclear}
-          onCopyBatch={copyBatch}
-          onBulkImport={bulkImportBatch}
-        />
+          {/* Add/Edit Wording Modal */}
+          <EditModal
+            isOpen={modalOpen}
+            editingItem={editingItem}
+            onSave={saveWordingItem}
+            onClose={closeModal}
+          />
 
-        {/* Add/Edit Wording Modal */}
-        <EditModal
-          isOpen={modalOpen}
-          editingItem={editingItem}
-          onSave={saveWordingItem}
-          onClose={closeModal}
-        />
+          {/* Settings Modal */}
+          <SettingsModal
+            isOpen={settingsModalOpen}
+            onClose={() => setSettingsModalOpen(false)}
+            appearance={appearance}
+            onSetLayout={setLayout}
+            onSetRadius={setRadius}
+            onSetDensity={setDensity}
+            onSetTextSize={setTextSize}
+            onSetMotion={setMotion}
+            onSetAccent={setAccent}
+          />
 
-        {/* Settings Modal */}
-        <SettingsModal
-          isOpen={settingsModalOpen}
-          onClose={() => setSettingsModalOpen(false)}
-          appearance={appearance}
-          onSetLayout={setLayout}
-          onSetRadius={setRadius}
-          onSetDensity={setDensity}
-          onSetTextSize={setTextSize}
-          onSetMotion={setMotion}
-          onSetAccent={setAccent}
-        />
+          {/* Cmd+K Spotlight Search CommandDialog */}
+          <CommandDialog open={spotlightOpen} onOpenChange={setSpotlightOpen}>
+            <CommandInput placeholder="Search QC defects or type a command (e.g. battery, screen)..." />
+            <CommandList>
+              <CommandEmpty>No matching QC wording defects found.</CommandEmpty>
+              <CommandGroup heading="QC Wording Defects">
+                {searchResults.slice(0, 15).map(({ item }) => (
+                  <CommandItem
+                    key={item.id}
+                    onSelect={() => {
+                      copySingleItem(item.t);
+                      setSpotlightOpen(false);
+                    }}
+                    className="cursor-pointer flex items-center justify-between py-2 px-3"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-mono text-xs text-zinc-400">#{item.n}</span>
+                      <span className="truncate text-sm text-zinc-100">{item.t}</span>
+                    </div>
+                    <span className="text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-cyan-400 border border-zinc-700">
+                      {item.c}
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </CommandDialog>
 
-        {/* Toast Notifications */}
-        <ToastsContainer toasts={toasts} onRemoveToast={removeToast} />
+          {/* Toast Notifications */}
+          <ToastsContainer toasts={toasts} onRemoveToast={removeToast} />
 
-        {/* Mantine Spotlight Search Modal (Cmd+K / Ctrl+K) */}
-        <Spotlight
-          actions={spotlightActions}
-          searchProps={{
-            placeholder: 'Search QC defect wording (Press Cmd+K / Ctrl+K)...',
-          }}
-          shortcut={['mod + k', 'ctrl + k']}
-          nothingFound="No QC wording items match search query."
-          highlightQuery
-        />
-
-        {/* Floating Scroll-to-Top Button (Mantine Affix) */}
-        <Affix position={{ bottom: 24, right: 24 }}>
-          <Transition transition="slide-up" mounted={scroll.y > 100}>
-            {(transitionStyles) => (
-              <Button
-                id="scrollTopBtn"
-                leftSection={<IconArrowUp size={16} />}
-                style={transitionStyles}
-                onClick={() => scrollTo({ y: 0 })}
-                variant="filled"
-                color="blue"
-                radius="xl"
-                size="sm"
-                shadow="md"
-              >
-                Scroll to Top
-              </Button>
-            )}
-          </Transition>
-        </Affix>
-      </AppShell.Main>
-    </AppShell>
+          {/* Floating Scroll-to-Top Button */}
+          {scrollY > 100 && (
+            <Button
+              id="scrollTopBtn"
+              onClick={scrollToTop}
+              className="fixed bottom-6 right-6 rounded-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs shadow-lg z-50 gap-1.5 h-10 px-4"
+            >
+              <ArrowUp className="size-4" />
+              <span>Scroll to Top</span>
+            </Button>
+          )}
+        </main>
+      </div>
+    </div>
   );
 };
 
 export default function App() {
-  return (
-    <MantineProvider theme={theme} defaultColorScheme="dark">
-      <Notifications position="top-right" zIndex={1000} />
-      <AppContent />
-    </MantineProvider>
-  );
+  return <AppContent />;
 }
+

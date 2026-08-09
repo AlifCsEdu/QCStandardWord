@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Drawer, Badge, Button, Select, Checkbox, Group, Stack, Text, Textarea, ActionIcon, Paper } from '@mantine/core';
-import { IconCopy, IconTrash, IconFileImport, IconX } from '@tabler/icons-react';
+import { Copy as IconCopy, Trash2 as IconTrash, FileInput as IconFileImport, X as IconX, ArrowUp, ArrowDown } from 'lucide-react';
 import type { DelimiterKey } from '../types/qc.ts';
+import { Button } from './ui/button.tsx';
+import { Checkbox } from './ui/checkbox.tsx';
+import { Textarea } from './ui/textarea.tsx';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select.tsx';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog.tsx';
 
 interface BatchDrawerProps {
   isOpen: boolean;
@@ -56,6 +60,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
       {/* Backdrop overlay for backward compatibility and glassmorphic styling */}
       <div
         id="backdrop"
+        data-testid="drawer-overlay"
         className={`drawer-backdrop ${isOpen ? 'show' : ''}`}
         onClick={onClose}
         style={{
@@ -65,311 +70,259 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'var(--drawer-backdrop-bg, rgba(15, 23, 42, 0.4))',
-          backdropFilter: 'var(--drawer-backdrop-blur, blur(8px))',
-          WebkitBackdropFilter: 'var(--drawer-backdrop-blur, blur(8px))',
-          '--drawer-backdrop-blur': 'blur(8px)',
+          background: 'rgba(9, 9, 11, 0.7)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           zIndex: 998,
-        } as React.CSSProperties}
+        }}
       />
 
-      {/* Mantine v7 Drawer container */}
-      <Drawer
-        opened={isOpen}
-        onClose={onClose}
-        position="right"
-        size="md"
-        keepMounted
-        title={
-          <Group gap="xs">
-            <Text fw={700} size="lg">
-              Batch Queue & Operations
-            </Text>
-            <Badge id="bbcount" color="blue" size="md">
-              {batchQueue.length}
-            </Badge>
-          </Group>
-        }
-        padding="md"
-        withCloseButton={false}
+      {/* Slide-out Batch Drawer container with glassmorphic styling */}
+      <div
+        id="batchDrawer"
+        data-testid="batch-drawer"
+        className={`batch-drawer ${isOpen ? 'open' : ''} fixed top-0 right-0 w-[380px] max-w-[90vw] h-full bg-zinc-900/95 backdrop-blur-md border-l border-zinc-800 z-[999] flex flex-col p-4 gap-4 box-border overflow-y-auto shadow-2xl transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{
+          display: isOpen ? 'flex' : 'none',
+        }}
       >
-        <div
-          id="batchDrawer"
-          className={`batch-drawer ${isOpen ? 'open' : ''}`}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            gap: '16px',
-          }}
-        >
-          {/* Top Header Controls Bar */}
-          <Group justify="space-between" align="center" style={{ borderBottom: '1px solid var(--mantine-color-gray-2)', paddingBottom: '12px' }}>
-            <Badge id="bcount" size="lg" color="blue" variant="filled">
+        {/* Top Header Controls Bar */}
+        <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-base text-zinc-100">
+              Batch Queue & Operations
+            </span>
+            <span
+              id="bbcount"
+              className="bg-cyan-500 text-zinc-950 px-2 py-0.5 rounded-full text-xs font-bold"
+            >
               {batchQueue.length}
-            </Badge>
-            <ActionIcon id="bclose" onClick={onClose} variant="subtle" color="gray" size="lg">
-              <IconX size={20} />
-            </ActionIcon>
-          </Group>
-
-          {/* Settings Section: Delimiter & Auto-clear */}
-          <Paper p="sm" radius="md" withBorder bg="var(--mantine-color-gray-0, #f8f9fa)">
-            <Stack gap="xs">
-              <Group justify="space-between" align="center">
-                <Text size="sm" fw={600} htmlFor="joinSel" component="label">
-                  Delimiter:
-                </Text>
-                <select
-                  id="joinSel"
-                  name="delimiter"
-                  data-testid="delimiter-select"
-                  value={delimiter}
-                  onChange={(e) => onSetDelimiter(e.target.value as DelimiterKey)}
-                  style={{
-                    padding: '6px 10px',
-                    borderRadius: '6px',
-                    border: '1px solid var(--mantine-color-gray-4)',
-                    fontSize: '0.85rem',
-                    background: '#fff',
-                  }}
-                >
-                  <option value="nl">Newline (\n)</option>
-                  <option value="comma">Comma (, )</option>
-                  <option value="semi">Semicolon (; )</option>
-                  <option value="space">Space ( )</option>
-                  <option value="pipe">Pipe ( | )</option>
-                  <option value="bullet">Bullet ( • )</option>
-                </select>
-              </Group>
-
-              <Group justify="space-between" align="center">
-                <Text size="sm" fw={600} htmlFor="autoclear" component="label" style={{ cursor: 'pointer' }}>
-                  Auto-clear on copy:
-                </Text>
-                <input
-                  id="autoclear"
-                  type="checkbox"
-                  checked={autoclear}
-                  onChange={(e) => onSetAutoclear(e.target.checked)}
-                  style={{ cursor: 'pointer', width: '18px', height: '18px' }}
-                />
-              </Group>
-            </Stack>
-          </Paper>
-
-          {/* Queued Items List */}
-          <div
-            id="blist"
-            style={{
-              flex: 1,
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              minHeight: '200px',
-            }}
+            </span>
+            <span
+              id="bcount"
+              data-testid="batch-count"
+              className="hidden"
+            >
+              {batchQueue.length}
+            </span>
+          </div>
+          <Button
+            id="bclose"
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="text-zinc-400 hover:text-zinc-100 h-8 w-8"
           >
-            {batchQueue.length === 0 ? (
-              <Text c="dimmed" ta="center" py="xl" size="sm">
-                No items in batch queue. Click "+ Batch" on wording rows to add.
-              </Text>
-            ) : (
-              batchQueue.map((itemText, idx) => (
-                <Paper
-                  key={idx}
-                  data-bi={idx}
-                  className="bitem"
-                  p="xs"
-                  radius="sm"
-                  withBorder
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '8px',
-                  }}
-                >
-                  <Text className="bt" size="sm" fw={500} style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {itemText}
-                  </Text>
+            <IconX className="size-4" />
+          </Button>
+        </div>
 
-                  <Group gap={4}>
-                    <button
-                      className="bup"
-                      data-mvup={idx}
-                      data-mup={idx}
-                      data-up={idx}
-                      data-act="moveup"
-                      data-testid={`move-up-${idx}`}
-                      disabled={idx === 0}
-                      onClick={() => handleMoveUp?.(idx)}
-                      title="Move Up"
-                      style={{
-                        border: '1px solid var(--border-contrast, #334155)',
-                        background: idx === 0 ? 'rgba(51, 65, 85, 0.2)' : 'rgba(15, 23, 42, 0.4)',
-                        color: idx === 0 ? '#64748b' : '#38bdf8',
-                        padding: '4px 6px',
-                        borderRadius: '4px',
-                        cursor: idx === 0 ? 'not-allowed' : 'pointer',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                      }}
-                    >
-                      ▲
-                    </button>
-
-                    <button
-                      className="bdn"
-                      data-mvdn={idx}
-                      data-mdown={idx}
-                      data-down={idx}
-                      data-act="movedown"
-                      data-testid={`move-down-${idx}`}
-                      disabled={idx === batchQueue.length - 1}
-                      onClick={() => handleMoveDown?.(idx)}
-                      title="Move Down"
-                      style={{
-                        border: '1px solid var(--border-contrast, #334155)',
-                        background: idx === batchQueue.length - 1 ? 'rgba(51, 65, 85, 0.2)' : 'rgba(15, 23, 42, 0.4)',
-                        color: idx === batchQueue.length - 1 ? '#64748b' : '#38bdf8',
-                        padding: '4px 6px',
-                        borderRadius: '4px',
-                        cursor: idx === batchQueue.length - 1 ? 'not-allowed' : 'pointer',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                      }}
-                    >
-                      ▼
-                    </button>
-
-                    <button
-                      data-bc={idx}
-                      className="bcopy-item"
-                      onClick={async () => {
-                        if (typeof navigator !== 'undefined' && navigator.clipboard) {
-                          await navigator.clipboard.writeText(itemText);
-                        }
-                      }}
-                      title="Copy single item"
-                      style={{
-                        border: 'none',
-                        background: '#e7f5ff',
-                        color: '#1971c2',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                      }}
-                    >
-                      Copy
-                    </button>
-
-                    <button
-                      data-rm={idx}
-                      data-testid={`remove-batch-item-${idx}`}
-                      className="brm-item"
-                      onClick={() => onRemoveItem(idx)}
-                      title="Remove item"
-                      style={{
-                        border: 'none',
-                        background: '#ffe3e3',
-                        color: '#e03131',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </Group>
-                </Paper>
-              ))
-            )}
+        {/* Settings Section: Delimiter & Auto-clear */}
+        <div className="p-3 rounded-lg border border-zinc-800 bg-zinc-950 flex flex-col gap-2.5">
+          <div className="flex justify-between items-center">
+            <label htmlFor="joinSel" className="text-xs font-semibold text-zinc-200">
+              Delimiter:
+            </label>
+            <select
+              id="joinSel"
+              name="delimiter"
+              data-testid="delimiter-select"
+              value={delimiter}
+              onChange={(e) => onSetDelimiter(e.target.value as DelimiterKey)}
+              className="px-2.5 py-1 rounded-md border border-zinc-800 bg-zinc-900 text-zinc-100 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            >
+              <option value="nl">Newline (\n)</option>
+              <option value="comma">Comma (, )</option>
+              <option value="semi">Semicolon (; )</option>
+              <option value="space">Space ( )</option>
+              <option value="pipe">Pipe ( | )</option>
+              <option value="bullet">Bullet ( • )</option>
+            </select>
           </div>
 
-          {/* Footer Action Buttons */}
-          <Stack gap="xs" style={{ borderTop: '1px solid var(--mantine-color-gray-2)', paddingTop: '12px' }}>
+          <div className="flex justify-between items-center">
+            <label htmlFor="autoclear" className="text-xs font-semibold text-zinc-200 cursor-pointer">
+              Auto-clear on copy:
+            </label>
+            <input
+              id="autoclear"
+              data-testid="autoclear-checkbox"
+              type="checkbox"
+              checked={autoclear}
+              onChange={(e) => onSetAutoclear(e.target.checked)}
+              className="size-4 rounded border-zinc-800 accent-cyan-500 cursor-pointer"
+            />
+          </div>
+        </div>
+
+        {/* Queued Items List */}
+        <div
+          id="blist"
+          className="flex-1 overflow-y-auto flex flex-col gap-2 min-h-[200px]"
+        >
+          {batchQueue.length === 0 ? (
+            <div className="text-center py-8 text-zinc-500 text-xs">
+              No items in batch queue. Click "+ Batch" on wording rows to add.
+            </div>
+          ) : (
+            batchQueue.map((itemText, idx) => (
+              <div
+                key={idx}
+                data-bi={idx}
+                data-testid="batch-item"
+                className="bitem p-2.5 rounded-lg border border-zinc-800 bg-zinc-950 flex items-center justify-between gap-2"
+              >
+                <span className="bt flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium text-zinc-200">
+                  {itemText}
+                </span>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    className="bup px-1.5 py-0.5 rounded border border-zinc-800 text-xs font-bold transition-colors"
+                    data-mvup={idx}
+                    data-mup={idx}
+                    data-up={idx}
+                    data-act="moveup"
+                    data-testid={`move-up-${idx}`}
+                    disabled={idx === 0}
+                    onClick={() => handleMoveUp?.(idx)}
+                    title="Move Up"
+                    style={{
+                      background: idx === 0 ? 'rgba(39, 39, 42, 0.4)' : 'rgba(6, 182, 212, 0.1)',
+                      color: idx === 0 ? '#64748b' : '#38bdf8',
+                      cursor: idx === 0 ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    ▲
+                  </button>
+
+                  <button
+                    className="bdn px-1.5 py-0.5 rounded border border-zinc-800 text-xs font-bold transition-colors"
+                    data-mvdn={idx}
+                    data-mdown={idx}
+                    data-down={idx}
+                    data-act="movedown"
+                    data-testid={`move-down-${idx}`}
+                    disabled={idx === batchQueue.length - 1}
+                    onClick={() => handleMoveDown?.(idx)}
+                    title="Move Down"
+                    style={{
+                      background: idx === batchQueue.length - 1 ? 'rgba(39, 39, 42, 0.4)' : 'rgba(6, 182, 212, 0.1)',
+                      color: idx === batchQueue.length - 1 ? '#64748b' : '#38bdf8',
+                      cursor: idx === batchQueue.length - 1 ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    ▼
+                  </button>
+
+                  <button
+                    data-bc={idx}
+                    className="bcopy-item border border-cyan-500/30 bg-cyan-500/15 text-cyan-400 hover:bg-cyan-500/25 px-2 py-0.5 rounded text-xs font-semibold cursor-pointer"
+                    onClick={async () => {
+                      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                        await navigator.clipboard.writeText(itemText);
+                      }
+                    }}
+                    title="Copy single item"
+                  >
+                    Copy
+                  </button>
+
+                  <button
+                    data-rm={idx}
+                    data-testid={`remove-batch-item-${idx}`}
+                    className="brm-item border border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25 px-2 py-0.5 rounded text-xs font-semibold cursor-pointer"
+                    onClick={() => onRemoveItem(idx)}
+                    title="Remove item"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Footer Action Buttons */}
+        <div className="flex flex-col gap-2 border-t border-zinc-800 pt-3">
+          <Button
+            id="bcopy"
+            data-testid="copy-batch-btn"
+            onClick={onCopyBatch}
+            disabled={batchQueue.length === 0}
+            className="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-sm gap-2 h-10"
+          >
+            <IconCopy className="size-4" />
+            <span>Copy Batch (<span id="bcopycount">{batchQueue.length}</span>)</span>
+          </Button>
+
+          <div className="flex gap-2">
             <Button
-              id="bcopy"
-              onClick={onCopyBatch}
+              id="bclear"
+              data-testid="clear-batch-btn"
+              variant="destructive"
+              size="sm"
+              onClick={onClearBatch}
               disabled={batchQueue.length === 0}
-              fullWidth
-              size="md"
-              color="blue"
-              leftSection={<IconCopy size={18} />}
+              className="flex-1 bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 gap-1.5 h-9"
             >
-              Copy Batch (<span id="bcopycount">{batchQueue.length}</span>)
+              <IconTrash className="size-3.5" />
+              Clear Queue
             </Button>
 
-            <Group grow gap="xs">
-              <Button
-                id="bclear"
-                onClick={onClearBatch}
-                disabled={batchQueue.length === 0}
-                variant="outline"
-                color="red"
-                size="sm"
-                leftSection={<IconTrash size={16} />}
-              >
-                Clear Queue
-              </Button>
-
-              <Button
-                id="bpaste"
-                onClick={() => setPasteModalOpen(true)}
-                variant="default"
-                size="sm"
-                leftSection={<IconFileImport size={16} />}
-              >
-                Bulk Paste
-              </Button>
-            </Group>
-          </Stack>
+            <Button
+              id="bpaste"
+              variant="outline"
+              size="sm"
+              onClick={() => setPasteModalOpen(true)}
+              className="flex-1 bg-zinc-950 border-zinc-800 text-zinc-200 hover:bg-zinc-800 gap-1.5 h-9"
+            >
+              <IconFileImport className="size-3.5" />
+              Bulk Paste
+            </Button>
+          </div>
         </div>
-      </Drawer>
+      </div>
 
-      {/* Bulk Paste Modal */}
-      {pasteModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Paper p="lg" radius="md" withBorder style={{ background: '#ffffff', width: '400px', maxWidth: '90vw' }}>
-            <Text fw={700} size="md" mb="xs">
+      {/* Bulk Paste Dialog */}
+      <Dialog open={pasteModalOpen} onOpenChange={setPasteModalOpen}>
+        <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-zinc-100">
               Bulk Import Defect Lines
-            </Text>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="py-2">
             <Textarea
               value={pasteText}
               onChange={(e) => setPasteText(e.target.value)}
               placeholder="Paste defect lines (one per line)..."
               rows={6}
-              mb="md"
+              className="w-full bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
             />
-            <Group justify="flex-end" gap="xs">
-              <Button variant="default" onClick={() => setPasteModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button color="blue" onClick={handleBulkSubmit}>
-                Import Lines
-              </Button>
-            </Group>
-          </Paper>
-        </div>
-      )}
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setPasteModalOpen(false)}
+              className="bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleBulkSubmit}
+              className="bg-cyan-500 text-zinc-950 font-semibold hover:bg-cyan-400"
+            >
+              Import Lines
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
+

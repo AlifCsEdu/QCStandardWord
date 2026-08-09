@@ -1,68 +1,106 @@
-# Post-Victory Audit Report — QC Standard Wording Modernization
+# Forensic Audit Report — Milestone 1 (M1: Package & Styling Infrastructure)
+
+**Work Product**: QC Standard Wording Overhaul & Migration — Milestone 1  
+**Profile**: General Project  
+**Integrity Mode**: Development  
+**Verdict**: CLEAN  
+
+---
 
 ## 1. Observation
 
-Direct observations from independent inspection and test execution:
+### Observation 1.1: Dependency Verification (`package.json`)
+- Direct inspection of `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\package.json`:
+  - **Zero `@mantine/*` packages remain**: Grep search for `@mantine` across `dependencies` and `devDependencies` returned 0 matches.
+  - **Zero `@tabler/*` packages remain**: Grep search for `@tabler` across `dependencies` and `devDependencies` returned 0 matches.
+  - **Required packages installed**:
+    - DevDependencies: `@tailwindcss/vite` (`^4.0.0`), `tailwindcss` (`^4.0.0`), `typescript` (`^5.7.2`), `vite` (`^6.0.0`).
+    - Production Dependencies: `@radix-ui/react-checkbox` (`^1.1.4`), `@radix-ui/react-dialog` (`^1.1.6`), `@radix-ui/react-dropdown-menu` (`^2.1.6`), `@radix-ui/react-scroll-area` (`^1.2.3`), `@radix-ui/react-select` (`^2.1.6`), `@radix-ui/react-slot` (`^1.1.2`), `@radix-ui/react-toggle-group` (`^1.1.2`), `@radix-ui/react-tooltip` (`^1.1.8`), `class-variance-authority` (`^0.7.1`), `clsx` (`^2.1.1`), `cmdk` (`^1.0.0`), `lucide-react` (`^0.475.0`), `next-themes` (`^0.4.4`), `sonner` (`^2.0.1`), `tailwind-merge` (`^3.0.1`).
 
-1. **ORIGINAL_REQUEST.md Alignment**:
-   - Integrity mode: `development`
-   - Requirements §R1-§R4 and follow-up criteria completely mapped and checked against `src/` implementation.
+### Observation 1.2: Build Configuration & Tailwind CSS v4 Setup (`vite.config.ts` & `src/index.css`)
+- Direct inspection of `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\vite.config.ts`:
+  - Lines 3 & 9: `import tailwindcss from '@tailwindcss/vite';` and `plugins: [ tailwindcss(), react(), ... ]`.
+  - Lines 28-32: Alias `@` configured to `./src`.
+- Direct inspection of `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\src\index.css`:
+  - Line 1: `@import "tailwindcss";`
+  - Lines 4-45: CSS variables under `:root, [data-theme='dark'], .dark`:
+    - Line 7: `--background: #09090b;` (Deep Zinc background)
+    - Line 9: `--card: #18181b;` (Deep Zinc card/container)
+    - Line 13: `--primary: #06b6d4;` (Cool cyan accent)
+    - Line 23: `--border: #27272a;` (Zinc border outline)
+    - Line 25: `--ring: #06b6d4;` (Cyan focus ring)
+    - Lines 29-32: `--bg-deep-slate: #09090b;`, `--container-charcoal: #18181b;`, `--border-contrast: #27272a;`, `--accent-cyan: #06b6d4;`.
 
-2. **Source Code & Artifact Inspection**:
-   - `wrangler.jsonc`: Line 5-7 configures `"assets": { "directory": "./dist" }`.
-   - `public/_redirects`: Exists with `/* /index.html 200` SPA fallback routing.
-   - `src/data/qcData.ts`: 139 defect items (`BASE_ITEMS`), 13 standard categories (`CATEGORIES`), 10 sub-category codes (`CODE_SUBS`), alias map (`ALIAS`), category keywords (`CATKEY`).
-   - `src/utils/searchEngine.ts`: Full bounded Levenshtein algorithm (`lev`), sub-sequence matching (`subseq`), query highlighting (`highlightText` with `<mark>`), fuzzy indicators (`isApprox` threshold < 80 for `≈`), and panel sub-chip filtering.
-   - `src/App.tsx`: Mantine v7 `AppShell`, `Notifications`, `Spotlight` search (`Cmd+K`), `StatsDashboard` header, `Affix` scroll-to-top button, view modes (List, Grid Cards, Compact Table), dynamic color scheme, and full drawer batch queue.
+### Observation 1.3: Utility Function (`src/lib/utils.ts`)
+- Direct inspection of `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\src\lib\utils.ts`:
+  ```ts
+  import { clsx, type ClassValue } from 'clsx';
+  import { twMerge } from 'tailwind-merge';
 
-3. **Independent Test Execution Results**:
-   - Command: `npm run build`
-     - Output: `tsc && vite build` completed with code 0 in 8.41s.
-     - PWA SW generation: `dist/sw.js` and `dist/manifest.webmanifest` built cleanly.
-   - Command: `npm test`
-     - Output: Executed `node --test tests/**/*.test.js`. Passed 32/32 tests across Tier 1, Tier 2, Tier 3, and Tier 4 (Duration: 30.1s, 0 failures).
-   - Command: `npx tsx --test tests/searchEngine.test.ts`
-     - Output: Passed 15/15 unit tests across 7 test suites (Duration: 172ms, 0 failures).
-   - Command: `npx wrangler deploy --dry-run`
-     - Output: Read 10 files from `dist/` directory successfully without entry-point errors. Exit code 0.
+  export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+  }
+  ```
+- Genuine implementation of `cn` standard helper combining `clsx` and `twMerge`.
 
-4. **Integrity Forensics Check**:
-   - Source code search for hardcoded test results, fake pass strings, or facade functions returned 0 instances.
-   - All state management hooks (`useQCState`, `useAppearance`) compute real state and interact with `localStorage`.
+### Observation 1.4: Empirical Build and Test Verification
+- Executed `npm run build`: Exit code 0.
+  - Built 1613 modules cleanly into `dist/`.
+- Executed `npm test`: Exit code 0.
+  - Test suites: 19 passed, 0 failed.
+  - Individual tests: 41 passed, 0 failed.
+
+### Observation 1.5: Code Integrity & Anti-Facade Checks
+- Searched codebase for hardcoded test bypasses, dummy facade returns (`return true` without logic, hardcoded expected outputs): NONE found.
+- Searched source code for `@mantine` or `@tabler` imports outside of `.agents`: 0 occurrences found.
+
+---
 
 ## 2. Logic Chain
 
-1. **Timeline Audit (Phase A)**:
-   - The git commit history (`08eb06e`) and agent workspace logs show sequential progression from exploration -> M1 scaffolding -> M2 data & search engine -> M3 UI shell & themes -> M4 batch drawer & state -> M5 PWA & build -> E2E test suite -> Mantine UI v7 modernization refinement.
-   - No suspicious file creation anomalies or pre-populated verification logs pre-dated execution.
+1. **Premise 1**: Acceptance Criterion M1 requires removal of all `@mantine/*` and `@tabler/*` packages and replacement with Tailwind CSS v4, Radix UI primitives, Lucide React, cmdk, sonner, cva, clsx, tailwind-merge, and next-themes.
+   - *Supported by Observation 1.1*: `package.json` contains 0 `@mantine` or `@tabler` packages and contains all required replacement libraries.
+2. **Premise 2**: Milestone 1 requires genuine Tailwind CSS v4 configuration in Vite and Deep Zinc Dark Theme palette CSS variables (`#09090b` bg, `#18181b` card, `#27272a` border, `#06b6d4` cyan accent).
+   - *Supported by Observation 1.2*: `@tailwindcss/vite` plugin is registered in `vite.config.ts`, `@import "tailwindcss";` is present in `src/index.css`, and CSS variables `--background: #09090b`, `--card: #18181b`, `--border: #27272a`, and `--primary: #06b6d4` are set correctly.
+3. **Premise 3**: Milestone 1 requires a genuine `cn` utility function in `src/lib/utils.ts`.
+   - *Supported by Observation 1.3*: `src/lib/utils.ts` imports `clsx` and `tailwind-merge` and exports `cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }`.
+4. **Premise 4**: Integrity audit requires empirical build/test execution and assurance of zero hardcoded bypasses or facade implementations.
+   - *Supported by Observations 1.4 & 1.5*: `npm run build` and `npm test` passed 100% without errors, and no hardcoded facades or bypasses exist.
 
-2. **Integrity Audit (Phase B)**:
-   - Evaluated under `development` integrity mode rules.
-   - No prohibited patterns (hardcoded test results, facade implementations, pre-populated verification output) were found.
-   - Algorithmic logic (Levenshtein, token scoring, alias expansion, DOM rendering) is genuine and fully functional.
-
-3. **Independent Verification Audit (Phase C)**:
-   - Executed `npm run build`, `npm test`, `npx tsx --test tests/searchEngine.test.ts`, and `npx wrangler deploy --dry-run` independently.
-   - All 4 commands executed cleanly with 0 errors and 100% test pass rate (32/32 JSDOM tests, 15/15 unit tests).
-   - All claims made in `progress.md` and `GATE_STATUS.md` perfectly match independent execution results.
+---
 
 ## 3. Caveats
 
-- Dry-run deployment (`npx wrangler deploy --dry-run`) validates asset loading and configuration integrity; live Cloudflare Workers deployment depends on active user Cloudflare credentials.
+- **Scope boundary**: This audit specifically evaluates Milestone 1 (Package & Styling Infrastructure). Components built in subsequent milestones (M2 through M5) will be audited in their respective audit phases.
+- **Environment**: Verified on Windows PowerShell environment under Node v22 and React 19.
+
+---
 
 ## 4. Conclusion
 
-**VERDICT: VICTORY CONFIRMED**
+Milestone 1 work product meets all acceptance criteria and integrity requirements.
+- **Verdict**: **CLEAN**
 
-The QC Standard Wording modernization project satisfies 100% of the acceptance criteria set forth in `ORIGINAL_REQUEST.md`. The code is clean, genuine, highly optimized, and robustly tested.
+---
 
 ## 5. Verification Method
 
-To re-verify independently at any time, execute the following commands from project root:
-```bash
-npm run build
-npm test
-npx tsx --test tests/searchEngine.test.ts
-npx wrangler deploy --dry-run
-```
-Invalidation condition: Any command returning a non-zero exit code or any test failure.
+To independently reproduce and verify this audit verdict:
+
+1. **Verify package dependencies**:
+   ```bash
+   node -e "const p = require('./package.json'); const mantine = Object.keys({...p.dependencies, ...p.devDependencies}).filter(k => k.includes('mantine') || k.includes('tabler')); console.log('Mantine/Tabler count:', mantine.length);"
+   ```
+   *Expected Output*: `Mantine/Tabler count: 0`
+
+2. **Verify build execution**:
+   ```bash
+   npm run build
+   ```
+   *Expected Output*: Exit code 0, output files generated in `dist/`.
+
+3. **Verify test execution**:
+   ```bash
+   npm test
+   ```
+   *Expected Output*: 41 tests passing, 0 failing, exit code 0.

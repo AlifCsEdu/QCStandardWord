@@ -1,7 +1,13 @@
 import React from 'react';
-import { Badge, Group, Paper, Text } from '@mantine/core';
-import { IconDashboard, IconFilter, IconBookmark, IconCopy } from '@tabler/icons-react';
+import {
+  LayoutDashboard as IconDashboard,
+  Filter as IconFilter,
+  Bookmark as IconBookmark,
+  Copy as IconCopy,
+} from 'lucide-react';
 import type { CategoryKey, SubCategoryCode } from '../types/qc.ts';
+import { Card, CardContent } from './ui/card.tsx';
+import { Badge } from './ui/badge.tsx';
 
 interface StatsDashboardProps {
   categoryCounts?: Record<string, number>;
@@ -42,63 +48,57 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({
   pinnedCount,
 }) => {
   return (
-    <Paper
+    <Card
       id="statsDashboard"
       data-testid="stats-dashboard"
-      p="sm"
-      m="md"
-      radius="md"
-      withBorder
-      style={{
-        background: 'var(--container-charcoal, #1e293b)',
-        borderColor: 'var(--border-contrast, #334155)',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-      }}
+      className="m-4 border-zinc-800 bg-zinc-900 shadow-md"
     >
-      <Group justify="space-between" align="center" wrap="wrap" gap="xs">
-        <Group gap="xs">
-          <IconDashboard size={18} color="var(--accent-cyan, #06b6d4)" />
-          <Text fw={700} size="sm" c="var(--text-primary, #f8fafc)">
+      <CardContent className="p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <IconDashboard className="size-4.5 text-cyan-400" />
+          <span className="font-semibold text-sm text-zinc-100">
             Inspection Dashboard
-          </Text>
-          <Badge color="cyan" variant="light" size="sm">
+          </span>
+          <Badge variant="default" className="bg-cyan-500/15 border-cyan-500/30 text-cyan-400">
             {totalFilteredCount} matching
           </Badge>
-        </Group>
+        </div>
 
         {/* Active Filter & Status Summary */}
-        <Group gap="xs" wrap="wrap">
-          <Group gap="xs">
-            <IconFilter size={14} color="var(--text-secondary, #94a3b8)" />
-            <Text size="xs" c="var(--text-secondary, #94a3b8)" fw={500}>
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-1.5">
+            <IconFilter className="size-3.5 text-zinc-400" />
+            <span className="text-xs text-zinc-400 font-medium">
               Active Filter:
-            </Text>
-            <Badge size="xs" color="cyan" variant="dot">
+            </span>
+            <Badge variant="outline" className="bg-cyan-950/40 border-cyan-500/30 text-cyan-400">
               Cat: {CATEGORY_NAMES[selectedCategory] || selectedCategory}
             </Badge>
             {selectedCategory === 'codes' && selectedSubCategory !== 'ALL' && (
-              <Badge size="xs" color="indigo" variant="dot">
+              <Badge variant="outline" className="bg-indigo-950/40 border-indigo-500/30 text-indigo-400">
                 Sub: {selectedSubCategory}
               </Badge>
             )}
             {searchQuery.trim() && (
-              <Badge size="xs" color="orange" variant="dot">
+              <Badge variant="outline" className="bg-orange-950/40 border-orange-500/30 text-orange-400">
                 Query: "{searchQuery.trim()}"
               </Badge>
             )}
-          </Group>
+          </div>
 
-          <Group gap="xs" ml="xs">
-            <Badge size="xs" color="yellow" variant="outline" leftSection={<IconBookmark size={10} />}>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="border-amber-500/40 text-amber-400 gap-1 bg-amber-950/20">
+              <IconBookmark className="size-3" />
               Pinned: {pinnedCount}
             </Badge>
-            <Badge size="xs" color="cyan" variant="outline" leftSection={<IconCopy size={10} />}>
+            <Badge variant="outline" className="border-cyan-500/40 text-cyan-400 gap-1 bg-cyan-950/20">
+              <IconCopy className="size-3" />
               Batch: {batchCount}
             </Badge>
-          </Group>
-        </Group>
-      </Group>
-    </Paper>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

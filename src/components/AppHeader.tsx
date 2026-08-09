@@ -1,7 +1,21 @@
 import React from 'react';
-import { SegmentedControl, Burger } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import {
+  Search,
+  X,
+  SlidersHorizontal,
+  Plus,
+  Folder,
+  Layers,
+  Settings,
+  Download,
+  Sun,
+  Moon,
+  Menu,
+} from 'lucide-react';
 import type { LayoutMode } from '../types/qc.ts';
+import { Button } from './ui/button.tsx';
+import { Input } from './ui/input.tsx';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group.tsx';
 
 interface AppHeaderProps {
   searchQuery: string;
@@ -19,6 +33,8 @@ interface AppHeaderProps {
   onToggleTheme: () => void;
   mobileOpened?: boolean;
   onToggleMobile?: () => void;
+  onOpenFolderManager?: () => void;
+  folderCount?: number;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -37,6 +53,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onToggleTheme,
   mobileOpened = false,
   onToggleMobile,
+  onOpenFolderManager,
+  folderCount,
 }) => {
   const hasQuery = searchQuery.trim().length > 0;
 
@@ -44,53 +62,33 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     <header
       id="appHeader"
       data-testid="app-header"
-      className="app-header"
-      style={{
-        padding: '10px 20px',
-        borderBottom: '1px solid var(--border-contrast, #334155)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        background: 'var(--header-bg, #1e293b)',
-        gap: '16px',
-        flexWrap: 'wrap',
-        minHeight: '60px',
-        boxSizing: 'border-box',
-      }}
+      className="app-header sticky top-0 z-40 w-full border-b border-zinc-800 bg-zinc-900/95 backdrop-blur-md px-4 py-2.5 flex items-center justify-between gap-4 flex-wrap min-h-[60px] box-border text-zinc-100"
     >
-      {/* Left side: Mobile Burger + Logo/Title */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      {/* Left side: Mobile Burger + Logo/Title + Version badge */}
+      <div className="flex items-center gap-3">
         {onToggleMobile && (
-          <Burger
-            opened={mobileOpened}
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onToggleMobile}
-            hiddenFrom="sm"
-            size="sm"
+            className="sm:hidden text-zinc-300 hover:text-white"
             aria-label="Toggle navigation"
-          />
+          >
+            <Menu className="size-5" />
+          </Button>
         )}
-        <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary, #f8fafc)', whiteSpace: 'nowrap' }}>
+        <h2 className="m-0 text-lg font-bold text-zinc-100 whitespace-nowrap tracking-tight">
           QC Standard Wording
         </h2>
-        <span
-          style={{
-            fontSize: '0.75rem',
-            padding: '2px 8px',
-            borderRadius: '12px',
-            background: 'rgba(6, 182, 212, 0.15)',
-            color: 'var(--accent-cyan, #06b6d4)',
-            border: '1px solid rgba(6, 182, 212, 0.3)',
-            fontWeight: 600,
-          }}
-        >
+        <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-semibold">
           v2.0
         </span>
       </div>
 
       {/* Middle: Search Bar + Clear Button + Cmd+K Spotlight Trigger */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, maxWidth: '480px', minWidth: '220px' }}>
-        <div style={{ position: 'relative', flex: 1 }}>
-          <input
+      <div className="flex items-center gap-2.5 flex-1 max-w-[480px] min-w-[220px]">
+        <div className="relative flex-1">
+          <Input
             id="search"
             data-testid="header-search-input"
             type="text"
@@ -102,170 +100,125 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               }
             }}
             placeholder="Search QC defects (e.g. FCPB, battery, display, crease)..."
-            style={{
-              width: '100%',
-              padding: '8px 36px 8px 12px',
-              borderRadius: '8px',
-              border: '1px solid var(--border-contrast, #334155)',
-              background: 'var(--bg-deep-slate, #0f172a)',
-              color: 'var(--text-primary, #f8fafc)',
-              fontSize: '0.9rem',
-              outline: 'none',
-              boxSizing: 'border-box',
-            }}
+            className="w-full pr-9 bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
           />
           {hasQuery && (
             <button
               id="clearBtn"
               data-testid="clear-search-btn"
-              className={`clear-btn ${hasQuery ? 'show' : ''}`}
+              className={`clear-btn ${hasQuery ? 'show' : ''} absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-100 bg-transparent border-0 cursor-pointer p-1`}
               onClick={onClearSearch}
               title="Clear search"
-              style={{
-                position: 'absolute',
-                right: '8px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                border: 'none',
-                background: 'transparent',
-                color: 'var(--text-secondary, #94a3b8)',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                fontWeight: 700,
-                padding: '2px 4px',
-              }}
             >
-              ✕
+              <X className="size-4" />
             </button>
           )}
         </div>
 
         {/* Cmd+K Spotlight Modal Trigger */}
-        <button
+        <Button
           id="spotlightBtn"
           data-testid="spotlight-trigger"
-          className="spotlight-btn"
+          className="spotlight-btn bg-zinc-950 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 text-xs gap-1.5 whitespace-nowrap h-9 px-3"
+          variant="outline"
           onClick={onOpenSpotlight}
           title="Quick Search (Cmd+K / Ctrl+K)"
-          style={{
-            padding: '6px 10px',
-            borderRadius: '8px',
-            border: '1px solid var(--border-contrast, #334155)',
-            background: 'var(--bg-deep-slate, #0f172a)',
-            color: 'var(--text-secondary, #94a3b8)',
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '0.8rem',
-            fontWeight: 500,
-            whiteSpace: 'nowrap',
-          }}
         >
-          <IconSearch size={14} color="var(--accent-cyan, #06b6d4)" />
-          <span>⌘K</span>
-        </button>
+          <Search className="size-3.5 text-cyan-400" />
+          <span className="font-mono text-[11px] bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-300 border border-zinc-700">⌘K</span>
+        </Button>
       </div>
 
-      {/* Right side: View Switcher SegmentedControl & Header Action Buttons */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+      {/* Right side: View Switcher ToggleGroup & Action Buttons */}
+      <div className="flex items-center gap-2 flex-wrap">
         {onSetLayout && (
-          <SegmentedControl
-            id="setLayout"
-            data-testid="view-switcher"
-            size="xs"
-            value={layoutMode}
-            onChange={(val) => onSetLayout(val as LayoutMode)}
-            data={[
-              { label: 'List', value: 'list' },
-              { label: 'Grid', value: 'grid' },
-              { label: 'Table', value: 'table' },
-            ]}
-          />
+          <div id="setLayout" data-testid="view-switcher" className="inline-flex rounded-lg bg-zinc-950 p-1 border border-zinc-800">
+            {(['list', 'grid', 'table'] as LayoutMode[]).map((mode) => (
+              <button
+                key={mode}
+                data-v={mode}
+                data-value={mode}
+                onClick={() => onSetLayout(mode)}
+                className={`px-2.5 py-1 text-xs font-semibold rounded transition-colors border-0 cursor-pointer capitalize ${
+                  layoutMode === mode
+                    ? 'bg-zinc-800 text-cyan-400 font-bold shadow-sm'
+                    : 'bg-transparent text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Pin Folder Manager Button (if provided) */}
+        {onOpenFolderManager && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onOpenFolderManager}
+            className="bg-zinc-950 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 gap-1.5 h-8"
+            title="Manage Pin Folders"
+          >
+            <FolderPin className="size-3.5 text-cyan-400" />
+            <span className="hidden md:inline">Folders</span>
+            {folderCount !== undefined && (
+              <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-1.5 py-0.2 rounded-full font-bold">
+                {folderCount}
+              </span>
+            )}
+          </Button>
         )}
 
         {/* Edit Mode Toggle */}
-        <button
+        <Button
           id="editBtn"
-          className={`edit-btn ${editMode ? 'on' : ''}`}
+          size="sm"
+          variant={editMode ? 'default' : 'outline'}
+          className={`edit-btn ${editMode ? 'on bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400' : 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800'} h-8 text-xs font-semibold`}
           onClick={onToggleEditMode}
           title="Toggle Edit Mode"
-          style={{
-            padding: '5px 12px',
-            borderRadius: '6px',
-            border: editMode ? '1px solid var(--accent-sky, #0284c7)' : '1px solid var(--border-contrast, #334155)',
-            cursor: 'pointer',
-            background: editMode ? 'var(--accent-sky, #0284c7)' : 'var(--container-charcoal, #1e293b)',
-            color: editMode ? '#ffffff' : 'var(--text-primary, #f8fafc)',
-            fontWeight: 600,
-            fontSize: '0.85rem',
-            transition: 'all 0.15s ease',
-          }}
         >
           Edit Mode
-        </button>
+        </Button>
 
         {/* Batch Drawer Button */}
-        <button
+        <Button
           id="batchBtn"
-          className="batch-btn"
+          size="sm"
+          variant="outline"
+          className="batch-btn bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 h-8 text-xs font-semibold gap-2"
           onClick={onOpenBatchDrawer}
           title="Open Batch Drawer"
-          style={{
-            padding: '5px 12px',
-            borderRadius: '6px',
-            border: '1px solid var(--border-contrast, #334155)',
-            cursor: 'pointer',
-            background: 'var(--container-charcoal, #1e293b)',
-            color: 'var(--text-primary, #f8fafc)',
-            fontWeight: 600,
-            fontSize: '0.85rem',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-          }}
         >
           <span>Batch Queue</span>
           <span
             id="bcount"
-            className="bcount"
-            style={{
-              background: 'var(--accent-cyan, #06b6d4)',
-              color: '#0f172a',
-              padding: '1px 7px',
-              borderRadius: '10px',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-            }}
+            className="bcount bg-cyan-400 text-zinc-950 px-2 py-0.5 rounded-full text-[11px] font-bold"
           >
             {batchCount}
           </span>
-        </button>
+        </Button>
 
         {/* Settings Button */}
-        <button
+        <Button
           id="setBtn"
-          className="set-btn settings-btn"
+          size="sm"
+          variant="outline"
+          className="set-btn settings-btn bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 h-8 text-xs font-semibold gap-1.5"
           onClick={onOpenSettings}
           title="Appearance & Layout Settings"
-          style={{
-            padding: '5px 12px',
-            borderRadius: '6px',
-            border: '1px solid var(--border-contrast, #334155)',
-            cursor: 'pointer',
-            background: 'var(--container-charcoal, #1e293b)',
-            color: 'var(--text-primary, #f8fafc)',
-            fontWeight: 600,
-            fontSize: '0.85rem',
-          }}
         >
-          Settings
-        </button>
+          <Settings className="size-3.5 text-zinc-400" />
+          <span className="hidden sm:inline">Settings</span>
+        </Button>
 
         {/* Download Offline Copy */}
-        <button
+        <Button
           id="dlBtn"
-          className="dl-btn"
+          size="sm"
+          variant="outline"
+          className="dl-btn bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 h-8 text-xs font-medium gap-1.5"
           onClick={() => {
             if (typeof document === 'undefined') return;
             const html = document.documentElement.outerHTML;
@@ -278,40 +231,34 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             URL.revokeObjectURL(url);
           }}
           title="Download Offline Copy"
-          style={{
-            padding: '5px 12px',
-            borderRadius: '6px',
-            border: '1px solid var(--border-contrast, #334155)',
-            cursor: 'pointer',
-            background: 'var(--container-charcoal, #1e293b)',
-            color: 'var(--text-primary, #f8fafc)',
-            fontWeight: 500,
-            fontSize: '0.85rem',
-          }}
         >
-          Offline Copy
-        </button>
+          <Download className="size-3.5 text-zinc-400" />
+          <span className="hidden md:inline">Offline Copy</span>
+        </Button>
 
         {/* Theme Toggle */}
-        <button
+        <Button
           id="themeBtn"
-          className="theme-btn"
+          size="sm"
+          variant="outline"
+          className="theme-btn bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 h-8 text-xs font-medium gap-1.5"
           onClick={onToggleTheme}
           title="Toggle Dark/Light Theme"
-          style={{
-            padding: '5px 12px',
-            borderRadius: '6px',
-            border: '1px solid var(--border-contrast, #334155)',
-            cursor: 'pointer',
-            background: 'var(--container-charcoal, #1e293b)',
-            color: 'var(--text-primary, #f8fafc)',
-            fontWeight: 500,
-            fontSize: '0.85rem',
-          }}
         >
-          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-        </button>
+          {theme === 'dark' ? (
+            <>
+              <Sun className="size-3.5 text-amber-400" />
+              <span>Light</span>
+            </>
+          ) : (
+            <>
+              <Moon className="size-3.5 text-cyan-400" />
+              <span>Dark</span>
+            </>
+          )}
+        </Button>
       </div>
     </header>
   );
 };
+

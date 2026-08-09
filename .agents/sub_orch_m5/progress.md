@@ -1,28 +1,24 @@
-# Progress — Sub-Orchestrator Milestone 5
+# Progress — Sub-Orchestrator Milestone 5: Final E2E & Adversarial Hardening
 
 ## Current Status
-Last visited: 2026-08-07T14:10:00Z
-
-## Iteration Status
-Current iteration: 0 / 32
+Last visited: 2026-08-09T20:59:00Z
 
 ## Checklist
-- [x] Initialized DISPATCH.md, BRIEFING.md, progress.md, SCOPE.md
-- [x] Started heartbeat cron
-- [x] Dispatch Explorers (Iter 1)
-- [x] Dispatch Worker (Iter 1)
-- [x] Dispatch Reviewers (Iter 1)
-- [x] Dispatch Challengers (Iter 1)
-- [x] Dispatch Forensic Auditor (Iter 1)
-- [x] Gate Check (Iter 1) — PASS
-- [x] Update SCOPE.md & PROJECT.md to DONE
-- [x] Report Handoff to Parent
-
-## Retrospective & Key Accomplishments
-- Implemented glassmorphic batch drawer (`backdrop-filter: blur(8px)`, `rgba(15, 23, 42, 0.4)` overlay, non-intrusive backdrop handling).
-- Added item reordering state logic (`moveBatchItemUp`, `moveBatchItemDown`) in `useQCState.ts` and sync to `localStorage['qc-batch']`.
-- Added move up (`.bup`, `data-mvup`) and move down (`.bdn`, `data-mvdn`) buttons per `.bitem`.
-- Enhanced delimiter select (`#joinSel`) with options for newline, comma, semicolon, space, pipe (` | `), and bullet (` • `).
-- Preserved 100% DOM element compatibility matrix (#batchDrawer, #backdrop, #bbcount, #bcount, #joinSel, #autoclear, #bcopy, #bclear, #bpaste, .bitem).
-- 100% build pass rate (`npm run build` code 0) and 100% test pass rate (108/108 tests passing).
-- Verified by 2 Reviewers (APPROVE), 2 Challengers (APPROVE), and 1 Forensic Auditor (CLEAN).
+- [x] Read ORIGINAL_REQUEST.md and PROJECT.md
+- [x] Initialized DISPATCH.md, BRIEFING.md, progress.md
+- [x] Phase 1: Full E2E Suite Verification
+  - [x] Run `npm test` and verify 100% pass rate on existing test assertions (Tiers 1-4: 46 assertions passing)
+  - [x] Run `npx tsc --noEmit` and verify 0 TypeScript errors
+  - [x] Run `npm run build` and verify clean production build in `./dist` (`dist/assets/`, `dist/sw.js`, `dist/manifest.webmanifest`)
+  - [x] Validate `package.json`: Confirm 0 `@mantine/*` and 0 `@tabler/*` packages
+  - [x] Validate `wrangler.jsonc`: Confirm output directory configured to `./dist`
+- [x] Phase 2: Adversarial Hardening (Tier 5 White-Box Stress Testing)
+  - [x] Create `tests/tier5-hardening.test.js` covering:
+    - Extreme localStorage corruption recovery
+    - HTML/XSS input sanitization in custom wording titles & folder names
+    - Max folder capacity (creating 50+ custom pin folders)
+    - Rapid batch drawer queue reordering under heavy concurrency
+    - High-speed theme/density toggling without state drift
+  - [x] Run `npm test` and verify 100% pass across all 55 tests (Tiers 1-5)
+- [x] Document results in `handoff.md`
+- [x] Send summary message to orchestrator

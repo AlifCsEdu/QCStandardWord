@@ -226,19 +226,19 @@ describe('Tier 1: Feature Coverage (Features 1 through 10)', () => {
   });
 
   describe('Feature 9: High-Contrast Cards & Table Rows Layout Transitions', () => {
-    it('should toggle layout modes between list, grid, and table with high-contrast borders', () => {
+    it('should toggle layout modes between list, grid, and table with high-contrast borders', async () => {
       const app = createAppInstance();
       const { document } = app;
 
-      app.setLayoutView('grid');
+      await app.setLayoutView('grid');
       let listwrap = document.querySelector('#listwrap, [data-testid="wording-container"]');
       assert.ok(listwrap && (listwrap.classList.contains('grid') || listwrap.getAttribute('data-layout') === 'grid'), 'Layout container should have "grid" layout');
 
-      app.setLayoutView('table');
+      await app.setLayoutView('table');
       listwrap = document.querySelector('#listwrap, [data-testid="wording-container"]');
       assert.ok(listwrap && (listwrap.classList.contains('table') || listwrap.getAttribute('data-layout') === 'table'), 'Layout container should have "table" layout');
 
-      app.setLayoutView('list');
+      await app.setLayoutView('list');
       listwrap = document.querySelector('#listwrap, [data-testid="wording-container"]');
       assert.ok(listwrap && (listwrap.classList.contains('list') || listwrap.getAttribute('data-layout') === 'list'), 'Layout container should have "list" layout');
     });

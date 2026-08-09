@@ -1,5 +1,5 @@
 import React from 'react';
-import type { QCItem, SearchResult } from '../types/qc.ts';
+import type { QCItem, SearchResult, CustomPinFolder } from '../types/qc.ts';
 import { DefectCard } from './DefectCard.tsx';
 
 interface WordingViewProps {
@@ -11,6 +11,9 @@ interface WordingViewProps {
   onAddToBatch: (text: string) => void;
   onOpenEdit: (item: QCItem) => void;
   onDeleteItem: (item: QCItem) => void;
+  folders?: CustomPinFolder[];
+  onTogglePinToFolder?: (itemId: string | number, folderId: string) => void;
+  isPinnedInFolder?: (itemId: string | number, folderId: string) => boolean;
 }
 
 export const WordingTable: React.FC<WordingViewProps> = ({
@@ -22,9 +25,12 @@ export const WordingTable: React.FC<WordingViewProps> = ({
   onAddToBatch,
   onOpenEdit,
   onDeleteItem,
+  folders,
+  onTogglePinToFolder,
+  isPinnedInFolder,
 }) => {
   return (
-    <div className="wording-table-body" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+    <div className="wording-table-body flex flex-col gap-1">
       {results.map(({ item, isApprox, highlightedText }) => {
         const isPinned = pinsSet.has(item.id) || pinsSet.has(item.n);
         return (
@@ -41,10 +47,14 @@ export const WordingTable: React.FC<WordingViewProps> = ({
             onAddToBatch={onAddToBatch}
             onOpenEdit={onOpenEdit}
             onDeleteItem={onDeleteItem}
+            folders={folders}
+            onTogglePinToFolder={onTogglePinToFolder}
+            isPinnedInFolder={isPinnedInFolder}
           />
         );
       })}
     </div>
   );
 };
+
 

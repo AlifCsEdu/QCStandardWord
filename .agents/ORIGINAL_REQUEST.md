@@ -1,32 +1,42 @@
 # Original User Request
 
-## 2026-08-07T13:21:42Z
+## 2026-08-09T12:41:38Z
 
-Complete 2026 UI/UX design overhaul of the QC Standard Wording application featuring a Deep Slate & Charcoal color palette (#0f172a / #1e293b), sticky left sidebar navigation, high-contrast cards and table rows, modern floating toast notifications, and non-intrusive backdrop-filtered batch drawer.
+<USER_REQUEST>
+Completely overhaul and migrate the QC Standard Wording React + Vite web application from Mantine UI to shadcn/ui (Tailwind CSS + Radix UI + Lucide React Icons + Sonner Toasts). Implement custom user pin folders/categories, category color-coding, and modern 2026 shadcn component design standards.
 
 Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
 Integrity mode: development
 
 ## Requirements
 
-### R1. 2026 Modern Deep Slate & Charcoal Design Theme
-- **Theme Palette**: Deep Slate background (#0f172a), Charcoal containers (#1e293b), high-contrast border outlines (#334155), and cool cyan accent highlights (#06b6d4 / #0284c7).
-- **Sidebar & Header Layout**: Clean split layout — sticky left sidebar for category tabs (All, Codes, Screen, Camera, etc.) and sub-code chips (FCPB, FCPW, etc.); top header for search bar (Cmd+K Spotlight modal trigger), view switcher (List, Grid, Table), and appearance settings.
-- **Visual Contrast & Differentiation**: Sharp visual separation between defect cards/rows, clear hover states (150ms ease), category pill badges with distinct theme colors, and bold typography hierarchy.
+### R1. Complete Migration to shadcn/ui Architecture
+- Remove all @mantine/* packages from package.json and replace with Tailwind CSS v4, @radix-ui/* primitives, lucide-react, class-variance-authority, clsx, tailwind-merge, next-themes, and sonner.
+- Zinc Dark Theme Palette: Deep Zinc dark background (#09090b), container cards (#18181b), crisp border outlines (#27272a), and cool cyan accent highlights (#06b6d4).
+- Core Components:
+  - Sheet (glassmorphic slide-out Batch Drawer)
+  - Command (Cmd+K Spotlight Search Dialog)
+  - Tabs & ScrollArea (Category & Sub-code Navigation)
+  - Card, Badge, Button, Input, Dialog, DropdownMenu, Tooltip, Select, ToggleGroup
 
-### R2. Modern 2026 Floating Notifications & Non-Intrusive Drawer
-- **Toast Notifications**: Modern floating toast pills with category icons, subtle glow, copy feedback animations, and progress timers.
-- **Glassmorphic Batch Drawer**: Slide-out panel with subtle background blur (backdrop-filter: blur(8px)), non-dimming overlay (rgba(15, 23, 42, 0.4)), and quick batch reorder/copy controls.
+### R2. Iconography & Enhanced Category Color Coding
+- Dedicated Lucide icon for every category (Screen, Camera, Buttons, Battery, Back Cover, Locks, Pen, Water Damage, Audio, Body, System, Codes, Custom Folders).
+- Theme-aware visual badges and left border accents for each defect category.
 
-### R3. Dependencies & Performance
-- Update @mantine/core, @mantine/hooks, @mantine/notifications, @mantine/spotlight to latest available packages.
-- Zero layout shift, 100% responsive desktop/mobile support, and clean TypeScript build (npm run build).
+### R3. Custom User Pin Categories & Favorites Folders
+- Enable users to star/pin items and create custom named folders/categories for personal inspection routines (e.g. "Screen Inspection", "Common Defects").
+- Persistent localStorage state for custom categories, batch queue, custom wording edits, and theme settings.
+
+### R4. Cloudflare Pages & Build Integrity
+- Maintain valid static asset build (dist/) and wrangler.jsonc ("pages_build_output_dir": "./dist").
+- Pass 100% of TypeScript compilation and test suites (npm run build & npm run test).
 
 ## Acceptance Criteria
 
-### UI & UX Overhaul
-- [ ] Deep Slate (#0f172a) & Charcoal (#1e293b) theme with high contrast borders (#334155).
-- [ ] Unified sticky left sidebar navigation with no duplicate stats headers.
-- [ ] Floating glassmorphic toast notifications with category icons.
-- [ ] Non-intrusive backdrop-filtered batch drawer.
-- [ ] npm run build and npm run test pass with 100% success rate.
+### Component & Design Migration
+- [ ] 0 @mantine/* packages remaining in package.json.
+- [ ] Genuine shadcn/ui component structure with Radix UI + Lucide React icons.
+- [ ] Custom user pin folders/categories system active with localStorage persistence.
+- [ ] Sonner floating toasts for instant copy feedback.
+- [ ] Clean build and test passes via npm run build and npm run test.
+</USER_REQUEST>

@@ -8,7 +8,7 @@ describe('Tier 4: Real-World Workload Scenarios (Features 1 through 10)', () => 
     const app = createAppInstance();
 
     // Step 1: Initial setup - set layout view to compact table using SegmentedControl
-    app.setLayoutView('table');
+    await app.setLayoutView('table');
     const { document } = app;
     assert.ok(document.querySelector('#listwrap, [data-testid="wording-container"]').classList.contains('table') || document.querySelector('[data-layout="table"]'));
 

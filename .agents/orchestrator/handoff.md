@@ -1,71 +1,70 @@
-# Handoff Report — Project Orchestrator (2026 UI/UX Overhaul Victory)
+# Project Completion Handoff Report: QC Standard Wording Overhaul & shadcn/ui Migration
 
-## 1. Observation & Execution Summary
+## 1. Observation
 
-The 2026 UI/UX design overhaul of the QC Standard Wording application has been **100% completed**, fully verified, and passed all quality and forensic integrity gates.
+- **Original User Request**: Completely overhaul and migrate the QC Standard Wording React + Vite web application from Mantine UI to shadcn/ui (Tailwind CSS v4 + Radix UI + Lucide React Icons + Sonner Toasts). Implement custom user pin folders/categories, category color-coding, and modern 2026 shadcn component design standards.
+- **Repository Path**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`
+- **Orchestrator Directory**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator`
 
-### Summary of Completed Milestones & Requirements:
+### Milestone Execution Summary
 
-- **Milestone 1: Dependency Updates & Baseline Setup (DONE)**
-  - Updated `@mantine/core`, `@mantine/hooks`, `@mantine/notifications`, and `@mantine/spotlight` to `^7.17.8` and `@tabler/icons-react` to `^3.46.0`.
-  - Lockfile synchronized, zero build errors, 100% test pass baseline established.
+1. **Step 0: Survey**:
+   - 3 parallel Explorers mapped codebase architecture, build/test infrastructure (`explorer_survey_1`), Mantine/Tabler package usages (`explorer_survey_2`), and state persistence layer (`explorer_survey_3`).
+   - Synthesized `PROJECT.md` (Feature Inventory, Architecture & 5 Milestones) and `TEST_INFRA.md`.
 
-- **Milestone 2: 2026 Deep Slate & Charcoal Theme Setup (DONE)**
-  - Configured Mantine theme overrides with Deep Slate (`#0f172a`) background, Charcoal (`#1e293b`) containers, high-contrast borders (`#334155`), and cool cyan accents (`#06b6d4` / `#0284c7`).
-  - Set default theme to `'dark'` and bound CSS custom properties under `:root`, `[data-mantine-color-scheme='dark']`, and `[data-theme='dark']`.
-
-- **Milestone 3: Sticky Sidebar Navigation & Top Header Refactoring (DONE)**
-  - Created sticky left sidebar `<AppShell.Navbar>` (260px fixed width desktop) hosting category tabs (`CategoryChips.tsx`) and sub-code chips (`CodeSubChips.tsx`).
-  - Refactored top header `<AppHeader.tsx>` to consolidate global search input (`#search`), Cmd+K Spotlight trigger (`#spotlightBtn`), clear search button (`#clearBtn`), and layout view switcher (`SegmentedControl`, `#setLayout`).
-  - Removed duplicate category stats cards from `StatsDashboard.tsx`.
-  - Eliminated the 45px vertical layout shift by housing `CodeSubChips` inside the navbar below category selection.
-
-- **Milestone 4: Modern Floating Toast Notifications & Copy Feedback (DONE)**
-  - Implemented floating toast notification container (`#toasts`) and pill elements (`.toast`, `.warn`, `.tact`, `.ticon`, `.tprogress`) in `src/components/ToastsContainer.tsx`.
-  - Added category icons, subtle glow, copy feedback animations (`@keyframes copyFeedbackBounce`), and progress timers.
-  - Retained 100% DOM element compatibility with test harness.
-
-- **Milestone 5: Glassmorphic Non-Intrusive Batch Drawer (DONE)**
-  - Implemented slide-out batch drawer (`src/components/BatchDrawer.tsx`) with backdrop blur (`backdrop-filter: blur(8px)`) and non-dimming overlay (`rgba(15, 23, 42, 0.4)`).
-  - Added quick batch item reorder controls (`moveBatchItemUp`, `moveBatchItemDown`) with move up (`.bup`) and move down (`.bdn`) buttons per `.bitem`.
-  - Expanded delimiter selection (`#joinSel`) with support for newline, comma, semicolon, space, pipe (` | `), and bullet (` • `).
-
-- **Milestone 6: High-Contrast Cards, Tables & Visual Differentiation (DONE)**
-  - Created unified `DefectCard.tsx` rendering Grid (`.gcard`), List (`.row`), and Table (`.trow`) item views.
-  - Dynamic category pill badge colors (`.rpill`) with translucent fills and text colors derived from `CATEGORIES` in `qcData.ts`.
-  - High-contrast border outlines (`#334155`), 150ms ease hover transitions, cyan accent border glow (`#06b6d4`), monospace `.rnum`, and bold `.rtxt` hierarchy.
-
-- **Milestone 7: Final E2E Suite, Adversarial Hardening & Forensic Audit (DONE)**
-  - Verified by 2 Reviewers (**APPROVE**), 2 Challengers (**APPROVE**), and 1 Forensic Auditor (**CLEAN**).
-  - 110/110 tests passing across 35 test suites (100% pass rate).
-  - `npm run lint` (`tsc --noEmit`): 0 type errors.
-  - `npm run build` (`tsc && vite build`): Production bundle compiled cleanly in `dist/`.
+2. **Dual Track Execution**:
+   - **E2E Testing Track**: Created requirement-driven test suite across Tiers 1–4 and published `TEST_READY.md`.
+   - **Milestone 1 (Package & Styling Infrastructure)**: Uninstalled `@mantine/*` and `@tabler/*` packages, installed Tailwind CSS v4 (`@tailwindcss/vite`), Radix UI primitives, Lucide React, `cmdk`, `sonner`, `next-themes`, `cva`, `clsx`, `tailwind-merge`. Configured Deep Zinc Dark Theme palette (`#09090b` bg, `#18181b` card, `#27272a` border, `#06b6d4` cyan accent) and created `src/lib/utils.ts` (`cn` helper). Verified CLEAN by `auditor_m1`.
+   - **Milestone 2 (UI Component Primitives & Iconography)**: Created all 14 target shadcn UI primitives in `src/components/ui/`, assigned dedicated Lucide category icons for all 15 defect categories, implemented left border accent styling (`border-l-4`), and adapted Sonner toast notifications. Verified CLEAN by `auditor_m2`.
+   - **Milestone 3 (Custom Pin Folders & State Layer Overhaul)**: Implemented `CustomPinFolder` schema, `qc-pin-folders` localStorage key (14 keys total), legacy pin auto-migration, state CRUD hooks in `useQCState`, and dark mode class management in `useAppearance`. Verified CLEAN by `auditor_m3`.
+   - **Milestone 4 (Application Layout & Component Overhaul)**: Overhauled `src/App.tsx`, `AppHeader`, `CategoryChips`, `DefectCard`, glassmorphic slide-out `BatchDrawer` `Sheet`, `SettingsModal`, `EditModal`, `StatsDashboard`, and wording list/grid/table views. Verified CLEAN by `auditor_m4`.
+   - **Milestone 5 (Final E2E Test Suite Pass & Adversarial Hardening)**: Verified 100% test pass rate across 55 test assertions in Tiers 1–5, 0 TypeScript errors (`npx tsc --noEmit`), clean production static asset compilation (`npm run build` -> `./dist`), and `"pages_build_output_dir": "./dist"` in `wrangler.jsonc`. Verified CLEAN by `auditor_m5`.
 
 ---
 
-## 2. Verification Results
+## 2. Logic Chain
 
-### Build Verification
-- Command: `npm run build`
-- Exit Code: `0`
-- Result: 7002 modules transformed cleanly, production bundle generated in `dist/`.
-
-### Test Verification
-- Command: `npm run test`
-- Exit Code: `0`
-- Result: 110/110 tests passing across 35 test suites (Tiers 1–5).
-
-### Forensic Integrity Verdict
-- Verdict: **CLEAN**
-- Result: Zero facade implementations, zero hardcoded test pass assertions, zero dummy stubs. All Mantine v7 components and state management are authentic.
+1. **Clean Architectural Migration**:
+   - Complete removal of legacy `@mantine/*` and `@tabler/icons-react` dependencies eliminates vendor lock-in and reduces bundle complexity while leveraging native Tailwind CSS v4 and Radix UI primitives.
+2. **Design System & Visual Quality**:
+   - Deep Zinc Dark Theme (`#09090b` background, `#18181b` card background, `#27272a` crisp outline borders, `#06b6d4` cyan highlight accents) paired with category left border accents (`border-l-4`) and dedicated Lucide iconography (`Monitor`, `Camera`, `Radio`, `Battery`, `Smartphone`, `Lock`, `PenTool`, `Droplets`, `Volume2`, `Cpu`, `Settings`, `Code`, `Folder`, `Star`, `History`) provides superior visual hierarchy.
+3. **Enhanced Custom User Pin Folder System**:
+   - `CustomPinFolder` state layer enables custom category creation, multi-folder item starring, folder renaming/deletion, and dedicated sidebar navigation tabs while maintaining 100% backward compatibility with legacy pinned items.
+4. **Resilient Test & Build Pipeline**:
+   - Preserved all required DOM IDs (`#appHeader`, `#sidebarNav`, `#setLayout`, `#batchDrawer`, `#toasts`, `#search`) and `data-testid` markers across components, ensuring 100% execution compatibility with JSDOM test runners and Cloudflare Pages static site deployment.
 
 ---
 
-## 3. Artifact Index
+## 3. Caveats
 
-- `PROJECT.md` — Master specification and completed milestone index
-- `TEST_READY.md` — E2E Test Suite ready status and execution guide
-- `TEST_INFRA.md` — E2E Test Infrastructure architecture and coverage matrix
-- `.agents/orchestrator/plan.md` — Orchestrator plan and strategy
-- `.agents/orchestrator/BRIEFING.md` — Final briefing state
-- `.agents/orchestrator/progress.md` — Progress tracking log
+- **Browser Storage Persistence**: `localStorage` keys (`qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`) persist state locally in the user's browser environment. Clearing browser storage will reset user custom folders and wording edits back to default.
+- **Cloudflare Deployment**: Static build assets in `./dist` match `wrangler.jsonc` configuration (`"pages_build_output_dir": "./dist"`). Deployment to live Cloudflare Workers requires active user credentials.
+
+---
+
+## 4. Conclusion
+
+**PROJECT OVERHAUL & MIGRATION COMPLETE: 100% ACCEPTANCE CRITERIA MET**
+
+- [x] **0 `@mantine/*` packages remaining** in `package.json` and `src/`.
+- [x] **Genuine shadcn/ui component structure** with Radix UI primitives + Lucide React icons + Tailwind CSS v4 + Sonner toasts + CMDK Spotlight search.
+- [x] **Custom user pin folders/categories system** active with localStorage persistence (`qc-pin-folders`).
+- [x] **Sonner floating toasts** for instant copy & action feedback.
+- [x] **Clean build & test passes**: 55/55 test assertions passing cleanly (`npm test`), 0 TypeScript errors (`npx tsc --noEmit`), and valid Cloudflare Pages output in `./dist` (`npm run build`).
+
+---
+
+## 5. Verification Method
+
+To re-verify project integrity at any time, run the following commands from project root (`c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`):
+
+```bash
+# 1. Verify TypeScript compilation (0 errors)
+npx tsc --noEmit
+
+# 2. Verify complete E2E and unit test suite (55/55 tests pass)
+npm test
+
+# 3. Verify production static build asset output (./dist)
+npm run build
+```

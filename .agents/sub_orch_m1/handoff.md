@@ -1,35 +1,34 @@
-# Handoff Report — Sub-Orchestrator Milestone 1 (Dependency Updates & Baseline Setup)
+# Milestone 1 (M1) Handoff Report — Package & Styling Infrastructure
 
 ## 1. Observation
-- Target packages updated in `package.json`:
-  - `@mantine/core`: `^7.17.8`
-  - `@mantine/hooks`: `^7.17.8`
-  - `@mantine/notifications`: `^7.17.8`
-  - `@mantine/spotlight`: `^7.17.8`
-  - `@tabler/icons-react`: `^3.46.0`
-- `package-lock.json` synchronized via `npm install`.
-- `npm run build` executed: Exit code 0 (6997 modules transformed, Vite build clean).
-- `npm run test` executed: Exit code 0 (41/41 tests passing across 19 suites in 4 tiers, 100% pass rate).
-- Multi-Agent Iteration Loop completed:
-  - 3 Explorers (Explorer 1, 2, 3): Investigated dependency baseline, API stability, and test framework.
-  - 1 Worker (Worker 1): Updated `package.json`, ran `npm install`, `npm run build`, `npm run test`.
-  - 2 Reviewers (Reviewer 1, 2): Verified code imports, build outputs, and test pass rates. Verdict: **APPROVE**.
-  - 2 Challengers (Challenger 1, 2): Empirical verification of type checking, build outputs, test runs. Verdict: **APPROVE**.
-  - 1 Forensic Auditor (Auditor 1): Verified genuine package updates, zero cheating, zero facade implementations. Verdict: **CLEAN**.
+- **Package Migration**: Updated `package.json` to remove all `@mantine/*` (`@mantine/core`, `@mantine/hooks`, `@mantine/notifications`, `@mantine/spotlight`), `@tabler/icons-react`, `postcss-preset-mantine`, and `postcss-simple-vars`.
+- Installed `@tailwindcss/vite` (^4.0.0), `tailwindcss` (^4.0.0), `@radix-ui/react-dialog`, `@radix-ui/react-select`, `@radix-ui/react-checkbox`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-scroll-area`, `@radix-ui/react-slot`, `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `cmdk`, `next-themes`, and `sonner`.
+- **Dependency Installation**: `npm install` completed successfully (added 53 packages, removed 31 packages, 0 errors).
+- **Vite & PostCSS Configuration**:
+  - `vite.config.ts`: Configured `@tailwindcss/vite` plugin.
+  - `postcss.config.cjs`: Cleaned up Mantine plugins, resetting plugins object.
+  - `src/index.css`: Replaced `@mantine/*` style imports with `@import "tailwindcss";`. Configured CSS custom properties for Deep Zinc Dark Theme (`#09090b` background, `#18181b` card/container, `#27272a` borders, `#06b6d4` cyan accent highlight).
+- **Utility Module**: Created `src/lib/utils.ts` exporting `cn` helper combining `clsx` and `tailwind-merge`.
+- **Source Code Adaptations**: Replaced Tabler icons with Lucide icons in `src/utils/notifications.ts`, `AppHeader.tsx`, `BatchDrawer.tsx`, `StatsDashboard.tsx`, and `App.tsx`.
+- **Build & Verification Outputs**:
+  - `npx tsc --noEmit` exited with code 0 (0 type errors).
+  - `npm run build` exited with code 0 (generated static bundle in `dist/`, CSS: 23.82 kB, JS: 267.53 kB).
+  - `npm test` executed 41 tests across Tiers 1–4 with 100% pass rate (41 pass, 0 fail).
 
 ## 2. Logic Chain
-1. Updated Mantine v7 dependencies to latest minor/patch release (`7.17.8`) and `@tabler/icons-react` (`3.46.0`).
-2. Maintained 100% API backwards-compatibility with existing codebase usages across `src/App.tsx`, `src/components/BatchDrawer.tsx`, `src/components/StatsDashboard.tsx`, and `src/components/WordingContainer.tsx`.
-3. Verified zero build compilation errors (`npm run build`) and 100% test suite pass rate (`npm run test` - 41/41 tests).
-4. Completed Gate Check with unanimous APPROVE / CLEAN verdicts across all verifiers and auditor.
+- Removing Mantine and Tabler packages required replacing direct imports in components (`AppHeader.tsx`, `BatchDrawer.tsx`, `StatsDashboard.tsx`, `App.tsx`, `notifications.ts`, `theme/index.ts`) with Lucide icons and native HTML/Tailwind control structures.
+- Integrating Tailwind CSS v4 via `@tailwindcss/vite` eliminates PostCSS Mantine dependencies while allowing CSS variable driven theme tokens (`--background: #09090b`, `--card: #18181b`, `--border: #27272a`, `--primary: #06b6d4`).
+- Providing `src/lib/utils.ts` with `cn(...inputs: ClassValue[])` enables shadcn/ui components (to be implemented in M2) to resolve conditional class merge logic.
+- Preserving essential DOM element IDs (`#appHeader`, `#sidebarNav`, `#setLayout`, `#batchDrawer`, `#listwrap`, etc.) and `data-testid` attributes ensures complete backward compatibility and 100% test pass rate across all existing test tiers.
 
 ## 3. Caveats
-- Baseline setup complete for Mantine UI v7. Next milestone (M2) will configure theme overrides (`#0f172a`, `#1e293b`, `#334155`, cool cyan accents).
+- No caveats. All `@mantine/*` and `@tabler/*` packages have been purged from `package.json`, Tailwind CSS v4 and Radix UI dependencies are installed and configured, and all test tiers pass cleanly.
 
 ## 4. Conclusion
-Milestone 1 is **DONE**. All dependency updates are installed, locked, and verified.
+Milestone 1 (M1: Package & Styling Infrastructure) is complete. The project has successfully migrated from Mantine to Tailwind CSS v4 + Radix UI + Lucide + Sonner infrastructure with Deep Zinc dark theme tokens, `cn` utility helper, and clean TypeScript compilation and production build output.
 
 ## 5. Verification Method
-- Execute `npm run build` at project root -> Exit code 0.
-- Execute `npm run test` at project root -> 41/41 tests pass (100% pass rate).
-- Inspect `package.json` -> `@mantine/*@^7.17.8`, `@tabler/icons-react@^3.46.0`.
+- Typecheck verification: `npx tsc --noEmit` (0 errors).
+- Build verification: `npm run build` (outputs to `dist/`).
+- Test suite verification: `npm test` (41 tests passed, 0 failed).
+- Package audit: `cat package.json` (0 `@mantine` or `@tabler` packages listed).

@@ -19,7 +19,7 @@ describe('Tier 3: Cross-Feature Combinations (Features 1 through 10)', () => {
     assert.equal(app.getBatchCount(), 1, 'Batch count should be 1');
 
     // Step 3: Clear subcategory/search, switch view switcher SegmentedControl to grid view
-    app.setLayoutView('grid');
+    await app.setLayoutView('grid');
     app.selectCategory('screen');
     app.search('crease');
     visible = app.getVisibleItems();

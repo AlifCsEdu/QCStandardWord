@@ -36,6 +36,14 @@ export interface QCItem {
   custom?: boolean;
 }
 
+export interface CustomPinFolder {
+  id: string;
+  name: string;
+  color?: string;
+  itemIds: (string | number)[];
+  createdAt: number;
+}
+
 export interface CategoryInfo {
   id: CategoryKey;
   name: string;

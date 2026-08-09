@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { BASE_ITEMS } from '../data/qcData.ts';
-import type { CategoryKey, DelimiterKey, QCItem, SearchResult, SubCategoryCode, ToastNotice } from '../types/qc.ts';
+import type { CategoryKey, CustomPinFolder, DelimiterKey, QCItem, SearchResult, SubCategoryCode, ToastNotice } from '../types/qc.ts';
 import { copyToClipboard, triggerVibrate } from '../utils/clipboard.ts';
 import { searchQCItems } from '../utils/searchEngine.ts';
 
@@ -31,33 +31,72 @@ export function useQCState() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('all');
   const [selectedSubCategory, setSelectedSubCategory] = useState<SubCategoryCode>('ALL');
 
-  // Storage State Keys (13 keys)
-  const [pins, setPins] = useState<(string | number)[]>(() => {
-    return safeJSONParse<(string | number)[]>('qc-pins', []);
+  // Storage State Keys (14 keys)
+  const [folders, setFolders] = useState<CustomPinFolder[]>(() => {
+    const saved = safeJSONParse<CustomPinFolder[]>('qc-pin-folders', []);
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+      const valid = saved.filter((f) => f && typeof f === 'object' && typeof f.name === 'string');
+      if (valid.length > 0) {
+        return valid.map((f) => ({
+          ...f,
+          itemIds: Array.isArray(f.itemIds) ? f.itemIds : [],
+        }));
+      }
+    }
+    // Auto-migration from legacy qc-pins to default "Starred Defects" folder if no folders exist
+    const legacyPins = safeJSONParse<(string | number)[]>('qc-pins', []);
+    const defaultFolder: CustomPinFolder = {
+      id: 'starred',
+      name: 'Starred Defects',
+      color: '#06b6d4',
+      itemIds: Array.isArray(legacyPins) ? legacyPins : [],
+      createdAt: Date.now(),
+    };
+    const initialFolders = [defaultFolder];
+    safeStorageSet('qc-pin-folders', initialFolders);
+    return initialFolders;
   });
+
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+
+  const [pins, setPins] = useState<(string | number)[]>(() => {
+    const savedFolders = safeJSONParse<CustomPinFolder[]>('qc-pin-folders', []);
+    if (savedFolders && Array.isArray(savedFolders) && savedFolders.length > 0) {
+      const validFolders = savedFolders.filter((f) => f && typeof f === 'object' && Array.isArray(f.itemIds));
+      if (validFolders.length > 0) {
+        return Array.from(new Set(validFolders.flatMap((f) => f.itemIds || [])));
+      }
+    }
+    const legacyPins = safeJSONParse<(string | number)[]>('qc-pins', []);
+    return Array.isArray(legacyPins) ? legacyPins : [];
+  });
+
+  const updateFoldersAndPins = useCallback(
+    (updater: CustomPinFolder[] | ((prev: CustomPinFolder[]) => CustomPinFolder[])) => {
+      setFolders((prev) => {
+        const next = typeof updater === 'function' ? updater(prev) : updater;
+        safeStorageSet('qc-pin-folders', next);
+        const allPinnedIds = Array.from(new Set(next.flatMap((f) => f.itemIds || [])));
+        setPins(allPinnedIds);
+        safeStorageSet('qc-pins', allPinnedIds);
+        return next;
+      });
+    },
+    []
+  );
 
   const [recents, setRecents] = useState<string[]>(() => {
     const r = safeJSONParse<string[]>('qc-recents', []);
-    if (r.length === 0) {
-      return safeJSONParse<string[]>('qc-history', []);
+    if (Array.isArray(r) && r.length > 0) {
+      return r.map(String);
     }
-    return r;
+    const h = safeJSONParse<string[]>('qc-history', []);
+    return Array.isArray(h) ? h.map(String) : [];
   });
 
   const [batchQueue, setBatchQueue] = useState<string[]>(() => {
-    if (typeof localStorage === 'undefined') return [];
-    const raw = localStorage.getItem('qc-batch');
-    if (!raw) return [];
-    let parsed: any;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      return [];
-    }
-    if (parsed !== null && parsed !== undefined && !Array.isArray(parsed)) {
-      throw new TypeError(`Corrupt qc-batch storage value: expected Array, got ${typeof parsed}`);
-    }
-    return Array.isArray(parsed) ? parsed : [];
+    const saved = safeJSONParse<any>('qc-batch', []);
+    return Array.isArray(saved) ? saved.map(String) : [];
   });
 
   const [delimiter, setDelimiterState] = useState<DelimiterKey>(() => {
@@ -93,15 +132,18 @@ export function useQCState() {
   autoclearRef.current = autoclear;
 
   const [qcEdits, setQcEdits] = useState<Record<string, { t: string; c: CategoryKey; n: number }>>(() => {
-    return safeJSONParse<Record<string, { t: string; c: CategoryKey; n: number }>>('qc-edits', {});
+    const saved = safeJSONParse<Record<string, any>>('qc-edits', {});
+    return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
   });
 
   const [qcDels, setQcDels] = useState<(string | number)[]>(() => {
-    return safeJSONParse<(string | number)[]>('qc-dels', []);
+    const saved = safeJSONParse<(string | number)[]>('qc-dels', []);
+    return Array.isArray(saved) ? saved : [];
   });
 
   const [qcCustom, setQcCustom] = useState<QCItem[]>(() => {
-    return safeJSONParse<QCItem[]>('qc-custom', []);
+    const saved = safeJSONParse<QCItem[]>('qc-custom', []);
+    return Array.isArray(saved) ? saved.filter((item) => item && typeof item === 'object' && item.t) : [];
   });
 
   // UI State: Edit Mode, Modals, Drawer, Toasts
@@ -135,7 +177,17 @@ export function useQCState() {
   }, [qcEdits, qcDels, qcCustom]);
 
   // Compute search results
-  const pinsSet = useMemo(() => new Set(pins), [pins]);
+  const activeFolder = useMemo(() => {
+    if (!activeFolderId) return null;
+    return folders.find((f) => f.id === activeFolderId) || null;
+  }, [folders, activeFolderId]);
+
+  const pinsSet = useMemo(() => {
+    if (activeFolder) {
+      return new Set(activeFolder.itemIds);
+    }
+    return new Set(pins);
+  }, [activeFolder, pins]);
 
   const searchResults = useMemo<SearchResult[]>(() => {
     const res = searchQCItems(
@@ -184,15 +236,100 @@ export function useQCState() {
     [removeToast]
   );
 
+  // Pin Folders Action Methods
+  const createFolder = useCallback(
+    (name: string, color?: string): string => {
+      const id = 'f_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+      const newFolder: CustomPinFolder = {
+        id,
+        name: name.trim() || 'New Folder',
+        color: color || '#06b6d4',
+        itemIds: [],
+        createdAt: Date.now(),
+      };
+      updateFoldersAndPins((prev) => [...prev, newFolder]);
+      return id;
+    },
+    [updateFoldersAndPins]
+  );
+
+  const deleteFolder = useCallback(
+    (folderId: string) => {
+      updateFoldersAndPins((prev) => prev.filter((f) => f.id !== folderId));
+      setActiveFolderId((prev) => (prev === folderId ? null : prev));
+    },
+    [updateFoldersAndPins]
+  );
+
+  const renameFolder = useCallback(
+    (folderId: string, newName: string) => {
+      if (!newName.trim()) return;
+      updateFoldersAndPins((prev) =>
+        prev.map((f) => (f.id === folderId ? { ...f, name: newName.trim() } : f))
+      );
+    },
+    [updateFoldersAndPins]
+  );
+
+  const togglePinToFolder = useCallback(
+    (itemId: string | number, folderId: string) => {
+      updateFoldersAndPins((prev) =>
+        prev.map((f) => {
+          if (f.id !== folderId) return f;
+          const exists = f.itemIds.some((id) => String(id) === String(itemId));
+          const nextItems = exists
+            ? f.itemIds.filter((id) => String(id) !== String(itemId))
+            : [...f.itemIds, itemId];
+          return { ...f, itemIds: nextItems };
+        })
+      );
+    },
+    [updateFoldersAndPins]
+  );
+
+  const isPinnedInFolder = useCallback(
+    (itemId: string | number, folderId: string): boolean => {
+      const folder = folders.find((f) => f.id === folderId);
+      if (!folder) return false;
+      return folder.itemIds.some((id) => String(id) === String(itemId));
+    },
+    [folders]
+  );
+
+  const getItemFolderIds = useCallback(
+    (itemId: string | number): string[] => {
+      return folders
+        .filter((f) => f.itemIds.some((id) => String(id) === String(itemId)))
+        .map((f) => f.id);
+    },
+    [folders]
+  );
+
   // Pinning
-  const togglePin = useCallback((id: string | number) => {
-    setPins((prev) => {
-      const exists = prev.includes(id);
-      const next = exists ? prev.filter((p) => p !== id) : [...prev, id];
-      safeStorageSet('qc-pins', next);
-      return next;
-    });
-  }, []);
+  const togglePin = useCallback(
+    (id: string | number) => {
+      const targetFolderId =
+        activeFolderId && folders.some((f) => f.id === activeFolderId)
+          ? activeFolderId
+          : folders[0]?.id || 'starred';
+
+      const targetFolderExists = folders.some((f) => f.id === targetFolderId);
+
+      if (!targetFolderExists) {
+        const newFolder: CustomPinFolder = {
+          id: targetFolderId,
+          name: 'Starred Defects',
+          color: '#06b6d4',
+          itemIds: [id],
+          createdAt: Date.now(),
+        };
+        updateFoldersAndPins([newFolder]);
+      } else {
+        togglePinToFolder(id, targetFolderId);
+      }
+    },
+    [activeFolderId, folders, updateFoldersAndPins, togglePinToFolder]
+  );
 
   // Recents & Copy
   const pushRecent = useCallback((text: string) => {
@@ -497,6 +634,17 @@ export function useQCState() {
     setSelectedSubCategory,
     activeItems,
     searchResults,
+
+    // Custom Pin Folders State & Methods
+    folders,
+    activeFolderId,
+    setActiveFolderId,
+    createFolder,
+    deleteFolder,
+    renameFolder,
+    togglePinToFolder,
+    isPinnedInFolder,
+    getItemFolderIds,
 
     // Pinning
     pins,

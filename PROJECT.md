@@ -1,59 +1,52 @@
-# Project: QC Standard Wording 2026 UI/UX Overhaul
+# Project: QC Standard Wording Overhaul & shadcn/ui Migration
 
 ## Architecture
-- Framework: React 18/19 + Vite + TypeScript
-- Component Library: Mantine UI v7 (`@mantine/core`, `@mantine/hooks`, `@mantine/notifications`, `@mantine/spotlight`, `@tabler/icons-react`)
-- Theme System: Mantine custom theme overrides with Deep Slate (`#0f172a`) background, Charcoal (`#1e293b`) containers, high-contrast borders (`#334155`), cool cyan accents (`#06b6d4` / `#0284c7`)
-- Layout Strategy: Split layout — Sticky left sidebar `<AppShell.Navbar>` for category tabs & sub-code chips; Top header `<AppShell.Header>` for Cmd+K search bar, List/Grid/Table view switcher, theme toggle, and settings.
+- **Framework & Build**: React 19 + Vite 6 + TypeScript 5 + Tailwind CSS v4 + Cloudflare Pages (`./dist`).
+- **UI Stack**: `@radix-ui/react-*` primitives, `lucide-react`, `cmdk` (Spotlight), `sonner` (Toasts), `next-themes`, `class-variance-authority`, `clsx`, `tailwind-merge`.
+- **Design Palette**: Deep Zinc Dark Theme (`#09090b` bg, `#18181b` card/containers, `#27272a` borders, `#06b6d4` cool cyan accent highlight).
+- **State & Data**: React hooks (`useQCState`, `useAppearance`), `localStorage` persistence across 14 keys (`qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`).
 
 ## Feature Inventory
 | # | Feature | Description | Milestone | Source |
 |---|---------|-------------|-----------|--------|
-| 1 | Dependency Updates | Update @mantine/* packages to latest available | M1 | R3 |
-| 2 | Deep Slate & Charcoal Theme | Deep Slate (#0f172a) bg, Charcoal (#1e293b) containers, cyan accents (#06b6d4/#0284c7), high-contrast borders (#334155) | M2 | R1 |
-| 3 | Sticky Left Sidebar Navigation | Move category tabs and sub-code chips into sticky left sidebar `<AppShell.Navbar>` | M3 | R1 |
-| 4 | Top Header Search & View Switcher | Move Cmd+K Spotlight search bar and List/Grid/Table view switcher to top header | M3 | R1 |
-| 5 | Remove Duplicate Stats Header | Consolidate `StatsDashboard.tsx` to eliminate duplicate category badges & counts | M3 | R1 |
-| 6 | Eliminate Layout Shift | Prevent 45px vertical jump when switching sub-code chips (placed in sidebar) | M3 | R1, R3 |
-| 7 | Floating Toast Notifications | Modern floating toast pills with category icons, subtle glow, copy feedback, and progress timers | M4 | R2 |
-| 8 | Glassmorphic Batch Drawer | Backdrop-filtered slide-out drawer (blur(8px), rgba(15,23,42,0.4)), batch reorder & copy controls | M5 | R2 |
-| 9 | High-Contrast Cards & Table Rows | Visual differentiation between defect cards/rows, clear hover states (150ms ease), category pill badges, bold typography | M6 | R1 |
-| 10 | E2E & Integrity Verification | 100% build and test pass rate, zero layout shift, 100% responsive desktop/mobile support | M7 | AC |
+| 1 | Package Migration & CSS Setup | Remove `@mantine/*` & `@tabler/*`, install Tailwind CSS v4 + Radix UI + Lucide + Sonner + CMDK | M1 | R1 |
+| 2 | Zinc Dark Palette Styling | Configure `#09090b` bg, `#18181b` cards, `#27272a` borders, `#06b6d4` cyan accents | M1 | R1 |
+| 3 | Core UI Primitives | Build `Button`, `Input`, `Badge`, `Card`, `Dialog`, `Select`, `Checkbox`, `Textarea`, `Tooltip`, `DropdownMenu`, `Sheet`, `Command`, `ToggleGroup`, `ScrollArea` | M2 | R1 |
+| 4 | Lucide Iconography System | Assign dedicated Lucide icons to all 15 defect categories & replace Tabler icons | M2 | R2 |
+| 5 | Category Color Accents & Badges | Implement theme-aware category badges and left border accents (`border-l-4`) | M2 | R2 |
+| 6 | Custom User Pin Categories & Folders | Implement `CustomPinFolder` schema, CRUD operations, multi-folder item starring, & navigation | M3 | R3 |
+| 7 | State Persistence Layer | Update `useQCState` and `useAppearance` for 14 `localStorage` keys & dark theme management | M3 | R3 |
+| 8 | Application Shell & Layout Migration | Migrate `App.tsx`, `AppHeader`, `CategoryChips`, `CodeSubChips`, `WordingContainer`, `BatchDrawer`, `SettingsModal`, `StatsDashboard` | M4 | R1, R2, R3 |
+| 9 | DOM & Test ID Preservation | Preserve `#appHeader`, `#sidebarNav`, `#setLayout`, `#batchDrawer`, `#toasts`, `#search`, `data-testid` markers | M4 | R4 |
+| 10 | Static Asset Build & Cloudflare Config | Clean `npm run build` (`dist/`), `wrangler.jsonc` validation | M5 | R4 |
+| 11 | Full Test Suite Execution | Pass 100% of unit/integration tests (`npm test`) & E2E suite | M5 | R4 |
+| 12 | Adversarial Coverage Hardening | Tier 5 white-box stress testing and edge-case validation | M5 | R4 |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| 1 | M1: Dependency Updates & Baseline Setup | Update Mantine dependencies, verify npm build/test baseline | None | DONE |
-| 2 | M2: 2026 Deep Slate & Charcoal Theme Setup | Configure Mantine theme overrides, custom CSS tokens (#0f172a, #1e293b, #334155, cyan accent) | M1 | DONE |
-| 3 | M3: Sticky Sidebar Navigation & Header Refactoring | Move navigation to sticky sidebar `<AppShell.Navbar>`, header search & view switcher, remove duplicate stats header | M2 | DONE |
-| 4 | M4: Modern Floating Toast Notifications | Refactor notifications to floating glassmorphic toasts with category icons, subtle glow, progress timer | M2 | DONE |
-| 5 | M5: Glassmorphic Non-Intrusive Batch Drawer | Refactor batch drawer with backdrop filter (blur 8px), non-dimming overlay, reorder/copy controls | M3, M4 | DONE |
-| 6 | M6: High-Contrast Cards, Tables & Visual Differentiation | Style defect cards, grid items, and table rows with high-contrast borders, hover animations (150ms), pill badges | M2, M3 | DONE |
-| 7 | M7: E2E Test Suite & Integrity Verification | Pass 100% E2E tests, zero layout shift verification, responsive desktop/mobile, forensic audit | M1-M6 | DONE |
+| M1 | Package & Styling Infrastructure | Remove `@mantine/*` & `@tabler/*`, install Tailwind v4 + Radix UI stack, configure Zinc Dark Theme | None | DONE |
+| M2 | UI Component Primitives & Iconography | Implement shadcn/ui primitives (`Sheet`, `Command`, `Dialog`, `Button`, `Card`, etc.), Lucide icon map, Sonner toasts | M1 | DONE |
+| M3 | Custom Pin Folders & State Layer | Implement `CustomPinFolder` schema, `qc-pin-folders` localStorage key, `useQCState` & `useAppearance` updates | M2 | DONE |
+| M4 | Application Layout & Component Overhaul | Migrate `App.tsx`, `AppHeader`, `BatchDrawer`, `CategoryChips`, `DefectCard`, `SettingsModal`, `EditModal` to shadcn/ui | M3 | DONE |
+| M5 | Final E2E Test Suite Pass & Hardening | Pass 100% unit & E2E tests, clean `npm run build`, zero `@mantine` packages remaining, Tier 5 hardening | M4 | DONE |
 
 ## Interface Contracts
-### AppShell ↔ Navigation
-- AppShell Navbar width: fixed 260px desktop, collapsible drawer mobile.
-- Category change updates `selectedCategory` state in `useQCState`.
-- Sub-code selection updates `selectedSubCategory` state in `useQCState`.
+### `useQCState` ↔ Component Layer
+- `folders`: `CustomPinFolder[]`
+- `createFolder`: `(name: string, color?: string) => string`
+- `deleteFolder`: `(folderId: string) => void`
+- `renameFolder`: `(folderId: string, newName: string) => void`
+- `togglePinToFolder`: `(itemId: string, folderId: string) => void`
+- `isPinnedInFolder`: `(itemId: string, folderId: string) => boolean`
 
-### AppHeader ↔ Search & View Switcher
-- Cmd+K opens Spotlight modal via `spotlight.open()`.
-- View switcher (`SegmentedControl`) updates `layoutMode` (`list` | `grid` | `table`).
-
-### Notifications System
-- Custom floating toast helper: `showFloatingToast(message, type, categoryIcon)`.
+### Toast Notifications Interface (`src/utils/notifications.ts`)
+- `showNotice(notice: { type: 'copy'|'pin'|'batch'|'edit'|'custom'|'info'|'warning'|'delete', text: string }) => void`
+- Wraps `sonner.toast` with Lucide icons (`Copy`, `Pin`, `Plus`, `Pencil`, `Trash2`, `AlertTriangle`).
 
 ## Code Layout
-- `src/App.tsx`: Main AppShell layout (Header, Navbar, Main)
-- `src/theme/`: Mantine theme definitions and 2026 color palette
-- `src/components/AppHeader.tsx`: Top header with search bar, view switcher, settings
-- `src/components/SidebarNav.tsx`: Sticky left sidebar with category tabs & sub-code chips
-- `src/components/CategoryChips.tsx`: Category badges (sidebar-friendly)
-- `src/components/CodeSubChips.tsx`: Sub-code badges (sidebar-friendly)
-- `src/components/WordingContainer.tsx`: Defect items container (List / Grid / Table view)
-- `src/components/DefectCard.tsx`: Individual card/row with high-contrast borders & hover states
-- `src/components/BatchDrawer.tsx`: Glassmorphic batch queue drawer with backdrop-filter
-- `src/utils/notifications.ts`: Floating toast notification triggers & icons
-- `src/utils/searchEngine.ts`: Search & filtering logic
-- `src/hooks/useQCState.ts`: State management and persistence
+- `src/components/ui/`: Target shadcn/ui primitives (`button.tsx`, `card.tsx`, `dialog.tsx`, `sheet.tsx`, `command.tsx`, `select.tsx`, `checkbox.tsx`, `textarea.tsx`, `badge.tsx`, `toggle-group.tsx`, `scroll-area.tsx`).
+- `src/lib/utils.ts`: Utility function `cn(...inputs: ClassValue[])`.
+- `src/types/qc.ts`: Expanded types (`CustomPinFolder`, `QCItem`, `CategoryInfo`, etc.).
+- `src/hooks/useQCState.ts`: State hook with 14 `localStorage` keys.
+- `src/hooks/useAppearance.ts`: Theme hook with dark mode class toggle.
