@@ -2,7 +2,7 @@ import React from 'react';
 import type { QCItem, CustomPinFolder } from '../types/qc.ts';
 import { getCategoryLeftBorderStyle, getCategoryBadgeElement } from '../utils/categoryColors.ts';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu.tsx';
-import { Folder } from 'lucide-react';
+import { Folder, Check } from 'lucide-react';
 import { escapeHtmlItem } from '../utils/searchEngine.ts';
 
 export interface DefectCardProps {
@@ -54,9 +54,31 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
   isPinnedInFolder,
 }) => {
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+  const copiedTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleCopy = React.useCallback(() => {
+    onCopyItem(item.t);
+    if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    setCopied(true);
+    copiedTimerRef.current = setTimeout(() => {
+      setCopied(false);
+    }, 1200);
+  }, [item.t, onCopyItem]);
+
+  React.useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
+
   const containerClass = `${variant === 'grid' ? 'gcard' : variant === 'list' ? 'row' : 'trow'} ${
-    isPinned ? 'pinned bg-amber-500/[0.06] border-amber-500/40 shadow-xs' : 'bg-stone-900 border-stone-800 hover:border-stone-700 hover:shadow-xs'
-  } border-l-4 transition-all duration-150 ease-in-out cursor-pointer rounded-xl text-stone-100 group`;
+    isPinned
+      ? 'pinned bg-amber-500/[0.07] border-amber-500/40 shadow-xs'
+      : copied
+      ? 'bg-emerald-950/20 border-emerald-500/70 ring-2 ring-emerald-500/40 shadow-md'
+      : 'bg-stone-900 border-stone-800 hover:border-stone-700 hover:shadow-xs'
+  } border-l-4 transition-all duration-150 ease-in-out cursor-pointer rounded-xl text-stone-100 group select-none`;
 
   const borderLeftStyle = getCategoryLeftBorderStyle(item.c);
 
@@ -69,9 +91,9 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
               data-act="pin"
               className={`pin-btn ${
                 isPinned
-                  ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40'
-                  : 'text-stone-400 hover:text-amber-300 bg-stone-800 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
-              } px-2.5 py-1 rounded-md border text-xs flex items-center gap-1 transition-all duration-150`}
+                  ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30 hover:border-amber-400'
+                  : 'text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
+              } px-2.5 py-1 rounded-md border text-xs flex items-center gap-1 active:scale-90 transition-all duration-150`}
               onClick={(e) => {
                 e.stopPropagation();
                 onTogglePin(item.id);
@@ -114,9 +136,9 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
           data-act="pin"
           className={`pin-btn ${
             isPinned
-              ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40'
-              : 'text-stone-400 hover:text-amber-300 bg-stone-800 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
-          } px-2.5 py-1 rounded-md border text-xs transition-all duration-150`}
+              ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30 hover:border-amber-400'
+              : 'text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
+          } px-2.5 py-1 rounded-md border text-xs active:scale-90 transition-all duration-150`}
           onClick={(e) => {
             e.stopPropagation();
             onTogglePin(item.id);
@@ -129,7 +151,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
 
       <button
         data-act="add"
-        className="add-batch-btn bg-stone-800 border border-stone-700 text-stone-200 hover:bg-stone-700 hover:border-stone-600 hover:text-stone-100 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
+        className="add-batch-btn bg-stone-800/90 border border-stone-700 text-stone-200 hover:bg-stone-700 hover:border-stone-500 hover:text-stone-100 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1 shadow-xs"
         onClick={(e) => {
           e.stopPropagation();
           onAddToBatch(item.t);
@@ -143,7 +165,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
         <>
           <button
             data-act="edit"
-            className="edit-item-btn bg-stone-800 border border-stone-700 text-stone-200 hover:bg-stone-700 hover:border-stone-600 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
+            className="edit-item-btn bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
             onClick={(e) => {
               e.stopPropagation();
               onOpenEdit(item);
@@ -154,7 +176,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
           </button>
           <button
             data-act="del"
-            className="del-item-btn bg-rose-950/40 border border-rose-800/60 text-rose-400 hover:bg-rose-900/60 hover:border-rose-700 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
+            className="del-item-btn bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
             onClick={(e) => {
               e.stopPropagation();
               onDeleteItem(item);
@@ -168,27 +190,40 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
     </div>
   );
 
+  const renderCopiedBadge = () => (
+    <span
+      data-testid="inline-copied-badge"
+      className="inline-copied-badge inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-in fade-in zoom-in-95 duration-150 shadow-xs"
+    >
+      <Check className="size-3 stroke-[2.5]" />
+      <span>Copied ✓</span>
+    </span>
+  );
+
   if (variant === 'grid') {
     return (
       <div
         data-id={item.id}
-        className={`${containerClass} flex flex-col justify-between p-4 shadow-xs`}
+        className={`${containerClass} flex flex-col justify-between p-4 shadow-xs min-h-[140px]`}
         style={borderLeftStyle}
-        onClick={() => onCopyItem(item.t)}
+        onClick={handleCopy}
       >
         <div className="flex justify-between items-center mb-2.5">
-          <span className="rnum font-mono text-xs font-bold text-stone-400 group-hover:text-stone-200 transition-colors">
-            #{item.n}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
+              #{item.n}
+            </span>
+            {copied && renderCopiedBadge()}
+          </div>
           {getCategoryBadgeElement(item.c)}
         </div>
 
-        <div className="rtxt font-sans text-sm font-semibold tracking-tight text-stone-100 mb-3 flex-1 leading-relaxed">
+        <div className="rtxt font-sans text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white mb-3 flex-1 leading-relaxed transition-colors">
           {isApprox && <span className="fz font-bold text-amber-400 mr-1.5">≈</span>}
           <span dangerouslySetInnerHTML={{ __html: highlightedText || escapeHtmlItem(item) }} />
         </div>
 
-        <div className="flex justify-end pt-2.5 border-t border-stone-800">
+        <div className="flex justify-end pt-2.5 border-t border-stone-800/80">
           {renderActionButtons(false)}
         </div>
       </div>
@@ -201,18 +236,21 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
         data-id={item.id}
         className={`${containerClass} flex sm:grid sm:grid-cols-12 items-center justify-between px-3.5 sm:px-4 py-2.5 text-sm shadow-xs transition-colors duration-150 gap-2`}
         style={borderLeftStyle}
-        onClick={() => onCopyItem(item.t)}
+        onClick={handleCopy}
       >
-        <span className="rnum font-mono text-xs font-bold text-stone-400 group-hover:text-stone-200 transition-colors sm:col-span-1 shrink-0">
-          #{item.n}
-        </span>
-        <div className="rtxt font-sans text-xs sm:text-sm font-semibold tracking-tight text-stone-100 flex-1 sm:col-span-7 truncate pr-2">
+        <div className="flex items-center gap-2 sm:col-span-1 shrink-0">
+          <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
+            #{item.n}
+          </span>
+        </div>
+        <div className="rtxt font-sans text-xs sm:text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white flex-1 sm:col-span-7 truncate pr-2 transition-colors">
           {isApprox && <span className="fz font-bold text-amber-400 mr-1.5">≈</span>}
           <span dangerouslySetInnerHTML={{ __html: highlightedText || escapeHtmlItem(item) }} />
         </div>
 
-        <div className="sm:col-span-2 flex items-center shrink-0">
+        <div className="sm:col-span-2 flex items-center gap-2 shrink-0">
           {getCategoryBadgeElement(item.c)}
+          {copied && renderCopiedBadge()}
         </div>
         <div className="sm:col-span-2 flex justify-end shrink-0">
           {renderActionButtons(true)}
@@ -227,19 +265,20 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
       data-id={item.id}
       className={`${containerClass} flex items-center justify-between p-3.5 sm:p-4 shadow-xs gap-3 transition-colors duration-150`}
       style={borderLeftStyle}
-      onClick={() => onCopyItem(item.t)}
+      onClick={handleCopy}
     >
       <div className="flex items-center gap-3.5 flex-1 min-w-0">
-        <span className="rnum font-mono text-xs font-bold text-stone-400 group-hover:text-stone-200 transition-colors min-w-[38px] shrink-0">
+        <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
           #{item.n}
         </span>
-        <div className="rtxt font-sans text-sm font-semibold tracking-tight text-stone-100 flex-1 leading-relaxed">
+        <div className="rtxt font-sans text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white flex-1 leading-relaxed transition-colors">
           {isApprox && <span className="fz font-bold text-amber-400 mr-1.5">≈</span>}
           <span dangerouslySetInnerHTML={{ __html: highlightedText || escapeHtmlItem(item) }} />
         </div>
       </div>
 
       <div className="flex items-center gap-3 shrink-0">
+        {copied && renderCopiedBadge()}
         {getCategoryBadgeElement(item.c)}
         {renderActionButtons(false)}
       </div>

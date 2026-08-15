@@ -1,12 +1,27 @@
-# Progress Log - worker_m2
+# Progress — Milestone R2: Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions
 
-Last visited: 2026-08-09T21:22:00Z
+Last visited: 2026-08-16T00:53:15+08:00
 
-- [x] Initialized workspace and briefing
-- [x] Read strategy reports and target source files
-- [x] Refactor CategoryChips.tsx (Linear/Vercel Dark Onyx aesthetic, Lucide category icons, 3 collapsible group sections, Pin Folder CRUD Manager)
-- [x] Refactor AppHeader.tsx (Onyx surface bg-[#0c0e12]/80, backdrop-blur-xl, ambient cyan glow search input #search, ⌘K badge #spotlightBtn, view switcher #setLayout with data-v, fixed FolderPin import)
-- [x] Refactor CommandDialog in App.tsx (Onyx surface bg-[#0c0e12]/95, cyan border glow, JetBrains Mono code badges, keyboard nav footer bar)
-- [x] Run build (`npm run build`) and typecheck (`npm run lint`) - PASSED (0 errors)
-- [x] Run test suite (`npm test`) - PASSED (55/55 tests passed)
-- [ ] Create handoff report
+## Status: COMPLETE
+
+### Checklist
+- [x] Initialize briefing, dispatch, progress
+- [x] Read and analyze PROJECT.md, ORIGINAL_REQUEST.md, explorer analysis
+- [x] Examine current implementation of:
+  - `src/components/DefectCard.tsx`
+  - `src/components/WordingContainer.tsx`
+  - `src/components/WordingGrid.tsx`
+  - `src/components/WordingList.tsx`
+  - `src/components/WordingTable.tsx`
+  - `src/index.css`
+- [x] Run baseline tests to verify current test state (232/232 passing)
+- [x] Implement enhanced micro-interactions & visual polish:
+  - `DefectCard.tsx` (copied state, emerald glow, inline badge, .rnum styling, .rtxt styling, tactile action buttons)
+  - `WordingGrid.tsx`, `WordingList.tsx`, `WordingTable.tsx`, `WordingContainer.tsx` (verified full compatibility)
+  - `src/index.css` (custom animation keyframes for badge/glow, tactile active scale states)
+- [x] Verify DOM query selectors and attributes are 100% preserved
+- [x] Verify NO `backdrop-blur-*` classes are introduced
+- [x] Add automated test coverage (5 new tests in `tests/m2-challenger-stress.test.ts`)
+- [x] Run full test suite (`npm test` -> 237/237 tests passing) and build (`npm run build` -> 0 errors)
+- [x] Write `changes.md` and `handoff.md`
+- [x] Notify parent agent

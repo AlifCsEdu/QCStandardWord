@@ -1,39 +1,34 @@
-# BRIEFING — 2026-08-09T21:41:28Z
+# BRIEFING — 2026-08-16T00:31:30+08:00
 
 ## Mission
-Investigate build system, TypeScript configuration, test infrastructure (unit, integration, E2E), current coverage, and Cloudflare Pages build requirements. Produce analysis.md and handoff.md.
+Investigate Milestone R3 (Batch Drawer & Floating Toasts) and R4 (Test Suite Architecture & Build System), producing comprehensive analysis and handoff reports.
 
 ## 🔒 My Identity
-- Archetype: explorer
-- Roles: explorer_survey_3
+- Archetype: Teamwork explorer
+- Roles: Read-only investigation, test suite architecture mapping, UI component mapping
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_3
-- Original parent: bf6e760d-7808-42de-8375-ac02b3c7bfed
-- Milestone: Build & Test System Survey
+- Original parent: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Milestone: Milestone R3 & R4 Survey
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT modify application source code (only write to .agents/explorer_survey_3/)
-- Focus on build system, package.json, tsconfig, testing setup, coverage, Cloudflare Pages requirements, build/test commands.
+- Read-only investigation — do NOT implement or modify project code
+- Output detailed findings to analysis.md and handoff.md in working directory
+- Communicate via send_message to parent (e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e)
 
 ## Current Parent
-- Conversation ID: bf6e760d-7808-42de-8375-ac02b3c7bfed
-- Updated: 2026-08-09T21:41:28Z
+- Conversation ID: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Updated: 2026-08-16T00:31:30+08:00
 
 ## Investigation State
-- **Explored paths**: package.json, tsconfig.json, tsconfig.app.json, tsconfig.node.json, vite.config.ts, wrangler.jsonc, src/types/qc.ts, tests/harness.js, tests/*.test.js, src/utils/*.test.ts
-- **Key findings**:
-  - `npm run lint` (`tsc --noEmit`) passes cleanly with 0 type errors.
-  - `npm run build` (`tsc && vite build`) passes cleanly with code 0, 1696 modules transformed into `./dist`.
-  - Cloudflare Pages configuration `wrangler.jsonc` specifies `"pages_build_output_dir": "./dist"`.
-  - Test framework: Node native runner (`node:test`) + JSDOM/esbuild harness in `tests/harness.js`.
-  - Coverage: 9 test files across Tiers 1-5 (happy path, boundary, combinations, workloads, hardening).
-- **Unexplored areas**: None (investigation complete).
+- **Explored paths**: `src/components/BatchDrawer.tsx`, `src/components/ToastsContainer.tsx`, `src/utils/notifications.ts`, `src/hooks/useQCState.ts`, `src/components/DefectCard.tsx`, `src/components/AppHeader.tsx`, `src/components/StatsDashboard.tsx`, `tests/harness.js`, `tests/tier1-features.test.js`, `tests/tier2-boundary.test.js`, `tests/tier3-combinations.test.js`, `tests/tier4-workloads.test.js`, `tests/tier5-hardening.test.js`, `tests/m3-*.test.js`, `tests/m2-*.test.ts`, `tests/searchEngine.test.ts`.
+- **Key findings**: Confirmed 203/203 tests passing across 58 suites; npm run build clean (0 errors); mapped all Batch Drawer and Floating Toast selectors, delimiter options, auto-clear behavior, reorder boundaries, and test harness mock contracts.
+- **Unexplored areas**: None within R3/R4 scope.
 
 ## Key Decisions Made
-- Written `analysis.md` with complete breakdown of build pipeline, TypeScript types, package scripts, test runner architecture, existing test files, and recommended test additions.
-- Written `handoff.md` with 5-component report structure.
+- Fully documented the 14 localStorage keys and fragile DOM selectors to prevent regressions during R1-R3 UI polish.
+- Proposed segmented tab implementation pattern for Batch Drawer that preserves the `#joinSel` `<select>` selector.
 
 ## Artifact Index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_3\DISPATCH.md — Dispatch instructions
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_3\BRIEFING.md — Working briefing index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_3\analysis.md — Comprehensive analysis report
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_3\handoff.md — 5-component handoff report
+- .agents/explorer_survey_3/analysis.md — Comprehensive exploration analysis report
+- .agents/explorer_survey_3/handoff.md — 5-component handoff report
+- .agents/explorer_survey_3/progress.md — Liveness & progress tracker

@@ -1,57 +1,72 @@
-# Project: QC Standard Wording — Raycast Warm Stone UI Redesign
+# Project: QC Standard Wording UI/UX Overhaul & Visual Refinement
 
 ## Architecture
-- **Framework & Build**: React 19 + Vite 6 + TypeScript 5 + Tailwind CSS v4 + Cloudflare Pages (`./dist`).
-- **UI Stack**: `@radix-ui/react-*` primitives, `lucide-react`, `cmdk` (Spotlight), `sonner` (Toasts), `next-themes`, `class-variance-authority`, `clsx`, `tailwind-merge`.
-- **Design Palette**: Raycast Warm Stone Palette (Soft warm charcoal surfaces `#121214` dark / `#fcfcfc` light, warm grey borders `border-stone-800` / `border-stone-200`, tactile cards, zero heavy glassmorphism blurs, zero neon gradients or radial void halos).
-- **Iconography & Accents**: Clean Lucide icons with muted semantic color pills (Soft Green for Battery, Muted Amber for Buttons, Steel Blue for Screen, Muted Plum for Pen, Rose for Locks) and left border accent indicators (`border-l-4`).
-- **State & Data**: React hooks (`useQCState`, `useAppearance`), `localStorage` persistence across 14 keys (`qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`).
+The application is a high-performance React + TypeScript + Vite + Tailwind CSS PWA for quality control defect standard wording inspection and batch aggregation.
+- **State Layer**: Custom hook `useQCState` synchronizing 14 `localStorage` keys (`qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`).
+- **Search Engine**: Typo-tolerant Levenshtein search engine in `src/utils/searchEngine.ts`.
+- **Presentation Layer**:
+  - `src/App.tsx`: App shell orchestrating header, sticky sidebar navigation, main content, and batch drawer.
+  - `src/components/AppHeader.tsx`: Unified top navigation with Spotlight ⌘K search, view switcher, and compact action controls.
+  - `src/components/StatsDashboard.tsx`: Integrated status summary strip (`139 Defects • 12 Categories • 3 Starred`).
+  - `src/components/CategoryChips.tsx` & `src/components/CodeSubChips.tsx`: Sticky sidebar with quick views, pin folders, and defect categories.
+  - `src/components/DefectCard.tsx` (and `WordingGrid`, `WordingList`, `WordingTable`, `WordingContainer`): Defect card/row/table rendering with inline 'Copied ✓' micro-interactions, elevated typography, and tactile buttons.
+  - `src/components/BatchDrawer.tsx`: Slide-out queue with delimiter segmented tabs (\n, ,, ;, space), reordering, and prominent Copy All.
+  - `src/components/ToastsContainer.tsx` & `src/utils/notifications.ts`: Minimalist floating toast notifications.
 
 ## Feature Inventory
 | # | Feature | Description | Milestone | Source |
 |---|---------|-------------|-----------|--------|
-| 1 | Raycast Warm Stone Base Theme | Soft warm charcoal surfaces (#121214 dark / #fcfcfc light), warm grey borders (border-stone-800 / border-stone-200), clean typography | M1 | R1 |
-| 2 | Complete Elimination of AI Tropes | Purge heavy glassmorphism blurs (backdrop-blur-md), radial neon halos, and cyan/purple glowing gradients. Solid subtle overlays for drawers/modals. | M1 | R1 |
-| 3 | Muted Semantic Color Pills | Soft Green (Battery), Muted Amber (Buttons), Steel Blue (Screen), Muted Plum (Pen), Rose (Locks), Slate (Codes/Other) | M2 | R2 |
-| 4 | Lucide Iconography System | Assign clean Lucide icons to all 15 defect categories and action buttons | M2 | R2 |
-| 5 | Left Border Accent Indicators | Crisp border-l-4 category indicators across List, Grid Cards, and Table view modes | M2 | R2 |
-| 6 | Sticky Left Sidebar Navigation | Category tabs (All, Codes, Screen, Camera, etc.), sub-code chips (FCPB, FCPW, etc.), and custom user pin folder manager | M3 | R3 |
-| 7 | Custom User Pin Folder Manager | Full CRUD for custom folders, multi-folder item starring, item count badges, and localStorage persistence (qc-pin-folders) | M3 | R3 |
-| 8 | Clean Top Header & Spotlight Search | Search input with ⌘K / Ctrl+K Spotlight modal trigger, View mode switcher (List, Grid, Table), Theme toggle, Settings modal trigger | M4 | R3 |
-| 9 | Floating Sonner Toasts & Batch Drawer | Minimalist floating Sonner toasts and clean slide-out batch drawer with solid subtle overlays (no heavy blurs) | M4 | R3 |
-| 10 | Type Safety & Performance | Zero layout shift, instant search responsiveness, 100% TypeScript type safety | M5 | R4 |
-| 11 | Cloudflare Pages Build Integrity | Static build asset generation in dist/ via npm run build compliant with wrangler.jsonc | M5 | R4 |
-| 12 | Full E2E & Tier 5 Test Suite Verification | Pass 100% of unit, integration, E2E, and Tier 5 hardening test suites (npm run test) | M5 | R4 |
+| 1 | R1.1: De-Clutter Horizontal Strips | Consolidate bulky StatsDashboard card into a sleek, integrated status summary strip preserving `#statsDashboard` and `[data-testid="stats-dashboard"]` | M1 | ORIGINAL_REQUEST §R1 |
+| 2 | R1.2: Modernized Unified Header | Balanced 3-column header with logo, centered hero ⌘K spotlight search, view switcher, and clean action group preserving all button IDs | M1 | ORIGINAL_REQUEST §R1 |
+| 3 | R1.3: Polished Sticky Sidebar | Sidebar category buttons with smooth indicator bars, Lucide icons, count pills, and Pin Folders accordion | M1 | ORIGINAL_REQUEST §R1 |
+| 4 | R2.1: Defect Card Typography & Hierarchy | Elevated typography, font weights, line-heights, contrast, and `#code` capsule pill styling across List, Grid, Table | M2 | ORIGINAL_REQUEST §R2 |
+| 5 | R2.2: Inline Copy Micro-Interactions | Localized click feedback with subtle emerald border pulse and inline `Copied ✓` badge alongside floating toast | M2 | ORIGINAL_REQUEST §R2 |
+| 6 | R2.3: Tactile Action Buttons | Physical click feel (`active:scale-95`), Star (★/☆) folder dropdown, and sleek + Batch button | M2 | ORIGINAL_REQUEST §R2 |
+| 7 | R3.1: Batch Drawer Polish & Segmented Tabs | Slide-out panel with delimiter segmented tabs (\n, ,, ;, space) synced with `#joinSel`, smooth reordering, and prominent Copy All | M3 | ORIGINAL_REQUEST §R3 |
+| 8 | R3.2: Floating Toast Notifications | Sleek floating Sonner toast styling with progress bar, copy preview, and auto-dismiss | M3 | ORIGINAL_REQUEST §R3 |
+| 9 | R4.1: Test Suite & Build Verification | Maintain 100% test pass rate across all 203 test suites and 0 build errors (`npm test` & `npm run build`) | M4 | ORIGINAL_REQUEST §R4 |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Warm Stone Base Theme & AI Tropes Elimination | Purge glassmorphism/neon gradients, configure #121214/#fcfcfc stone palette, warm grey borders, refactor inline styles | None | DONE |
-| M2 | Muted Semantic Color-Coding & Iconography | Implement soft green/amber/steel blue/plum/rose pills, Lucide icon map, border-l-4 category left accent indicators | M1 | IN_PROGRESS |
-| M3 | Sidebar Navigation & Pin Folder Manager | Sticky left sidebar category tabs, sub-code chips, custom user pin folder CRUD and persistence | M2 | PLANNED |
-| M4 | Top Header, Spotlight, Drawer & Toasts | ⌘K Spotlight search modal, view switcher, settings modal, slide-out drawer with subtle solid overlay, floating toasts | M3 | PLANNED |
-| M5 | E2E Test Suite Pass & Build Verification | Pass 100% test suite (Tiers 1-5), clean static build (npm run build), Cloudflare Pages compliance | M4 | PLANNED |
-| M_REMEDIATION | Victory Audit Remediation | Fix 3 latency stress tests (<1000ms threshold) & purge all residual cyan/purple classes in UI primitives/components | M1-M5 | IN_PROGRESS |
+| M1 | Layout De-Cluttering & Unified Header | De-clutter horizontal strips, modernize top header (⌘K spotlight & view switchers), polish sticky sidebar | None | DONE |
+| M2 | Defect Cards, List Rows & Inline Copy | Defect card/row/table typography, `#code` badges, tactile buttons, inline 'Copied ✓' micro-interaction & border pulse | M1 | DONE |
+| M3 | Batch Drawer & Floating Toasts Polish | Delimiter segmented tabs (\n, ,, ;, space), item reorder micro-states, prominent Copy All, sleek floating toast styling | M2 | DONE |
+| M4 | Final Integration, Test Hardening & Forensic Audit | Verification across all 203 test suites, 0 build errors, adversarial review, and forensic integrity audit | M1, M2, M3 | DONE |
 
 ## Interface Contracts
-### `categoryColors.ts` ↔ Defect Component Layer
-- `getCategoryBadgeStyle(category: CategoryKey)`: returns muted pill background, text color, and border styling
-- `getCategoryLeftBorderStyle(category: CategoryKey)`: returns Tailwind `border-l-4 border-l-stone-*` or semantic color border
-- `CATEGORY_ICON_MAP`: mapping of CategoryKey to Lucide icon component
 
-### `useQCState` ↔ Pin Folder Layer
-- `folders`: `CustomPinFolder[]`
-- `createFolder`: `(name: string, color?: string) => string`
-- `deleteFolder`: `(folderId: string) => void`
-- `renameFolder`: `(folderId: string, newName: string) => void`
-- `togglePinToFolder`: `(itemId: string, folderId: string) => void`
-- `isPinnedInFolder`: `(itemId: string, folderId: string) => boolean`
+### AppHeader ↔ App
+- Preserves all element IDs and data-testids: `#appHeader`, `#search`, `[data-testid="header-search-input"]`, `#clearBtn`, `#spotlightBtn`, `[data-testid="spotlight-trigger"]`, `#setLayout`, `[data-testid="view-switcher"]`, `data-v="list|grid|table"`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`.
+- Emits standard callbacks: `onSearchChange`, `onClearSearch`, `onOpenSpotlight`, `onLayoutChange`, `onToggleEditMode`, `onOpenBatchDrawer`, `onOpenSettings`, `onDownloadOffline`, `onToggleTheme`.
+
+### StatsDashboard ↔ App
+- Element: `#statsDashboard[data-testid="stats-dashboard"]`.
+- Props: `totalFilteredCount`, `totalAllCount`, `activeCategory`, `activeSub`, `searchQuery`, `pinnedCount`, `batchCount`, `categoryMap`.
+- Output: Compact, clean single-line status bar with badges and filter pills.
+
+### CategoryChips ↔ App
+- Elements: `#sidebarNav[data-testid="app-navbar"]`, `button[data-cat="..."]`, `[data-testid="category-tab-..."]`, `[data-folder="..."]`, `[data-testid="pin-folder-..."]`, `border-l-4`, `span.rounded-full`.
+- Props: `activeCat`, `onSelectCat`, `pinnedCount`, `recentCount`, `allCount`, `categoryCounts`, `folders`, `activeFolder`, `onSelectFolder`, `onCreateFolder`, `onRenameFolder`, `onDeleteFolder`.
+
+### DefectCard ↔ Container
+- Container Elements: `.gcard` (grid), `.row` (list), `.trow` (table), with `data-id={item.id}`, `border-l-4`.
+- Internal Elements: `.rnum` (code label), `.rtxt` (text), `.rpill` (category pill), `.racts` (actions container), `.pin-btn` (`data-act="pin"`), `.add-batch-btn` (`data-act="add"`), `.edit-item-btn` (`data-act="edit"`), `.del-item-btn` (`data-act="del"`).
+- Micro-Interaction: Local state `copied` (1200ms) adding `ring-2 ring-emerald-500/40 border-emerald-500/70` and inline `Copied ✓` badge while executing `onCopyItem(item.t)`.
+
+### BatchDrawer ↔ App
+- Element: `#batchDrawer`, `#joinSel[data-testid="delimiter-select"]` (synchronized with visual segmented tabs), `#autoclear`, `#bcopy`, `#bcopycount`, `#bclear`, `#blist .bitem[data-bi]`, `[data-rm]`, `[data-mvup]`, `[data-mvdn]`, `#bpaste`.
 
 ## Code Layout
-- `src/index.css`: CSS custom properties for Warm Stone palette (`#121214` dark / `#fcfcfc` light, `stone-800`/`stone-200` borders).
-- `src/utils/categoryColors.ts`: Category color mapping, Lucide icon map, left border accent styles.
-- `src/components/CategoryChips.tsx`: Left sidebar navigation, category tabs, sub-code chips, pin folder manager.
-- `src/components/AppHeader.tsx`: Top navigation bar, search bar, Spotlight button, view toggle, settings.
-- `src/components/DefectCard.tsx`, `WordingList.tsx`, `WordingGrid.tsx`, `WordingTable.tsx`: Cards/rows with category pills and left border accents.
-- `src/components/BatchDrawer.tsx`: Slide-out batch queue drawer with solid subtle backdrop.
-- `src/components/ToastsContainer.tsx`: Floating toast notifications.
+- `src/App.tsx`: Layout composition and root view state.
+- `src/components/AppHeader.tsx`: Header component.
+- `src/components/StatsDashboard.tsx`: Compact status summary bar.
+- `src/components/CategoryChips.tsx`: Sticky sidebar category and pin folder navigation.
+- `src/components/CodeSubChips.tsx`: Subcategory chips.
+- `src/components/DefectCard.tsx`: Card, row, and table row renderer.
+- `src/components/WordingContainer.tsx`: List and layout wrapper.
+- `src/components/BatchDrawer.tsx`: Batch drawer panel.
+- `src/components/ToastsContainer.tsx`: Floating toasts renderer.
+- `src/utils/notifications.ts`: Sonner toast dispatch and icon mapping.
+- `src/index.css`: Global styles and animation keyframes.
+- `tests/`: 58 test suites (203 tests across Tiers 1-5, Challenger, Stress, Latency).

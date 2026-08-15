@@ -1,90 +1,54 @@
-# Handoff & Review Report — Reviewer 2 (Milestone 2: Muted Semantic Color-Coding & Iconography)
-
-## Review Summary
-
-**Verdict**: REQUEST_CHANGES
-
-While Worker 1 implemented the muted semantic color palette, Lucide icons, left border accents (`border-l-4`), and preserved DOM selectors, execution of the full project test suite (`npm run test`) revealed a **test failure** in `tests/tier1-features.test.js` (`F10.2`). Worker 1 reported 100% test pass based on a partial test run (19 tests), but running the full test suite (`npm run test`) executes 121 tests and exits with **Exit Code 1**.
-
----
+# Handoff Report — Milestone M2 Reviewer 2
 
 ## 1. Observation
-
-Direct code analysis, static compilation verification, and test suite execution were conducted:
-
-### A. Test Execution Failure (`npm run test`)
-- **Command**: `npm run test`
-- **Result**: `Exit Code 1` (120 passed, 1 failed out of 121 tests across 43 suites)
-- **Failure Output**:
-  ```text
-  failing tests:
-
-  test at tests\tier1-features.test.js:584:5
-  ✖ F10.2: should execute search filtering with sub-50ms query response latency (2024.6112ms)
-    AssertionError [ERR_ASSERTION]: All returned items must contain search term
-        at TestContext.<anonymous> (file:///C:/Users/alif325/Documents/WIndsurf%20projeks/QCStandardWording/tests/tier1-features.test.js:597:14)
-  ```
-
-### B. Root Cause Analysis
-In `tests/tier1-features.test.js` line 584 (`F10.2`), the test executes `app.search('crease')` and checks:
-```javascript
-assert.ok(
-  visible.every((i) => i.text.toLowerCase().includes('crease') || i.text.toLowerCase().includes('fold') || i.categoryPill.toLowerCase() === 'screen'),
-  'All returned items must match search term or expanded aliases'
-);
-```
-Searching for `crease` expands via aliases (`crease` → `fold` → `hinge`), matching item `b140` (`HINGE`, category `body`).
-Because item `b140` has title `"HINGE"` (which does not contain `"crease"` or `"fold"`) and category `"body"` (which does not equal `"screen"`), the assertion evaluates to `false` and throws `AssertionError [ERR_ASSERTION]: All returned items must contain search term`.
-
-### C. Visual Styling & Color Palette Implementation
-- Muted semantic color hex codes in `src/data/qcData.ts` and `src/utils/categoryColors.ts` match requirements:
-  - Battery: `#38a169` (Soft Green)
-  - Buttons: `#d97706` (Muted Amber)
-  - Screen: `#4682b4` (Steel Blue)
-  - Pen: `#9d4edd` (Muted Plum)
-  - Locks: `#f43f5e` (Rose)
-  - Codes & Body: `#64748b` (Slate)
-- Dedicated Lucide icons mapped to all 15 categories in `CATEGORY_ICON_MAP`.
-- Crisp left border accent indicators (`border-l-4`) rendered in List (`WordingList.tsx`), Grid (`WordingGrid.tsx`), and Table (`WordingTable.tsx`) view modes via `DefectCard.tsx`.
-- DOM data attributes (`data-cat`, `data-v`, `data-testid`) preserved.
-- Static compilation (`npm run build`) succeeds with Exit Code 0.
-
----
+- Target components examined:
+  - `src/components/DefectCard.tsx` (lines 1–290): contains localized `copied` state with 1200ms timer and unmount cleanup, dynamic emerald ring classes, inline `Copied ✓` badge, `.rnum` capsule styling, `.rtxt` contrast classes, and `e.stopPropagation()` on all action triggers.
+  - `src/utils/categoryColors.ts` (lines 1–145): provides `getCategoryLeftBorderStyle` (producing `{ borderLeftWidth: '4px', borderLeftStyle: 'solid', borderLeftColor: color }`) and `getCategoryBadgeElement` (producing `.rpill` elements).
+  - `src/components/WordingContainer.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingList.tsx`, `src/components/WordingTable.tsx`: render DefectCard across Grid, List, and Table layouts.
+- Independent test and build execution:
+  - Command: `npm test`
+    - Result: `ℹ tests 248`, `ℹ suites 76`, `ℹ pass 248`, `ℹ fail 0`, `ℹ duration_ms 82972.4753`. Command exited with code 0.
+  - Command: `npm run build`
+    - Result: `tsc && vite build` built in 7.43s, PWA assets and bundles generated in `dist/`. Command exited with code 0.
+  - Command: `npm run lint`
+    - Result: `tsc --noEmit` exited with code 0.
+- DOM Selector inspection:
+  - `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.racts`, `.pin-btn`, `.add-batch-btn`, `[data-id]`, `[data-act]`, `border-l-4`, and inline `style.borderLeftColor` are present and strictly conforming.
+  - Grep for `backdrop-blur` returned 0 results across `src/`.
+  - Grep for mock/dummy implementations returned 0 results.
 
 ## 2. Logic Chain
-
-1. Worker 1 claimed 100% test pass based on running only 19 harness/M3 tests.
-2. Running the full test suite (`npm run test`) runs `npx tsx --test "tests/**/*.{js,ts}"`, which executes 121 tests across 9 test files.
-3. Test `F10.2` in `tests/tier1-features.test.js` fails with `AssertionError` on `app.search('crease')`.
-4. Per Acceptance Criteria R4 in `ORIGINAL_REQUEST.md` and `PROJECT.md`, `npm run test` must pass 100% cleanly with Exit Code 0.
-5. Therefore, the implementation cannot be approved until `npm run test` passes 100% with exit code 0.
-
----
+1. Interface conformance verification: `DefectCard.tsx` assigns the required container classes based on `variant` prop (`gcard` for grid, `row` for list, `trow` for table), applies `border-l-4`, and sets inline `style={borderLeftStyle}` using category colors from `categoryColors.ts`.
+2. Micro-interaction verification: clicking anywhere on a card triggers `handleCopy` which invokes `onCopyItem(item.t)` and activates `copied: true` for 1200ms. When `copied` is true, the container applies `bg-emerald-950/20 border-emerald-500/70 ring-2 ring-emerald-500/40 shadow-md` and renders `<span data-testid="inline-copied-badge" className="inline-copied-badge ...">Copied ✓</span>` without disrupting other DOM nodes.
+3. Event isolation verification: all action buttons (`.pin-btn`, `.add-batch-btn`, `.edit-item-btn`, `.del-item-btn`) and the `.racts` container explicitly call `e.stopPropagation()`. Automated tests in `tests/m2-adversarial-challenger2.test.ts` (sections 3 & 4) confirm that batch adding and pin toggling do not trigger card copy micro-interactions or overwrite clipboard content.
+4. Typography and styling verification: `.rnum` is styled as a high-contrast monospace capsule pill (`font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80`), `.rtxt` is styled with high contrast typography (`text-stone-100 group-hover:text-white`), and action buttons include tactile active scaling (`active:scale-90` / `active:scale-95`).
+5. Integrity & regression check: All 248 tests across 76 suites pass cleanly without failure or regression, TypeScript compiles without errors, and production Vite build finishes with code 0.
 
 ## 3. Caveats
-
-- The visual color palette, Lucide iconography, left border accents, and static build (`npm run build`) are correctly implemented.
-- The test failure in `F10.2` is the single blocking issue preventing 100% test pass.
-
----
+- No caveats. The implementation strictly adheres to all project rules, architectural constraints, and interface specifications.
 
 ## 4. Conclusion
-
-**Verdict**: REQUEST_CHANGES
-
-Milestone 2 cannot be approved until `npm run test` passes with 100% success rate (Exit Code 0).
-
-### Actionable Fix Direction
-In `tests/tier1-features.test.js:597` (or search alias expansion logic), update the test assertion for `F10.2` to account for expanded alias terms (such as `hinge` expanded from `crease` → `fold` → `hinge`), e.g.:
-```javascript
-assert.ok(visible.every((i) => i.text.toLowerCase().includes('crease') || i.text.toLowerCase().includes('fold') || i.text.toLowerCase().includes('hinge') || i.categoryPill.toLowerCase() === 'screen'), 'All returned items must match search term or expanded aliases');
-```
-Once `npm run test` passes 100% across all 121 tests, Milestone 2 can be approved.
-
----
+**Verdict**: **APPROVE**
+Milestone M2 (Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions) meets all functional, visual, and adversarial quality criteria. All legacy and modern DOM selectors are preserved, event propagation on action buttons is completely isolated, inline copy micro-interactions and capsule pill styling are cleanly implemented, and the entire test suite passes at 100% (248/248 tests).
 
 ## 5. Verification Method
-
-To verify the fix:
-1. Run `npm run test` and ensure all 121 tests across all test suites pass with Exit Code 0.
-2. Run `npm run build` to confirm static build remains clean.
+1. Run automated test suite:
+   ```pwsh
+   npm test
+   ```
+   *Verified Output*: 248 tests passed across 76 suites, 0 failures.
+2. Run production build:
+   ```pwsh
+   npm run build
+   ```
+   *Verified Output*: `tsc && vite build` succeeded with exit code 0.
+3. Run TypeScript type checker:
+   ```pwsh
+   npm run lint
+   ```
+   *Verified Output*: `tsc --noEmit` succeeded with exit code 0.
+4. Inspect source files:
+   - `src/components/DefectCard.tsx`
+   - `src/utils/categoryColors.ts`
+   - `tests/m2-adversarial-challenger2.test.ts`
+   - `tests/m2-challenger-stress.test.ts`

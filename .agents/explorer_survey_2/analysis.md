@@ -1,227 +1,498 @@
-# QC Standard Wording — Comprehensive UI Feature & State Architecture Analysis
+# Milestone R2 Architectural Analysis & Technical Specification
+## Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions
 
-## 1. Executive Summary
-
-This report presents a comprehensive survey and architectural breakdown of the **QC Standard Wording** web application codebase at `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`. The analysis was conducted by `explorer_survey_2` to evaluate existing features, state management models, UI component structures, interface contracts, and design tokens against the design overhaul requirements specified in `ORIGINAL_REQUEST.md`.
-
-### Core Assessment
-- **Current Aesthetic Baseline**: The application currently implements a **Zinc Dark / Deep Void** palette (`#050608` / `#0c0e12` / `#18181b`) with cyan accent highlights (`#06b6d4`), cyan glow borders, cyan selection halos, and heavy backdrop blur filters (`backdrop-blur-xl`, `backdrop-blur-2xl`).
-- **Target Aesthetic (`ORIGINAL_REQUEST.md`)**: The application requires a complete elimination of AI design tropes (heavy glassmorphism blurs, neon gradients, dark void halos) and a full migration to a **Raycast Warm Stone** palette (`#121214` dark / `#fcfcfc` light, warm grey borders `border-stone-800` / `border-stone-200`, soft muted category pills, and crisp tactile cards).
-- **Functional Completeness**: All functional systems—state management (14 localStorage keys), custom user pin folder manager, ⌘K spotlight modal, batch drawer operations, view toggles, and toast notifications—are fully implemented and operational. The primary focus of upcoming work is visual palette refinement, theme token overhaul, and eliminating neon glow/glassmorphism blurs while maintaining 100% test suite and DOM ID contract compliance.
-
----
-
-## 2. Comprehensive UI & Feature Inventory
-
-### 2.1 Top Header (`src/components/AppHeader.tsx`)
-- **Existing Functionality**:
-  - Fixed sticky header (`#appHeader`, `data-testid="app-header"`) pinned to top (`sticky top-0 z-40`).
-  - Left section: Mobile menu toggle button (`Menu` icon, visible `< sm`), app title ("QC Standard Wording"), version badge ("v2.0").
-  - Center section: Real-time defect search input (`#search`, `data-testid="header-search-input"`), search clear button (`#clearBtn`), and ⌘K Spotlight modal trigger button (`#spotlightBtn`, `data-testid="spotlight-trigger"`).
-  - Right section: View switcher toggle group (`#setLayout`, `data-testid="view-switcher"`) supporting `list`, `grid`, and `table` layout modes; optional Pin Folder Manager button; Edit mode toggle button (`#editBtn`); Batch Queue drawer toggle button (`#batchBtn`) with live count badge (`#bcount`); Settings modal toggle button (`#setBtn`); Offline Copy HTML exporter button (`#dlBtn`); Dark/Light theme toggle button (`#themeBtn`).
-- **State Dependencies**:
-  - `searchQuery`, `setSearchQuery`, `layoutMode`, `onSetLayout`, `editMode`, `onToggleEditMode`, `batchCount`, `onOpenBatchDrawer`, `settingsModalOpen`, `theme`, `onToggleTheme`, `mobileOpened`.
-- **Current Styling**:
-  - `bg-[#0c0e12]/80 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.4)]`.
-  - Active view mode uses `bg-cyan-500/15 text-cyan-400 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Heavy backdrop blur (`backdrop-blur-xl`) and dark onyx background (`#0c0e12`) must be replaced with solid, subtle Raycast Warm Stone header surfaces (`#121214` dark / `#fcfcfc` light).
-  - Glowing cyan active highlights and borders must be replaced with warm grey borders (`border-stone-800` / `border-stone-200`) and warm stone active button fills.
-
-### 2.2 Sticky Left Sidebar & Navigation (`src/components/CategoryChips.tsx` & `src/components/CodeSubChips.tsx`)
-- **Existing Functionality**:
-  - Navigation container (`#sidebarNav`, `#nav`, `data-testid="app-navbar"`) positioned `fixed sm:sticky top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto`.
-  - Section 1 — **Quick Views**: "All Defects" (`all`), "Starred Defects" (`pinned`), "Recent History" (`recent`).
-  - Section 2 — **Pin Folders**: Custom user pin folder manager section with expandable list, inline folder creation form, color picker circles (`#06b6d4`, `#10b981`, `#8b5cf6`, `#f59e0b`, `#ef4444`, `#3b82f6`), hover actions for inline renaming (pencil icon) and deletion (trash icon).
-  - Section 3 — **Defect Categories**: 15 defect categories (`all`, `codes`, `screen`, `camera`, `buttons`, `battery`, `backcover`, `locks`, `pen`, `water`, `audio`, `body`, `system`, `pinned`, `recent`) with dedicated Lucide icons (`Monitor`, `Camera`, `Sliders`, `Battery`, `Smartphone`, `Lock`, `PenTool`, `Droplets`, `Volume2`, `Cpu`, `Settings`, `Code`, `Folder`, `Star`, `History`) and real-time item count badges.
-  - **Code Sub-Chips (`CodeSubChips.tsx`)**: Mounted inside sidebar (`#subchips`), automatically visible when `codes` category is active. Displays 10 sub-code filter buttons (`ALL`, `FCPB`, `FCPW`, `FCPC`, `RCPB`, `RCPW`, `RCPC`, `FCDS`, `RCDS`, `PC`).
-- **State Dependencies**:
-  - `selectedCategory`, `setSelectedCategory`, `selectedSubCategory`, `setSelectedSubCategory`, `categoryCounts`, `folders`, `activeFolderId`, `setActiveFolderId`, `createFolder`, `deleteFolder`, `renameFolder`.
-- **Current Styling**:
-  - `bg-[#0c0e12] border-r border-white/[0.08]`. Active tabs use `bg-gradient-to-r from-cyan-500/15 via-cyan-500/10 to-transparent text-cyan-300 border-l-4 border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.15)]`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Gradient background glows (`from-cyan-500/15`) and cyan shadow glows must be replaced with clean Warm Stone surfaces (`#121214` dark / `#fcfcfc` light) and warm grey borders (`border-stone-800` / `border-stone-200`).
-  - Category tabs must use soft muted left border indicators (`border-l-4`) and warm grey text states without neon halos.
-
-### 2.3 Defect Cards, Container & View Modes (`src/components/DefectCard.tsx`, `WordingGrid.tsx`, `WordingList.tsx`, `WordingTable.tsx`, `WordingContainer.tsx`)
-- **Existing Functionality**:
-  - Main container (`#wordingContainer`, `#listwrap`, `data-testid="wording-container"`) rendering defect items in 3 layout modes:
-    - **List View (`WordingList.tsx`)**: Full-width row cards (`row`) with `#n` defect number, search match highlighting (`<mark>`), category pill, and action bar.
-    - **Grid View (`WordingGrid.tsx`)**: Multi-column cards (`gcard`) in 1, 2, or 3 column responsive grid.
-    - **Table View (`WordingTable.tsx`)**: Ultra-compact rows (`trow`) for dense inspection workflows.
-  - Card Action Bar (`.racts`):
-    - **Star / Folder Pin Button** (`.pin-btn`): Toggles item pin state. When custom pin folders exist, triggers a `DropdownMenu` allowing multi-folder starring (`onTogglePinToFolder`, `isPinnedInFolder`).
-    - **+ Batch Button** (`.add-batch-btn`): Adds defect text to batch queue.
-    - **Edit / Del Buttons** (`.edit-item-btn`, `.del-item-btn`): Visible in Edit Mode (`editMode = true`).
-  - Item Click Handler: Clicking anywhere on the card copies defect wording to clipboard (`onCopyItem`).
-- **State Dependencies**:
-  - `results` (`SearchResult[]`), `layoutMode`, `pinsSet`, `editMode`, `onCopyItem`, `onTogglePin`, `onAddToBatch`, `onOpenEdit`, `onDeleteItem`, `folders`, `onTogglePinToFolder`, `isPinnedInFolder`.
-- **Current Styling**:
-  - Cards use `bg-[#0c0e12] border-white/[0.08] hover:border-cyan-500/50 hover:shadow-[0_0_20px_-3px_rgba(6,182,212,0.25)]`.
-  - Pinned cards use `bg-amber-500/[0.06] border-amber-500/40 shadow-[0_0_15px_rgba(245,159,0,0.15)]`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Glowing hover halos (`hover:shadow-[0_0_20px... cyan]`) and neon amber glow shadows must be removed.
-  - Cards must be styled as Raycast crisp tactile surfaces (`#121214` dark / `#fcfcfc` light) with warm grey borders (`border-stone-800` / `border-stone-200`) and clean typography.
-
-### 2.4 Category Pills & Muted Color Coding (`src/utils/categoryColors.ts` & `src/data/qcData.ts`)
-- **Existing Functionality**:
-  - `getCategoryColor(categoryKey)` maps categories to hex colors defined in `qcData.ts`.
-  - `getCategoryBadgeStyle(categoryKey)` generates inline CSS object (`backgroundColor: rgba(rgb, 0.18)`, `borderColor: rgba(rgb, 0.45)`, `color: hexColor`).
-  - `getCategoryLeftBorderStyle(categoryKey)` generates left border accent style (`borderLeftWidth: '4px'`, `borderLeftColor: color`).
-  - `CATEGORY_ICON_MAP` maps all 15 category keys to dedicated Lucide icon components.
-- **Current Color Definitions (`qcData.ts`)**:
-  - `all`: `#8a8577`, `codes`: `#7048e8` (Purple), `screen`: `#1971c2` (Blue), `camera`: `#15aabf` (Cyan), `buttons`: `#f59f00` (Amber), `battery`: `#2f9e44` (Green), `backcover`: `#b08020` (Gold), `locks`: `#e03131` (Red), `pen`: `#c2255c` (Plum), `water`: `#0b7285` (Deep Teal), `audio`: `#0ca678` (Emerald), `body`: `#64748b` (Slate), `system`: `#e8590c` (Orange), `pinned`: `#e8930c`, `recent`: `#8a8577`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - R2 explicitly requires **Purposeful Muted Color-Coding**:
-    - Soft Green for Battery (`#34d399` / `#22c55e` muted)
-    - Muted Amber for Buttons (`#fbbf24` / `#f59e0b` muted)
-    - Steel Blue for Screen (`#60a5fa` / `#3b82f6` muted)
-    - Muted Plum for Pen (`#c084fc` / `#a855f7` muted)
-    - Rose for Locks (`#f43f5e` / `#e11d48` muted)
-  - Color pill styles need refinement to fit soft muted Raycast aesthetics (subtle backgrounds, warm grey contrast borders).
-
-### 2.5 Left Border Accent Indicators (`border-l-4`)
-- **Existing Functionality**:
-  - Rendered on defect cards (`DefectCard.tsx:43`), list rows, table rows, and active category sidebar tabs (`CategoryChips.tsx:129,269,346`).
-- **Current Styling**:
-  - Uses `border-l-4` with inline `borderLeftColor` derived from category hex colors.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Ensure high visual contrast against Warm Stone background (`#121214` dark / `#fcfcfc` light) without relying on surrounding neon glow shadows.
-
-### 2.6 Custom User Pin Folder Manager (`src/hooks/useQCState.ts` & `src/components/CategoryChips.tsx`)
-- **Existing Functionality**:
-  - Data structure: `CustomPinFolder` (`{ id, name, color, itemIds, createdAt }`).
-  - Storage key: `qc-pin-folders` (with legacy auto-migration from `qc-pins` to default folder "Starred Defects" `#06b6d4`).
-  - Operations in `useQCState`:
-    - `createFolder(name, color)`
-    - `deleteFolder(folderId)`
-    - `renameFolder(folderId, newName)`
-    - `togglePinToFolder(itemId, folderId)`
-    - `isPinnedInFolder(itemId, folderId)`
-    - `getItemFolderIds(itemId)`
-  - UI in `CategoryChips.tsx`: Expandable "Pin Folders" accordion, inline creation form with color palette swatches, hover pencil/trash buttons, inline rename input.
-  - UI in `DefectCard.tsx`: Pin star button triggers `DropdownMenu` with checkboxes for starring across multiple folders.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Functionality is 100% complete. Needs visual styling adaptation to match the Raycast Warm Stone palette (`#121214` / `#fcfcfc`, stone borders).
-
-### 2.7 ⌘K Spotlight Search Modal (`src/App.tsx` & `src/components/ui/command.tsx`)
-- **Existing Functionality**:
-  - Keyboard listener: `Cmd+K` / `Ctrl+K` opens `CommandDialog` modal (`spotlightOpen` state).
-  - Modal contents: `CommandInput` search bar, `CommandList` displaying top 20 defect results with `#n` number badge, defect text `t`, and category badge `c`. Selecting item copies text to clipboard and closes modal. Keyboard hints footer (`↑↓ Navigate`, `↵ Copy & Close`, `ESC Exit`).
-- **Current Styling**:
-  - Uses cyan accent badges (`bg-cyan-500/10 text-cyan-400 border-cyan-500/20`), cyan item hover state (`data-[selected=true]:bg-cyan-500/10 text-cyan-200`).
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Redesign Spotlight modal to Raycast Warm Stone aesthetic (`#121214` dark / `#fcfcfc` light surface, warm grey borders `border-stone-800` / `border-stone-200`, refined typography, muted accent badges).
-
-### 2.8 View Switcher Toggles (`src/components/AppHeader.tsx` & `src/hooks/useAppearance.ts`)
-- **Existing Functionality**:
-  - View switcher container (`#setLayout`, `data-testid="view-switcher"`) rendering 3 view mode buttons: `list`, `grid`, `table`.
-  - State managed via `useAppearance` hook (`layout` state), persisted in `qc-appearance` and `data-layout` attribute on `document.documentElement`.
-- **Current Styling**:
-  - Active button uses `bg-cyan-500/15 text-cyan-400 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - Remove cyan glow shadow. Implement Raycast tactile button toggle styling using Warm Stone palette.
-
-### 2.9 Batch Drawer (`src/components/BatchDrawer.tsx`)
-- **Existing Functionality**:
-  - Slide-out drawer (`#batchDrawer`, `data-testid="batch-drawer"`) with backdrop overlay (`#backdrop`, `data-testid="drawer-overlay"`).
-  - Delimiter dropdown (`#joinSel`, `data-testid="delimiter-select"`) supporting `nl` (\n), `comma` (, ), `semi` (; ), `space` ( ), `pipe` ( | ), `bullet` ( • ).
-  - Auto-clear checkbox (`#autoclear`, `data-testid="autoclear-checkbox"`).
-  - Queued item cards (`.bitem`, `data-testid="batch-item"`) with up/down reorder buttons (`data-act="moveup"`, `data-act="movedown"`), single copy button (`.bcopy-item`), remove item button (`.brm-item`, `data-testid="remove-batch-item-${idx}"`).
-  - Action buttons: "Copy Batch" (`#bcopy`, `data-testid="copy-batch-btn"`), "Clear Queue" (`#bclear`, `data-testid="clear-batch-btn"`), "Bulk Paste" (`#bpaste`, opens `Dialog` for multi-line defect text import).
-- **Current Styling**:
-  - Drawer uses `bg-[#0c0e12]/90 backdrop-blur-2xl border-l border-white/[0.08] shadow-[0_0_50px_rgba(0,0,0,0.8)]`.
-  - Overlay uses `bg-zinc-950/80 backdrop-blur-xl`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - R3 explicitly requires: **solid subtle overlays (no heavy blurs)**.
-  - Backdrop overlay must use solid subtle overlay without `backdrop-blur-xl`.
-  - Drawer panel must use Raycast Warm Stone surface (`#121214` dark / `#fcfcfc` light) and warm grey borders without heavy glassmorphic blurs (`backdrop-blur-2xl`).
-
-### 2.10 Sonner Toast Integration (`src/utils/notifications.ts` & `src/components/ToastsContainer.tsx`)
-- **Existing Functionality**:
-  - `notifications.ts` exports `showNotice`, `createToastNotice`, `showFloatingToast`, which trigger `sonner.toast()` with Lucide icons (`Copy`, `Pin`, `Plus`, `Trash2`, `ArrowBackUp`, `Pencil`, `Download`, `Upload`, `Refresh`, `AlertTriangle`).
-  - `ToastsContainer.tsx` renders custom toast stack (`#toasts`) fixed at bottom-right (`bottom: 24px, right: 24px`) with automatic 4.2s progress bar (`.tprogress`).
-- **Current Styling**:
-  - Custom toast uses `background: rgba(12, 14, 18, 0.90)`, `backdrop-filter: blur(16px)`, `box-shadow: 0 10px 38px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.20)`.
-- **Missing Requirements vs ORIGINAL_REQUEST.md**:
-  - R3 explicitly requires **Minimalist floating Sonner toasts**.
-  - Remove cyan glow shadows (`0 0 20px rgba(6,182,212,0.20)`) and heavy glassmorphic blur filters (`blur(16px)`).
-  - Style toasts using clean Raycast Warm Stone palette (`#121214` dark / `#fcfcfc` light, `border-stone-800` / `border-stone-200`, crisp Lucide iconography).
+### 1. Executive Summary & Problem Scope
+Milestone R2 focuses on the core defect wording presentation and micro-interaction layer in the QC Standard Wording application. While the application already provides Grid, List, and Table layout views, the current visual presentation lacks tactile responsiveness and instant localized micro-feedback:
+1. **Lack of Instant Localized Feedback**: Clicking a defect card triggers a global floating toast and copies text to the clipboard, but the card itself offers no immediate inline visual confirmation or tactile pulse.
+2. **Typography & Contrast Refinement**: The defect number (`#code` badge) and title text (`.rtxt`) can be elevated with sharper contrast, refined monospace capsules, and improved visual hierarchy between dark/light themes.
+3. **Tactile Action Buttons**: The Star (★/☆) folder dropdown and `+ Batch` action buttons can feature smoother hover/active micro-states (`active:scale-95`, warm glow borders) to feel tactile and responsive.
+4. **Test Suite Invariants**: The project has 203 automated tests across 58 test suites checking specific DOM class names (`.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.racts`, `.pin-btn`, `.add-batch-btn`), data attributes (`data-id`, `data-act`), and style properties (`border-left`, `border-l-4`). Any visual enhancements must strictly preserve 100% test compatibility.
 
 ---
 
-## 3. State Management & Persistence Layer Architecture
+### 2. Component Mapping & Architecture
 
-The state architecture is encapsulated in two core custom hooks: `useQCState` and `useAppearance`. Together, they manage **14 localStorage keys** to maintain complete client-side data persistence.
+The presentation layer for defect items is concentrated in `src/components/DefectCard.tsx` and orchestrated by `src/components/WordingContainer.tsx`.
 
-### 3.1 `useQCState` Storage Key Mapping
+```
+src/
+├── components/
+│   ├── DefectCard.tsx          # Core polymorphic card/row/trow component (Grid, List, Table)
+│   ├── WordingContainer.tsx    # List wrapper, layout routing, empty state, and item counts
+│   ├── WordingGrid.tsx         # Standalone Grid wrapper (maps to DefectCard variant="grid")
+│   ├── WordingList.tsx         # Standalone List wrapper (maps to DefectCard variant="list")
+│   ├── WordingTable.tsx        # Standalone Table wrapper (maps to DefectCard variant="table")
+│   ├── ToastsContainer.tsx     # Floating toast notifications container
+│   └── ui/
+│       └── dropdown-menu.tsx   # Radix dropdown menu for multi-folder star pinning
+├── hooks/
+│   ├── useQCState.ts           # State layer: copySingleItem, addToBatch, togglePin, folders
+│   └── useAppearance.ts        # Theme & appearance tokens
+├── utils/
+│   ├── categoryColors.ts       # Category badge elements (.rpill), border accents (.border-l-4)
+│   ├── clipboard.ts            # Clipboard copy helper & navigator.vibrate wrapper
+│   ├── notifications.ts        # Sonner toast dispatcher & toast icons
+│   └── searchEngine.ts         # Highlighting & HTML escape helpers
+└── index.css                   # Tailwind v4 theme variables, hover transitions & animations
+```
 
-| # | Storage Key | Data Type | Default / Fallback | Description |
-|---|---|---|---|---|
-| 1 | `qc-pin-folders` | `CustomPinFolder[]` | `[{ id: 'starred', name: 'Starred Defects', color: '#06b6d4', itemIds: [], createdAt: Date.now() }]` | Array of custom pin folders created by user. Auto-migrates legacy `qc-pins` on initial launch. |
-| 2 | `qc-pins` | `(string \| number)[]` | `[]` | Flattened set of all pinned item IDs across all folders. Legacy key retained for backwards compatibility. |
-| 3 | `qc-recents` | `string[]` | `[]` | Array of last 20 copied defect wording strings. |
-| 4 | `qc-history` | `string[]` | `[]` | Fallback history log for recents compatibility. |
-| 5 | `qc-batch` | `string[]` | `[]` | Queued defect wording strings in batch drawer. |
-| 6 | `qc-join` | `DelimiterKey` | `'nl'` | Batch join delimiter (`'nl'`, `'comma'`, `'semi'`, `'space'`, `'pipe'`, `'bullet'`). |
-| 7 | `qc-autoclear` | `boolean` | `true` | Auto-clear batch queue after copying (`"true"` / `"false"` string). |
-| 8 | `qc-edits` | `Record<string, { t, c, n }>` | `{}` | Key-value store of edited base defect items (keyed by `item.id`). |
-| 9 | `qc-dels` | `(string \| number)[]` | `[]` | Array of deleted base defect item IDs. |
-| 10 | `qc-custom` | `QCItem[]` | `[]` | Array of user-created custom defect items (`{ id, n, t, c, custom: true }`). |
-
-### 3.2 `useAppearance` Storage Key Mapping
-
-| # | Storage Key | Data Type | Default / Fallback | Description |
-|---|---|---|---|---|
-| 11 | `qc-appearance` | `AppearanceSettings` | `{ layout: 'list', radius: 'soft', textsize: 'm', accent: 'indigo', density: 'cozy', motion: 'full', theme: 'dark' }` | Settings object for layout, radius, text size, density, motion, theme. |
-| 12 | `qc-theme` | `'light' \| 'dark' \| 'auto'` | `'dark'` | Theme preference. Directly toggles `.dark` class and `data-theme` attribute on `document.documentElement`. |
-| 13 | `qc-density` | `'cozy' \| 'compact'` | `'cozy'` | Layout density mode. Sets `data-density` attribute on `document.documentElement`. |
-| 14 | `qc-sort` | `'default' \| 'alpha' \| 'num'` | `'default'` | Sort order preference for wording list. |
-
----
-
-## 4. Interface Boundaries & DOM Contracts
-
-To guarantee that unit, integration, and E2E test suites pass without regressions, all existing DOM IDs, CSS classes, and `data-testid` markers must be strictly preserved during the Raycast Warm Stone palette migration:
-
-### Mandatory DOM Element Identifiers
-1. **Header & Navigation**: `#appHeader`, `#sidebarNav`, `#setLayout`, `#search`, `#clearBtn`, `#spotlightBtn`, `#editBtn`, `#batchBtn`, `#setBtn`, `#dlBtn`, `#themeBtn`, `#nav`, `#chips`, `#subchips`.
-2. **Main Container & Cards**: `#wordingContainer`, `#countLabel`, `#listwrap`, `#empty`, `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.racts`, `.pin-btn`, `.add-batch-btn`, `.edit-item-btn`, `.del-item-btn`.
-3. **Batch Drawer & Overlay**: `#backdrop`, `#batchDrawer`, `#bclose`, `#joinSel`, `#autoclear`, `#blist`, `.bitem`, `.bup`, `.bdn`, `.bcopy-item`, `.brm-item`, `#bcopy`, `#bclear`, `#bpaste`, `#bcount`, `#bbcount`, `#bcopycount`.
-4. **Toasts System**: `#toasts`, `.toasts-container`, `.toast`, `.ticon`, `.toast-message`, `.tact`, `.tprogress`.
-5. **Mandatory `data-testid` Attributes**:
-   - `data-testid="app-header"`
-   - `data-testid="app-navbar"`
-   - `data-testid="header-search-input"`
-   - `data-testid="clear-search-btn"`
-   - `data-testid="spotlight-trigger"`
-   - `data-testid="view-switcher"`
-   - `data-testid="wording-container"`
-   - `data-testid="batch-drawer"`
-   - `data-testid="drawer-overlay"`
-   - `data-testid="delimiter-select"`
-   - `data-testid="autoclear-checkbox"`
-   - `data-testid="batch-item"`
-   - `data-testid="copy-batch-btn"`
-   - `data-testid="clear-batch-btn"`
-   - `data-testid="category-tab-${id}"`
-   - `data-testid="pin-folder-${id}"`
-   - `data-testid="move-up-${idx}"`, `data-testid="move-down-${idx}"`, `data-testid="remove-batch-item-${idx}"`
+#### Detailed Breakdown of `DefectCard.tsx`
+`DefectCard` is a memoized React functional component (`React.memo` with `arePropsEqual`). It receives:
+- `item: QCItem` (`id`, `n` (number), `t` (text), `c` (category), `custom?`)
+- `variant: 'grid' | 'list' | 'table'`
+- `isPinned: boolean`
+- `isApprox?: boolean`
+- `highlightedText?: string`
+- `editMode: boolean`
+- `onCopyItem: (text: string) => void`
+- `onTogglePin: (id: string | number) => void`
+- `onAddToBatch: (text: string) => void`
+- `onOpenEdit: (item: QCItem) => void`
+- `onDeleteItem: (item: QCItem) => void`
+- `folders?: CustomPinFolder[]`
+- `onTogglePinToFolder?: (itemId: string | number, folderId: string) => void`
+- `isPinnedInFolder?: (itemId: string | number, folderId: string) => boolean`
 
 ---
 
-## 5. Requirement Gap Matrix vs `ORIGINAL_REQUEST.md`
+### 3. Typography, Contrast & Badge Styling
 
-| Requirement ID | Specification | Current Implementation | Gap Status | Required Transformation |
-|---|---|---|---|---|
-| **R1.1** | No Heavy Glassmorphism | Uses `backdrop-blur-xl`, `backdrop-blur-2xl`, `backdrop-blur-md` across header, drawer, and toasts. | **NON-COMPLIANT** | Remove heavy backdrop blur stacks; replace with solid/subtle Raycast surfaces (`#121214` dark / `#fcfcfc` light). |
-| **R1.2** | No Neon Halos or Cyan Gradients | Uses `shadow-[0_0_20px_rgba(6,182,212,0.25)]`, cyan selection halos, and cyan gradient button fills. | **NON-COMPLIANT** | Eliminate neon cyan glows, radial background halos, and gradient fills. |
-| **R1.3** | Raycast Warm Stone Palette | Uses Deep Zinc / Dark Void palette (`#050608`, `#0c0e12`, `#18181b`). | **NON-COMPLIANT** | Update CSS variables and Tailwind classes to Raycast Warm Stone charcoal (`#121214` dark / `#fcfcfc` light) and warm stone borders (`border-stone-800` / `border-stone-200`). |
-| **R2.1** | Purposeful Muted Color-Coding | Uses bright/vibrant category colors (`#7048e8`, `#1971c2`, `#15aabf`, `#f59f00`). | **NEEDS OVERHAUL** | Implement muted color palette: Soft Green (Battery), Muted Amber (Buttons), Steel Blue (Screen), Muted Plum (Pen), Rose (Locks). |
-| **R2.2** | Muted Category Pills & Lucide Icons | Badges use high-contrast semi-transparent backgrounds with bright text. | **NEEDS REFINEMENT** | Soften category pill backgrounds and borders for a harmonious muted appearance with Lucide icons. |
-| **R2.3** | Left Border Accent Indicators (`border-l-4`) | Present on cards and sidebar tabs, but paired with glowing shadows. | **NEEDS REFINEMENT** | Maintain `border-l-4` indicator with clean visual contrast against warm charcoal surfaces without neon glow shadows. |
-| **R3.1** | Sticky Left Sidebar Navigation | Fully functional sticky sidebar with Quick Views, Pin Folders, and Defect Categories. | **STYLE GAP ONLY** | Retain 100% functionality; update colors/borders to Raycast Warm Stone palette. |
-| **R3.2** | Clean Top Header & Search Bar | Fully functional header with search, Spotlight ⌘K trigger, view switcher, settings, theme toggle. | **STYLE GAP ONLY** | Retain 100% functionality and DOM IDs; update surface styles to solid Warm Stone. |
-| **R3.3** | Solid Subtle Overlays & Batch Drawer | Slide-out drawer functions with overlay backdrop, but uses `backdrop-blur-xl`/`2xl`. | **NON-COMPLIANT** | Replace glassmorphic blurs with solid subtle overlays and clean Warm Stone drawer panel. |
-| **R3.4** | Minimalist Floating Sonner Toasts | Toast system functions with Lucide icons, but uses `blur(16px)` and cyan glow shadows. | **STYLE GAP ONLY** | Remove glassmorphic blur and cyan glow; re-style toasts into minimalist Warm Stone floating pills. |
-| **R4** | Performance & Build Integrity | Clean React 19 + Vite 6 + Tailwind setup; TypeScript type safe. | **COMPLIANT** | Maintain zero layout shift, instant search responsiveness, and 100% test pass rate. |
+#### Font Stacks & Theme Variables
+- **Sans Font**: `'Geist', 'Inter', system-ui, sans-serif` (`--font-sans`)
+- **Mono Font**: `'JetBrains Mono', ui-monospace, monospace` (`--font-mono`)
+- **Backgrounds**: Dark theme `#121214` (surface), `#18181b` (cards); Light theme `#fcfcfc` (surface), `#ffffff` (cards).
+
+#### Visual Hierarchy Refinements
+
+| Element | Class Selector | Current Styling | Proposed Refinement |
+| :--- | :--- | :--- | :--- |
+| **Defect Number Badge** | `.rnum` | `font-mono text-xs font-bold text-stone-400` | Elegant capsule pill: `bg-stone-800/80 px-2 py-0.5 rounded-md border border-stone-700/80 text-stone-300 font-mono text-[11px] font-bold group-hover:text-stone-100 group-hover:border-stone-500 shadow-xs transition-all` |
+| **Defect Title Text** | `.rtxt` | `font-sans text-sm font-semibold tracking-tight text-stone-100` | High-contrast typography: `font-sans text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white leading-relaxed transition-colors` with gold-tinted mark highlights |
+| **Category Pill** | `.rpill` | `text-[11px] font-semibold px-2.5 py-0.5 rounded-full border` | Muted semantic pill with crisp Lucide icon, subtle semitransparent background, `hover:scale-105 transition-transform` |
+| **Approx Indicator** | `.fz` | `fz font-bold text-amber-400 mr-1.5` | Crisp amber `≈` symbol indicating fuzzy match or terminology alias expansion |
+| **Left Border Accent** | `border-l-4` + `style` | Dynamic inline `borderLeftColor` & `borderLeftWidth: 4px` | Preserved inline `style={borderLeftStyle}` to guarantee 100% test compatibility for all 15 defect categories |
+
+---
+
+### 4. Copy Interaction & Inline 'Copied ✓' Micro-Interaction
+
+#### Current Execution Flow
+1. User clicks anywhere on `.gcard`, `.row`, or `.trow` container.
+2. Container `onClick` handler calls `onCopyItem(item.t)`.
+3. In `useQCState.ts`:
+   - Calls `copyToClipboard(text)` (`navigator.clipboard.writeText(text)`).
+   - Calls `pushRecent(text)` (persists to `qc-recents` & `qc-history` in `localStorage`).
+   - Calls `triggerVibrate(20)` (mobile vibration).
+   - Calls `addToast(...)` (spawns floating toast notification in Sonner / `ToastsContainer`).
+
+#### Proposed Inline Micro-Interaction Design
+Alongside the global floating toast, provide instant, localized card-level feedback:
+1. **Local State**: In `DefectCard.tsx`, introduce:
+   ```tsx
+   const [copied, setCopied] = React.useState(false);
+   const copiedTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+   const handleCopy = React.useCallback(() => {
+     onCopyItem(item.t);
+     if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
+     setCopied(true);
+     copiedTimeoutRef.current = setTimeout(() => {
+       setCopied(false);
+     }, 1200);
+   }, [item.t, onCopyItem]);
+
+   React.useEffect(() => {
+     return () => {
+       if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
+     };
+   }, []);
+   ```
+
+2. **Border Pulse & Ring Glow Transition**:
+   When `copied === true`, the container dynamically gains:
+   - `ring-2 ring-emerald-500/50 border-emerald-500/70 bg-emerald-950/20 scale-[1.008]`
+   - Smooth CSS transitions (`transition-all duration-200 ease-out`).
+
+3. **Inline 'Copied ✓' Badge**:
+   Render an animated badge within the card/row header:
+   ```tsx
+   {copied && (
+     <span
+       data-testid="inline-copied-badge"
+       className="inline-copied-badge inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-in fade-in zoom-in-95 duration-150 shadow-xs"
+     >
+       <Check className="size-3 stroke-[2.5]" />
+       <span>Copied ✓</span>
+     </span>
+   )}
+   ```
+   *Note: All core DOM nodes (`.rnum`, `.rtxt`, `.rpill`, `.racts`) remain present and unreplaced in the DOM to ensure test queries never fail.*
+
+---
+
+### 5. Tactile Action Buttons Specification
+
+Action buttons reside in `<div className="racts flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>`.
+
+#### A. Pin / Star Button (`data-act="pin"`, `.pin-btn`)
+- **Unpinned State**: `text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700/80 hover:bg-amber-500/10 hover:border-amber-400/50 active:scale-90 transition-all duration-150`
+- **Pinned State**: `pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30 hover:border-amber-400 shadow-xs active:scale-90 transition-all duration-150`
+- **Multi-Folder Mode**: Wrapped with Radix `DropdownMenu` with folder color pills and `✓` indicators for each folder containing the item.
+
+#### B. `+ Batch` Button (`data-act="add"`, `.add-batch-btn`)
+- Styling: `bg-stone-800/90 border border-stone-700/80 text-stone-200 hover:bg-stone-700 hover:border-stone-500 hover:text-stone-100 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1 shadow-xs`
+- Icon integration: Optional Lucide `Plus` icon (`size-3`) alongside `+ Batch` text.
+
+#### C. Edit Mode Action Buttons (`Edit`, `Del`)
+- **Edit Item Button (`.edit-item-btn`, `data-act="edit"`)**: `bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 active:scale-95 transition-all font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1`
+- **Delete Item Button (`.del-item-btn`, `data-act="del"`)**: `bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 active:scale-95 transition-all font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1`
+
+---
+
+### 6. View Layouts: Grid vs List vs Table
+
+#### Grid View (`variant === 'grid'`, `.gcard`)
+- Layout: Card structure with `p-4 flex flex-col justify-between rounded-xl border min-h-[140px]`.
+- Top Section: `#item.n` code pill, inline `Copied ✓` badge (when copied), and category badge `.rpill`.
+- Center Section: Title text `.rtxt` with search term highlighting and approximate indicator `.fz`.
+- Bottom Section: Subtle divider `border-t border-stone-800/80 pt-2.5` with `.racts` aligned to the right.
+
+#### List View (`variant === 'list'`, `.row`)
+- Layout: Single horizontal row with `p-3.5 sm:p-4 rounded-xl border flex items-center justify-between gap-3`.
+- Left Section: `#item.n` code pill + title text `.rtxt`.
+- Right Section: Inline `Copied ✓` badge (when copied), category badge `.rpill`, and `.racts` buttons.
+
+#### Table View (`variant === 'table'`, `.trow`)
+- Layout: Responsive grid/flex table row with `px-3.5 sm:px-4 py-2.5 text-sm sm:grid sm:grid-cols-12 items-center justify-between gap-2 border-l-4`.
+- Column Structure (12 cols):
+  - Col 1: `#item.n` code pill (`.rnum`, `sm:col-span-1`)
+  - Col 7: Defect title (`.rtxt`, `sm:col-span-7`, truncate)
+  - Col 2: Category badge (`.rpill`, `sm:col-span-2`)
+  - Col 2: Inline `Copied ✓` / Action buttons (`.racts`, `sm:col-span-2`, `justify-end`)
+
+---
+
+### 7. Test Suite Invariants & Verification Plan
+
+All 203 automated test suites rely on specific DOM contracts:
+1. **DOM Class Names**:
+   - Grid cards: `.gcard`
+   - List rows: `.row`
+   - Table rows: `.trow`
+   - Defect code: `.rnum`
+   - Defect title: `.rtxt`
+   - Category badge: `.rpill`
+   - Action buttons container: `.racts`
+   - Pin button: `.pin-btn`
+   - Add button: `.add-batch-btn`
+2. **Data Attributes**:
+   - `data-id={item.id}` on each card/row container
+   - `data-act="pin"`, `data-act="add"`, `data-act="edit"`, `data-act="del"` on action buttons
+   - `data-folder` attributes on folder elements
+   - `data-layout="grid" | "list" | "table"` on wording container
+3. **Style Properties**:
+   - `border-l-4` class and inline `style.borderLeftColor`
+   - Category color matching (e.g. Battery `#38a169`, Buttons `#d97706`, Screen `#4682b4`, Locks `#f43f5e`, Pen `#9d4edd`).
+4. **Behavioral Invariants**:
+   - Clicking card row triggers copy and toast.
+   - Clicking `.pin-btn` toggles pin state and adds/removes `.pinned` class.
+   - Clicking `.add-batch-btn` adds item to batch queue.
+   - Clicking `.edit-item-btn` opens edit modal.
+   - Clicking `.del-item-btn` deletes item and triggers undo toast.
+
+---
+
+### 8. Implementation Code Snippets (Ready for Implementer)
+
+#### A. Updated `DefectCard.tsx` (Micro-Interactions & Tactile States)
+```tsx
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import type { QCItem, CustomPinFolder } from '../types/qc.ts';
+import { getCategoryLeftBorderStyle, getCategoryBadgeElement } from '../utils/categoryColors.ts';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu.tsx';
+import { Folder, Check } from 'lucide-react';
+import { escapeHtmlItem } from '../utils/searchEngine.ts';
+
+export interface DefectCardProps {
+  item: QCItem;
+  variant: 'grid' | 'list' | 'table';
+  isPinned: boolean;
+  isApprox?: boolean;
+  highlightedText?: string;
+  editMode: boolean;
+  onCopyItem: (text: string) => void;
+  onTogglePin: (id: string | number) => void;
+  onAddToBatch: (text: string) => void;
+  onOpenEdit: (item: QCItem) => void;
+  onDeleteItem: (item: QCItem) => void;
+  folders?: CustomPinFolder[];
+  onTogglePinToFolder?: (itemId: string | number, folderId: string) => void;
+  isPinnedInFolder?: (itemId: string | number, folderId: string) => boolean;
+}
+
+function arePropsEqual(prevProps: Readonly<DefectCardProps>, nextProps: Readonly<DefectCardProps>): boolean {
+  return (
+    prevProps.item.id === nextProps.item.id &&
+    prevProps.item.t === nextProps.item.t &&
+    prevProps.item.c === nextProps.item.c &&
+    prevProps.item.n === nextProps.item.n &&
+    prevProps.isPinned === nextProps.isPinned &&
+    prevProps.isApprox === nextProps.isApprox &&
+    prevProps.editMode === nextProps.editMode &&
+    prevProps.highlightedText === nextProps.highlightedText &&
+    prevProps.variant === nextProps.variant &&
+    prevProps.folders === nextProps.folders
+  );
+}
+
+export const DefectCard: React.FC<DefectCardProps> = React.memo(({
+  item,
+  variant,
+  isPinned,
+  isApprox,
+  highlightedText,
+  editMode,
+  onCopyItem,
+  onTogglePin,
+  onAddToBatch,
+  onOpenEdit,
+  onDeleteItem,
+  folders,
+  onTogglePinToFolder,
+  isPinnedInFolder,
+}) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleCopy = useCallback(() => {
+    onCopyItem(item.t);
+    if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    setCopied(true);
+    copiedTimerRef.current = setTimeout(() => {
+      setCopied(false);
+    }, 1200);
+  }, [item.t, onCopyItem]);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
+
+  const containerClass = `${variant === 'grid' ? 'gcard' : variant === 'list' ? 'row' : 'trow'} ${
+    isPinned
+      ? 'pinned bg-amber-500/[0.07] border-amber-500/40 shadow-xs'
+      : copied
+      ? 'bg-emerald-950/20 border-emerald-500/70 ring-2 ring-emerald-500/40 shadow-md'
+      : 'bg-stone-900 border-stone-800 hover:border-stone-700 hover:shadow-xs'
+  } border-l-4 transition-all duration-150 ease-in-out cursor-pointer rounded-xl text-stone-100 group select-none`;
+
+  const borderLeftStyle = getCategoryLeftBorderStyle(item.c);
+
+  const renderActionButtons = (compact = false) => (
+    <div className="racts flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+      {folders && folders.length > 1 && onTogglePinToFolder && isPinnedInFolder ? (
+        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+          <DropdownMenuTrigger asChild>
+            <button
+              data-act="pin"
+              className={`pin-btn ${
+                isPinned
+                  ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30'
+                  : 'text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
+              } px-2.5 py-1 rounded-md border text-xs flex items-center gap-1 active:scale-90 transition-all duration-150`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onTogglePin(item.id);
+              }}
+              title={isPinned ? 'Unpin item / Select folder' : 'Pin item to folder'}
+            >
+              <span>{isPinned ? '★' : '☆'}</span>
+            </button>
+          </DropdownMenuTrigger>
+          {dropdownOpen && (
+            <DropdownMenuContent className="bg-stone-900 border-stone-800 text-stone-100 min-w-[160px] shadow-xl">
+              <div className="px-2 py-1.5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-1 border-b border-stone-800">
+                <Folder className="size-3 text-stone-400" />
+                <span>Pin to Folders</span>
+              </div>
+              {folders.map((folder) => {
+                const pinnedInThis = isPinnedInFolder(item.id, folder.id);
+                return (
+                  <DropdownMenuItem
+                    key={folder.id}
+                    onClick={() => {
+                      onTogglePinToFolder(item.id, folder.id);
+                      setDropdownOpen(false);
+                    }}
+                    className="flex items-center justify-between text-xs cursor-pointer hover:bg-stone-800 focus:bg-stone-800"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full" style={{ backgroundColor: folder.color || '#a1a1aa' }} />
+                      {folder.name}
+                    </span>
+                    {pinnedInThis && <span className="text-amber-400 font-bold text-xs">✓</span>}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          )}
+        </DropdownMenu>
+      ) : (
+        <button
+          data-act="pin"
+          className={`pin-btn ${
+            isPinned
+              ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30'
+              : 'text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
+          } px-2.5 py-1 rounded-md border text-xs active:scale-90 transition-all duration-150`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onTogglePin(item.id);
+          }}
+          title={isPinned ? 'Unpin item' : 'Pin item'}
+        >
+          {isPinned ? '★' : '☆'}
+        </button>
+      )}
+
+      <button
+        data-act="add"
+        className="add-batch-btn bg-stone-800/90 border border-stone-700 text-stone-200 hover:bg-stone-700 hover:border-stone-500 hover:text-stone-100 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1 shadow-xs"
+        onClick={(e) => {
+          e.stopPropagation();
+          onAddToBatch(item.t);
+        }}
+        title="Add to batch queue"
+      >
+        + Batch
+      </button>
+
+      {editMode && (
+        <>
+          <button
+            data-act="edit"
+            className="edit-item-btn bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenEdit(item);
+            }}
+            title="Edit wording item"
+          >
+            Edit
+          </button>
+          <button
+            data-act="del"
+            className="del-item-btn bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-md px-2.5 py-1 flex items-center gap-1"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteItem(item);
+            }}
+            title="Delete wording item"
+          >
+            Del
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  const renderCopiedBadge = () => (
+    <span
+      data-testid="inline-copied-badge"
+      className="inline-copied-badge inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-in fade-in zoom-in-95 duration-150 shadow-xs"
+    >
+      <Check className="size-3 stroke-[2.5]" />
+      <span>Copied ✓</span>
+    </span>
+  );
+
+  if (variant === 'grid') {
+    return (
+      <div
+        data-id={item.id}
+        className={`${containerClass} flex flex-col justify-between p-4 shadow-xs min-h-[140px]`}
+        style={borderLeftStyle}
+        onClick={handleCopy}
+      >
+        <div className="flex justify-between items-center mb-2.5">
+          <div className="flex items-center gap-2">
+            <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all">
+              #{item.n}
+            </span>
+            {copied && renderCopiedBadge()}
+          </div>
+          {getCategoryBadgeElement(item.c)}
+        </div>
+
+        <div className="rtxt font-sans text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white mb-3 flex-1 leading-relaxed transition-colors">
+          {isApprox && <span className="fz font-bold text-amber-400 mr-1.5">≈</span>}
+          <span dangerouslySetInnerHTML={{ __html: highlightedText || escapeHtmlItem(item) }} />
+        </div>
+
+        <div className="flex justify-end pt-2.5 border-t border-stone-800/80">
+          {renderActionButtons(false)}
+        </div>
+      </div>
+    );
+  }
+
+  if (variant === 'table') {
+    return (
+      <div
+        data-id={item.id}
+        className={`${containerClass} flex sm:grid sm:grid-cols-12 items-center justify-between px-3.5 sm:px-4 py-2.5 text-sm shadow-xs transition-colors duration-150 gap-2`}
+        style={borderLeftStyle}
+        onClick={handleCopy}
+      >
+        <div className="flex items-center gap-2 sm:col-span-1 shrink-0">
+          <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all">
+            #{item.n}
+          </span>
+        </div>
+        <div className="rtxt font-sans text-xs sm:text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white flex-1 sm:col-span-7 truncate pr-2 transition-colors">
+          {isApprox && <span className="fz font-bold text-amber-400 mr-1.5">≈</span>}
+          <span dangerouslySetInnerHTML={{ __html: highlightedText || escapeHtmlItem(item) }} />
+        </div>
+
+        <div className="sm:col-span-2 flex items-center gap-2 shrink-0">
+          {getCategoryBadgeElement(item.c)}
+          {copied && renderCopiedBadge()}
+        </div>
+        <div className="sm:col-span-2 flex justify-end shrink-0">
+          {renderActionButtons(true)}
+        </div>
+      </div>
+    );
+  }
+
+  // Default: variant === 'list'
+  return (
+    <div
+      data-id={item.id}
+      className={`${containerClass} flex items-center justify-between p-3.5 sm:p-4 shadow-xs gap-3 transition-colors duration-150`}
+      style={borderLeftStyle}
+      onClick={handleCopy}
+    >
+      <div className="flex items-center gap-3.5 flex-1 min-w-0">
+        <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
+          #{item.n}
+        </span>
+        <div className="rtxt font-sans text-sm font-semibold tracking-tight text-stone-100 group-hover:text-white flex-1 leading-relaxed transition-colors">
+          {isApprox && <span className="fz font-bold text-amber-400 mr-1.5">≈</span>}
+          <span dangerouslySetInnerHTML={{ __html: highlightedText || escapeHtmlItem(item) }} />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 shrink-0">
+        {copied && renderCopiedBadge()}
+        {getCategoryBadgeElement(item.c)}
+        {renderActionButtons(false)}
+      </div>
+    </div>
+  );
+}, arePropsEqual);
+
+export default DefectCard;
+```

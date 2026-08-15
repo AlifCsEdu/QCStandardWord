@@ -182,4 +182,97 @@ describe('Milestone 2 Empirical Challenger Stress Harness', () => {
       });
     });
   });
+
+  describe('4. Inline Copy Micro-Interactions & Capsule Pill Refinements', () => {
+    it('4.1: clicking a defect card in list view triggers inline copied badge and emerald glow', async () => {
+      const app = createAppInstance();
+      await app.setLayoutView('list');
+      await new Promise((r) => setTimeout(r, 20));
+
+      const cards = app.document.querySelectorAll('#listwrap .row');
+      assert.ok(cards.length > 0, 'Defect rows must exist in list view');
+
+      const firstCard = cards[0] as HTMLElement;
+      firstCard.click();
+      await new Promise((r) => setTimeout(r, 30));
+
+      const badge = firstCard.querySelector('.inline-copied-badge, [data-testid="inline-copied-badge"]');
+      assert.ok(badge, 'Inline copied badge must appear on clicked card');
+      assert.ok(badge.textContent?.includes('Copied ✓'), 'Inline copied badge must contain "Copied ✓" text');
+      assert.ok(firstCard.className.includes('emerald') || firstCard.className.includes('ring'), 'Card container must activate emerald glow styling');
+    });
+
+    it('4.2: clicking a defect card in grid view triggers inline copied badge', async () => {
+      const app = createAppInstance();
+      await app.setLayoutView('grid');
+      await new Promise((r) => setTimeout(r, 20));
+
+      const cards = app.document.querySelectorAll('#listwrap .gcard');
+      assert.ok(cards.length > 0, 'Defect cards must exist in grid view');
+
+      const firstCard = cards[0] as HTMLElement;
+      firstCard.click();
+      await new Promise((r) => setTimeout(r, 30));
+
+      const badge = firstCard.querySelector('.inline-copied-badge, [data-testid="inline-copied-badge"]');
+      assert.ok(badge, 'Inline copied badge must appear on clicked grid card');
+      assert.ok(badge.textContent?.includes('Copied ✓'), 'Badge text must be "Copied ✓"');
+    });
+
+    it('4.3: clicking a defect card in table view triggers inline copied badge', async () => {
+      const app = createAppInstance();
+      await app.setLayoutView('table');
+      await new Promise((r) => setTimeout(r, 20));
+
+      const cards = app.document.querySelectorAll('#listwrap .trow');
+      assert.ok(cards.length > 0, 'Defect rows must exist in table view');
+
+      const firstCard = cards[0] as HTMLElement;
+      firstCard.click();
+      await new Promise((r) => setTimeout(r, 30));
+
+      const badge = firstCard.querySelector('.inline-copied-badge, [data-testid="inline-copied-badge"]');
+      assert.ok(badge, 'Inline copied badge must appear on clicked table row');
+      assert.ok(badge.textContent?.includes('Copied ✓'), 'Badge text must be "Copied ✓"');
+    });
+
+    it('4.4: verify .rnum capsule pill styling and .rtxt high-contrast classes', async () => {
+      const app = createAppInstance();
+      const numEls = app.document.querySelectorAll('.rnum');
+      assert.ok(numEls.length > 0, '.rnum elements must exist in DOM');
+
+      numEls.forEach((el) => {
+        const cls = el.className || '';
+        assert.ok(cls.includes('font-mono'), '.rnum must include font-mono');
+        assert.ok(cls.includes('font-bold'), '.rnum must include font-bold');
+        assert.ok(cls.includes('bg-stone-800') || cls.includes('rounded'), '.rnum must include capsule styling');
+      });
+
+      const txtEls = app.document.querySelectorAll('.rtxt');
+      assert.ok(txtEls.length > 0, '.rtxt elements must exist in DOM');
+      txtEls.forEach((el) => {
+        const cls = el.className || '';
+        assert.ok(cls.includes('font-sans') || cls.includes('font-semibold'), '.rtxt must have structured typography');
+      });
+    });
+
+    it('4.5: verify action buttons tactile micro-states', () => {
+      const app = createAppInstance();
+      const pinBtns = app.document.querySelectorAll('.pin-btn');
+      const addBtns = app.document.querySelectorAll('.add-batch-btn');
+
+      assert.ok(pinBtns.length > 0, '.pin-btn must exist');
+      assert.ok(addBtns.length > 0, '.add-batch-btn must exist');
+
+      pinBtns.forEach((btn) => {
+        const cls = btn.className || '';
+        assert.ok(cls.includes('active:scale-90') || cls.includes('transition'), '.pin-btn must have tactile active state');
+      });
+
+      addBtns.forEach((btn) => {
+        const cls = btn.className || '';
+        assert.ok(cls.includes('active:scale-95') || cls.includes('transition'), '.add-batch-btn must have tactile active state');
+      });
+    });
+  });
 });

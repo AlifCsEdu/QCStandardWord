@@ -1,37 +1,43 @@
-# BRIEFING — 2026-08-09T21:40:40Z
+# BRIEFING — 2026-08-16T00:31:20Z
 
 ## Mission
-Investigate the existing codebase for UI components, CSS/Tailwind configuration, color palette, glassmorphism/neon gradients, themes, layout components, Lucide icons, etc. Document existing UI components, styling patterns, AI design tropes to eliminate, and proposed Warm Stone (#121214 / #fcfcfc) palette mapping.
+Investigate the QC Standard Wording codebase for Milestone R1: Layout De-Cluttering & Unified Header, mapping all components, state stores, tests, and props to propose a clean, unified architecture.
 
 ## 🔒 My Identity
-- Archetype: explorer (Teamwork explorer)
-- Roles: survey codebase, analyze UI components & styling, identify tropes to eliminate, design palette mapping
+- Archetype: explorer
+- Roles: investigation, synthesis
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1
-- Original parent: bf6e760d-7808-42de-8375-ac02b3c7bfed
-- Milestone: UI Survey & Tropes Inventory
+- Original parent: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Milestone: Milestone R1: Layout De-Cluttering & Unified Header
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement changes in source files (only write to .agents/explorer_survey_1 folder)
-- Rely on exact file paths, line numbers, and evidence
+- Read-only investigation — do NOT implement changes in source code
+- Produce structured analysis report in analysis.md and handoff.md in .agents/explorer_survey_1/
+- Keep test suite passing in mind (203 test suites)
 
 ## Current Parent
-- Conversation ID: bf6e760d-7808-42de-8375-ac02b3c7bfed
-- Updated: 2026-08-09T21:40:40Z
+- Conversation ID: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Updated: 2026-08-16T00:31:20Z
 
 ## Investigation State
-- **Explored paths**: Entire `src/` directory (components, ui primitives, hooks, theme, utils, data, types), configuration files (`package.json`, `PROJECT.md`, `src/index.css`), test files.
-- **Key findings**: 
-  - Complete inventory of all 14 core components and 14 UI primitives created.
-  - Generic AI tropes identified: heavy glassmorphism blurs (`blur(12px)`, `blur(16px)`), cyan glow halos (`.glow-cyan-subtle`, `.ambient-cyan-glow`, cyan shadows), and deep void surfaces (`#050608`, `#0c0e12`).
-  - Raycast Warm Stone palette mapping (#121214 dark / #fcfcfc light) fully detailed along with requirement R2 muted semantic color coding for all 15 categories.
-- **Unexplored areas**: None (full survey completed).
+- **Explored paths**:
+  - `src/App.tsx`, `src/components/AppHeader.tsx`, `src/components/StatsDashboard.tsx`, `src/components/CategoryChips.tsx`, `src/components/CodeSubChips.tsx`, `src/components/WordingContainer.tsx`, `src/components/HistoryBar.tsx`, `src/components/EditToolbar.tsx`, `src/components/DefectCard.tsx`
+  - `src/hooks/useQCState.ts`, `src/hooks/useAppearance.ts`, `src/utils/categoryColors.ts`, `src/data/qcData.ts`, `src/index.css`, `src/theme/tokens.ts`
+  - `tests/harness.js`, `tests/tier1-features.test.js`, `tests/tier2-boundary.test.js`, `tests/m3-pin-folders.test.js`, `tests/m2-empirical-stress-harness.test.ts`
+- **Key findings**:
+  - Main content column has up to 4 stacked horizontal strips (`StatsDashboard`, `HistoryBar`, `EditToolbar`, and `WordingContainer` count header), taking unnecessary vertical space.
+  - `StatsDashboard` can be refactored into a sleek, compact metadata summary (`139 Defects • 12 Categories • 3 Starred`) while retaining `#statsDashboard` / `data-testid="stats-dashboard"` for tests.
+  - `AppHeader` can be unified into a balanced 3-column layout with centered hero search and integrated ⌘K Spotlight.
+  - `CategoryChips` can be polished with active indicators, aligned icons, count pills, and accordion transitions while preserving all test hooks.
+  - Full test suite passes 100% (203/203 tests across 58 suites) and build passes cleanly.
+- **Unexplored areas**: None. Milestone R1 survey complete.
 
 ## Key Decisions Made
-- Completed detailed analysis in `analysis.md`.
-- Completed handoff report in `handoff.md`.
+- Authored deep exploration analysis report in `analysis.md`.
+- Authored 5-component handoff report in `handoff.md`.
 
 ## Artifact Index
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\DISPATCH.md` — Dispatch log
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\BRIEFING.md` — Working state briefing
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\analysis.md` — Detailed UI survey & Warm Stone palette mapping
-- `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\handoff.md` — 5-component handoff report
+- `DISPATCH.md` — Initial dispatch record
+- `analysis.md` — Deep exploration analysis report
+- `handoff.md` — 5-component handoff report
+- `progress.md` — Progress tracker

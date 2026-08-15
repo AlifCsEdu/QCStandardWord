@@ -1,34 +1,42 @@
-## 2026-08-09T13:20:27Z
-You are worker_m2 (role: teamwork_preview_worker).
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2
+## 2026-08-16T00:48:25+08:00
+You are Worker M2 implementing Milestone R2: Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions for the QC Standard Wording application.
 
-FILE WRITE OWNERSHIP:
-You have EXCLUSIVE write ownership of:
-- src/components/CategoryChips.tsx
-- src/components/AppHeader.tsx
-- src/App.tsx
-
-MANDATORY INPUTS TO READ BEFORE IMPLEMENTING:
-- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-- strategy_sidebar.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1\strategy_sidebar.md
-- strategy_header_search.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\strategy_header_search.md
-- test_impact_m2.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_3\test_impact_m2.md
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
+Your agent metadata directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2
+Original Request: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+Project Spec: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+Explorer Findings: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2\analysis.md
 
 MANDATORY INTEGRITY WARNING:
-DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results, create dummy/facade implementations, or circumvent the intended task. A teamwork_preview_auditor will independently verify your work. Integrity violations WILL be detected and your work WILL be rejected.
+DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results, create dummy/facade implementations, or circumvent the intended task. A auditor will independently verify your work. Integrity violations WILL be detected and your work WILL be rejected.
 
-ASSIGNMENT (Milestone M2 Implementation):
-1. Read the strategy reports above.
-2. Refactor src/components/CategoryChips.tsx:
-   - Implement 2026 Linear/Vercel sticky left sidebar styling (#sidebarNav): Onyx container surfaces (#0c0e12), 1px razor-sharp borders (border-white/[0.08]), ambient cyan glow highlights, 150ms ease hover transitions, theme-aware cyan/emerald count pill badges.
-   - Integrate 15 Lucide category icons, 3 collapsible group sections (Quick Views, Custom Pin Folders, Defect Categories), and full Custom Pin Folder CRUD Manager (+ Add Folder form, rename input, delete action).
-   - STRICT REQUIREMENT: Preserve all DOM IDs (#sidebarNav, #nav, #chips) and dataset attributes (data-cat, data-folder, data-testid).
-3. Refactor src/components/AppHeader.tsx & src/App.tsx:
-   - Implement glassmorphic top header (#appHeader): Onyx backdrop bg-[#0c0e12]/80, backdrop-blur-xl, ambient cyan glow border for hero search input (#search), ⌘K / Ctrl+K shortcut badge.
-   - Refactor view switcher (#setLayout): preserve data-v="list|grid|table" with glowing active state pills.
-   - Refactor CommandDialog (Spotlight search modal) in App.tsx: Onyx surface bg-[#0c0e12]/95 backdrop-blur-xl, ambient cyan border glow, JetBrains Mono code badges, and keyboard navigation footer. Fix missing FolderPin import in AppHeader.tsx.
-   - STRICT REQUIREMENT: Preserve all DOM IDs (#appHeader, #search, #clearBtn, #spotlightBtn, #setLayout, #editBtn, #batchBtn, #bcount, #modal, #setBtn).
-4. Run build (`npm run build`) and test suite (`npm test`).
-5. Document all code changes and build/test verification results in handoff.md in your working directory.
-6. When finished, send a completion message with summary to parent.
+Files You Own Exclusively:
+- `src/components/DefectCard.tsx`
+- `src/components/WordingContainer.tsx`
+- `src/components/WordingGrid.tsx`
+- `src/components/WordingList.tsx`
+- `src/components/WordingTable.tsx`
+- `src/index.css` (for any supporting animation keyframes)
+
+Implementation Requirements:
+1. Instant Copy Micro-Interactions:
+   - Introduce localized `copied` state in `DefectCard.tsx` (with ~1200ms auto-reset).
+   - On container click / copy trigger, activate a subtle border pulse and emerald ring glow (`ring-2 ring-emerald-500/40 border-emerald-500/70 bg-emerald-950/20`).
+   - Render an animated inline `<span className="inline-copied-badge ...">Copied ✓</span>` badge with smooth entry/exit alongside `.rnum` and `.rpill`.
+   - Ensure the global floating toast notification via `onCopyItem(item.t)` continues to fire seamlessly.
+2. Typography & Visual Polish:
+   - Enhance `.rnum` with an elevated capsule pill (`bg-stone-800/80 border border-stone-700/80 text-stone-300 font-mono text-[11px] font-bold`).
+   - Elevate `.rtxt` text contrast (`text-stone-100 group-hover:text-white font-medium`) and clean line-height.
+   - Refine spacing and layout alignment across Grid (`.gcard`), List (`.row`), and Table (`.trow`) views.
+3. Tactile Action Buttons:
+   - Add tactile click micro-states (`active:scale-90` / `active:scale-95`, warm amber active glow on star, stone-700/500 border transitions) to `.pin-btn`, `.add-batch-btn`, `.edit-item-btn`, `.del-item-btn`.
+4. Strict DOM Preservation:
+   - Strictly PRESERVE all DOM query selectors and attributes: `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.racts`, `.pin-btn`, `.add-batch-btn`, `[data-id]`, `[data-act]`, `border-l-4`, inline `style.borderLeftColor`.
+   - Ensure no forbidden `backdrop-blur-*` classes are introduced.
+5. Verification:
+   - Run `npm test` and ensure all test suites pass with 100% success rate (232+/232).
+   - Run `npm run build` and ensure TypeScript compilation and Vite production build succeed with 0 errors.
+6. Reporting:
+   - Write your implementation details to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2\changes.md`.
+   - Write your full handoff report to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2\handoff.md`.
+   - Send a message back to parent with summary and test results.

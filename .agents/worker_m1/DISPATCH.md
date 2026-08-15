@@ -1,32 +1,37 @@
-## 2026-08-09T13:14:34Z
-You are worker_m1 (role: teamwork_preview_worker).
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1
+## 2026-08-16T00:31:50Z
+You are Worker M1 implementing Milestone R1: Layout De-Cluttering & Unified Header for the QC Standard Wording application.
 
-FILE WRITE OWNERSHIP:
-You have EXCLUSIVE write ownership of:
-- src/index.css
-- src/components/HistoryBar.tsx
-- src/components/EditToolbar.tsx
-- src/components/CodeSubChips.tsx
-
-MANDATORY INPUTS TO READ BEFORE IMPLEMENTING:
-- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-- strategy_index_css.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_1\strategy_index_css.md
-- strategy_inline_styles.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_2\strategy_inline_styles.md
-- test_impact_analysis.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_3\test_impact_analysis.md
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
+Your agent metadata directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1
+Original Request: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+Project Spec: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+Explorer Findings: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_1\analysis.md
 
 MANDATORY INTEGRITY WARNING:
-DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results, create dummy/facade implementations, or circumvent the intended task. A teamwork_preview_auditor will independently verify your work. Integrity violations WILL be detected and your work WILL be rejected.
+DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results, create dummy/facade implementations, or circumvent the intended task. A auditor will independently verify your work. Integrity violations WILL be detected and your work WILL be rejected.
 
-ASSIGNMENT (Milestone M1 Implementation):
-1. Read the strategy reports above.
-2. Refactor src/index.css:
-   - Update theme tokens to Deep Void Midnight (#050608) background, Onyx container surfaces (#0c0e12), razor borders (border-white/[0.08] / border-zinc-800), ambient cyan glow utilities, and Geist/Inter + JetBrains Mono typography definitions.
-   - Purge legacy --mantine-color-body variables.
-3. Refactor HistoryBar.tsx, EditToolbar.tsx, CodeSubChips.tsx:
-   - Replace hardcoded light inline styles (#fff9db, #e7f5ff, #7048e8) with modern dark Tailwind CSS v4 classes matching the 2026 Linear/Vercel design system.
-   - STRICT REQUIREMENT: Preserve all DOM IDs (#histbar, #editstrip, #subchips, #hchips, #hclearAll, #addBtn, #exportBtn, #importBtn, #resetBtn) and test attributes (data-hcopy, data-sub, class hooks) specified in test_impact_analysis.md.
-4. Run build (`npm run build`) and test suite (`npm test`).
-5. Document all code changes and build/test verification results in handoff.md in your working directory.
-6. When finished, send a completion message with summary to parent.
+Files You Own Exclusively:
+- `src/App.tsx`
+- `src/components/AppHeader.tsx`
+- `src/components/StatsDashboard.tsx`
+- `src/components/CategoryChips.tsx`
+- `src/components/CodeSubChips.tsx`
+
+Implementation Requirements:
+1. Layout De-Cluttering:
+   - Convert `StatsDashboard.tsx` from bulky card banner to a sleek, compact, integrated status summary strip (e.g. `139 Defects • 12 Categories • 3 Starred`) and subtle active filter tags.
+   - Strictly PRESERVE `id="statsDashboard"` and `data-testid="stats-dashboard"`.
+   - Ensure clean vertical flow and remove unnecessary visual noise/redundant padding in `src/App.tsx`.
+2. Top Header Modernization (`src/components/AppHeader.tsx`):
+   - Balanced 3-column layout: Left Brand Logo + title + version; Center Hero Search bar with ⌘K Spotlight trigger; Right View switcher (List / Grid / Table) and clean, responsive Action group.
+   - Strictly PRESERVE all IDs and attributes: `#appHeader`, `[data-testid="app-header"]`, `#search`, `[data-testid="header-search-input"]`, `#clearBtn`, `[data-testid="clear-search-btn"]`, `#spotlightBtn`, `[data-testid="spotlight-trigger"]`, `#setLayout`, `[data-testid="view-switcher"]`, `data-v="list"`, `data-v="grid"`, `data-v="table"`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`.
+3. Sticky Sidebar Polish (`src/components/CategoryChips.tsx` & `src/components/CodeSubChips.tsx`):
+   - Refine category navigation with smooth active indicator bars (`border-l-4`), crisp Lucide icons, aligned count pills (`span.rounded-full`), and polished Pin Folders accordion.
+   - Strictly PRESERVE all selectors: `#sidebarNav`, `[data-testid="app-navbar"]`, `button[data-cat="..."]`, `[data-testid="category-tab-..."]`, `[data-folder="..."]`, `[data-testid="pin-folder-..."]`, `#subchips`, `[data-testid="code-sub-chips"]`, `button[data-sub="..."]`.
+4. Verification:
+   - Run `npm test` and ensure all 203 test suites pass cleanly.
+   - Run `npm run build` and ensure TypeScript compilation and Vite build succeed with 0 errors.
+5. Reporting:
+   - Write your implementation details to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1\changes.md`.
+   - Write your full handoff report to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1\handoff.md`.
+   - Send a message back to parent with summary and test results.

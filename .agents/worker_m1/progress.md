@@ -1,12 +1,13 @@
-# Progress Log - worker_m1
+# Progress — Worker M1 (Milestone R1: Layout De-Cluttering & Unified Header)
 
-Last visited: 2026-08-09T13:16:00Z
+Last visited: 2026-08-16T00:37:00Z
 
-- [x] Initialized workspace and briefing
-- [x] Read mandatory input documents (`ORIGINAL_REQUEST.md`, `PROJECT.md`, `strategy_index_css.md`, `strategy_inline_styles.md`, `test_impact_analysis.md`)
-- [x] Refactor `src/index.css`
-- [x] Refactor `src/components/HistoryBar.tsx`
-- [x] Refactor `src/components/EditToolbar.tsx`
-- [x] Refactor `src/components/CodeSubChips.tsx`
-- [x] Run build (`npm run build`) and test suite (`npm test`)
-- [x] Document findings and write `handoff.md`
+## Status
+- [x] Phase 1: Survey existing codebase, inspect test suites and target components
+- [x] Phase 2: Refactor `StatsDashboard.tsx` into a sleek compact status strip while preserving IDs and props
+- [x] Phase 3: Modernize `AppHeader.tsx` to balanced 3-column layout preserving all buttons, IDs, and event handlers
+- [x] Phase 4: Polish `CategoryChips.tsx` and `CodeSubChips.tsx` with indicator bars, Lucide icons, aligned counts, and pin folders
+- [x] Phase 5: Clean up `App.tsx` layout & padding
+- [x] Phase 6: Run full test suite (`npm test`) and build (`npm run build`)
+- [x] Phase 7: Document `changes.md` and `handoff.md`, send message to parent
+

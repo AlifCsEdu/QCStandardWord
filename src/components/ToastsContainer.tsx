@@ -12,21 +12,27 @@ export const ToastsContainer: React.FC<ToastsContainerProps> = ({
   onRemoveToast,
 }) => {
   return (
-    <div id="toasts" className="toasts-container">
+    <div id="toasts" className="toasts-container" aria-live="polite" aria-atomic="true">
       {toasts.map((toast) => {
         const iconElement = getToastIcon(toast.msg, toast.warn);
         return (
           <div
             key={toast.id}
+            data-testid="floating-toast"
+            data-toast-id={toast.id}
             className={`toast ${toast.warn ? 'warn' : ''}`}
             onClick={() => onRemoveToast(toast.id)}
+            role="status"
           >
             <div className="ticon" data-testid="toast-icon">
               {iconElement}
             </div>
-            <span className="toast-message">{toast.msg}</span>
+            <span className="toast-message" title={toast.msg}>
+              {toast.msg}
+            </span>
             {toast.action && (
               <button
+                type="button"
                 className="tact"
                 data-testid="toast-action"
                 onClick={(e) => {
@@ -45,4 +51,3 @@ export const ToastsContainer: React.FC<ToastsContainerProps> = ({
     </div>
   );
 };
-

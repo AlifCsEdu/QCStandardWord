@@ -3,10 +3,10 @@ import {
   LayoutDashboard as IconDashboard,
   Filter as IconFilter,
   Bookmark as IconBookmark,
-  Copy as IconCopy,
+  Layers as IconLayers,
+  Sparkles,
 } from 'lucide-react';
 import type { CategoryKey, SubCategoryCode } from '../types/qc.ts';
-import { Card, CardContent } from './ui/card.tsx';
 import { Badge } from './ui/badge.tsx';
 
 interface StatsDashboardProps {
@@ -35,7 +35,7 @@ const CATEGORY_NAMES: Record<CategoryKey, string> = {
   audio: 'Audio & Speakers',
   body: 'Body & Housing',
   system: 'System & OS',
-  pinned: 'Pinned / Favorites',
+  pinned: 'Starred Defects',
   recent: 'Recent History',
 };
 
@@ -47,58 +47,94 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = React.memo(({
   batchCount,
   pinnedCount,
 }) => {
+  const hasActiveFilter =
+    selectedCategory !== 'all' ||
+    (selectedCategory === 'codes' && selectedSubCategory !== 'ALL') ||
+    Boolean(searchQuery.trim());
+
   return (
-    <Card
+    <div
       id="statsDashboard"
       data-testid="stats-dashboard"
-      className="m-4 border-stone-800 bg-stone-900 text-stone-100 shadow-xs"
+      className="stats-dashboard w-full px-4 sm:px-6 py-2.5 bg-stone-900/50 border-b border-stone-800/80 text-stone-300 flex flex-wrap items-center justify-between gap-3 text-xs select-none"
     >
-      <CardContent className="p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <IconDashboard className="size-4.5 text-stone-300" />
-          <span className="font-semibold text-sm text-stone-100">
-            Inspection Dashboard
+      {/* Left: Metric Summary Strip */}
+      <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap min-w-0">
+        <div className="flex items-center gap-1.5 text-stone-100 font-medium">
+          <IconDashboard className="size-3.5 text-stone-400 shrink-0" />
+          <span className="font-semibold text-stone-100">
+            {totalFilteredCount} {totalFilteredCount === 1 ? 'Defect' : 'Defects'}
           </span>
-          <Badge variant="default" className="bg-stone-800/80 border-stone-700 text-stone-200">
-            {totalFilteredCount} matching
-          </Badge>
         </div>
 
-        {/* Active Filter & Status Summary */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1.5">
-            <IconFilter className="size-3.5 text-stone-400" />
-            <span className="text-xs text-stone-400 font-medium">
-              Active Filter:
+        <span className="text-stone-600 font-mono text-[10px] select-none">•</span>
+
+        <span className="text-stone-300 hidden sm:inline">
+          {selectedCategory === 'all'
+            ? '12 Categories'
+            : CATEGORY_NAMES[selectedCategory] || selectedCategory}
+        </span>
+
+        <span className="text-stone-600 font-mono text-[10px] hidden sm:inline select-none">•</span>
+
+        <div className="flex items-center gap-1 text-amber-400 font-medium">
+          <IconBookmark className="size-3 text-amber-400/90 shrink-0" />
+          <span>{pinnedCount} Starred</span>
+        </div>
+
+        {batchCount > 0 && (
+          <>
+            <span className="text-stone-600 font-mono text-[10px] select-none">•</span>
+            <div className="flex items-center gap-1 text-stone-200 font-medium bg-stone-800/60 px-2 py-0.5 rounded-full border border-stone-700/60">
+              <IconLayers className="size-3 text-stone-400 shrink-0" />
+              <span>{batchCount} in Batch</span>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Right: Active Filter Indicators */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {hasActiveFilter ? (
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <IconFilter className="size-3 text-stone-500 shrink-0" />
+            <span className="text-[11px] text-stone-500 font-medium hidden md:inline">
+              Filter:
             </span>
-            <Badge variant="outline" className="bg-stone-800/60 border-stone-700 text-stone-300">
-              Cat: {CATEGORY_NAMES[selectedCategory] || selectedCategory}
-            </Badge>
+            {selectedCategory !== 'all' && (
+              <Badge
+                variant="outline"
+                className="bg-stone-800/80 border-stone-700/80 text-stone-200 text-[11px] px-2 py-0 h-5 font-normal"
+              >
+                Cat: {CATEGORY_NAMES[selectedCategory] || selectedCategory}
+              </Badge>
+            )}
             {selectedCategory === 'codes' && selectedSubCategory !== 'ALL' && (
-              <Badge variant="outline" className="bg-stone-800/60 border-stone-700 text-stone-300">
+              <Badge
+                variant="outline"
+                className="bg-stone-800/80 border-stone-700/80 text-stone-200 text-[11px] px-2 py-0 h-5 font-normal"
+              >
                 Sub: {selectedSubCategory}
               </Badge>
             )}
             {searchQuery.trim() && (
-              <Badge variant="outline" className="bg-orange-950/40 border-orange-500/30 text-orange-400">
+              <Badge
+                variant="outline"
+                className="bg-stone-800/80 border-stone-600 text-stone-100 text-[11px] px-2 py-0 h-5 font-normal"
+              >
                 Query: "{searchQuery.trim()}"
               </Badge>
             )}
           </div>
-
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="border-amber-500/40 text-amber-400 gap-1 bg-amber-950/20">
-              <IconBookmark className="size-3" />
-              Pinned: {pinnedCount}
-            </Badge>
-            <Badge variant="outline" className="border-stone-700 text-stone-300 gap-1 bg-stone-800/60">
-              <IconCopy className="size-3" />
-              Batch: {batchCount}
-            </Badge>
+        ) : (
+          <div className="hidden lg:flex items-center gap-1.5 text-[11px] text-stone-400 font-mono">
+            <Sparkles className="size-3 text-stone-400" />
+            <span>Ready for QC Inspection</span>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </div>
   );
 });
+
 

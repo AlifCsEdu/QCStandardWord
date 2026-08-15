@@ -1,55 +1,56 @@
-# BRIEFING — 2026-08-09T21:22:15Z
+# BRIEFING — 2026-08-16T00:53:15+08:00
 
 ## Mission
-Refactor sidebar (CategoryChips.tsx), top header (AppHeader.tsx), and Spotlight modal (App.tsx) for 2026 Linear/Vercel Dark Onyx aesthetic while strictly preserving DOM IDs, dataset attributes, accessibility attributes, and test specs.
+Implement Milestone R2: Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions for QC Standard Wording with strict DOM preservation and visual polish.
 
 ## 🔒 My Identity
-- Archetype: teamwork_preview_worker
-- Roles: implementer, qa, specialist
+- Archetype: implementer
+- Roles: [implementer, qa, specialist]
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2
-- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
-- Milestone: M2 - Sidebar & Navigation Refactoring
+- Original parent: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Milestone: Milestone R2 (Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions)
 
 ## 🔒 Key Constraints
-- EXCLUSIVE file write ownership: `src/components/CategoryChips.tsx`, `src/components/AppHeader.tsx`, `src/App.tsx`.
-- DO NOT CHEAT: genuine implementation, no hardcoded test shortcuts.
-- Preserve all DOM IDs (`#sidebarNav`, `#nav`, `#chips`, `#appHeader`, `#search`, `#clearBtn`, `#spotlightBtn`, `#setLayout`, `#editBtn`, `#batchBtn`, `#bcount`, `#modal`, `#setBtn`).
-- Preserve all dataset attributes (`data-cat`, `data-folder`, `data-testid`, `data-v`).
-- Fix missing `FolderPin` import in `AppHeader.tsx`.
+- Strictly PRESERVE all DOM query selectors and attributes: `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.rpill`, `.racts`, `.pin-btn`, `.add-batch-btn`, `[data-id]`, `[data-act]`, `border-l-4`, inline `style.borderLeftColor`.
+- Ensure no forbidden `backdrop-blur-*` classes are introduced.
+- Maintain full compatibility with all existing test suites (237/237 tests passing).
+- Files owned: `src/components/DefectCard.tsx`, `src/components/WordingContainer.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingList.tsx`, `src/components/WordingTable.tsx`, `src/index.css`.
+- High integrity: genuine implementations only, no cheat/facade.
 
 ## Current Parent
-- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
-- Updated: 2026-08-09T21:22:15Z
+- Conversation ID: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Updated: 2026-08-16T00:53:15+08:00
 
 ## Task Summary
-- **What to build**: Modern 2026 Linear/Vercel sticky left sidebar (#sidebarNav) and glassmorphic top header (#appHeader) + CommandDialog in App.tsx.
-- **Success criteria**: All tests in `npm test` pass (55/55), build succeeds (`npm run build`), exact DOM IDs & attributes preserved.
-- **Interface contracts**: `PROJECT.md`, `strategy_sidebar.md`, `strategy_header_search.md`, `test_impact_m2.md`.
+- **What to build**: Instant copy micro-interactions (localized copied state with 1200ms reset, emerald ring glow, inline animated Copied ✓ badge), typography polish (.rnum capsule pill, .rtxt high contrast), tactile action button states (active:scale-90/95), table/grid/list layout consistency.
+- **Success criteria**: 100% test pass rate (237/237), 0 build errors, 0 lint errors, 0 backdrop-blur classes.
+- **Interface contracts**: PROJECT.md & ORIGINAL_REQUEST.md
+- **Code layout**: src/components/*.tsx, src/index.css
 
 ## Key Decisions Made
-- CategoryChips.tsx refactored into 3 collapsible sections: Quick Views, Custom Pin Folders, Defect Categories.
-- Pin Folder CRUD Manager integrated with inline creation form, color picker, rename input, confirmation delete action.
-- AppHeader.tsx refactored with Onyx backdrop `#0c0e12`/80, backdrop-blur-xl, ambient cyan glow input, ⌘K badge, data-v view switcher. Fixed FolderPin import by using exported Folder icon.
-- CommandDialog in App.tsx styled with Onyx surface, ambient cyan border glow, JetBrains Mono code badges, and keyboard navigation footer bar.
+- Introduced localized `copied` state and `handleCopy` callback in `DefectCard.tsx` using `useCallback` and `useRef` timer.
+- Added animated inline `<span className="inline-copied-badge ...">Copied ✓</span>` with `Check` icon from lucide-react.
+- Enhanced container class dynamically with `bg-emerald-950/20 border-emerald-500/70 ring-2 ring-emerald-500/40 shadow-md` on copy.
+- Styled `.rnum` as an elevated capsule pill (`bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 text-stone-300 font-mono text-[11px] font-bold`).
+- Elevated `.rtxt` contrast with `text-stone-100 group-hover:text-white font-medium` and clean line-height.
+- Added tactile active click states (`active:scale-90` on pin-btn, `active:scale-95` on add/edit/del buttons) in both TSX and CSS.
+- Added 5 new automated verification tests in `tests/m2-challenger-stress.test.ts` verifying list, grid, table inline copy badges, capsule pills, and tactile buttons.
+
+## Artifact Index
+- `.agents/worker_m2/DISPATCH.md` — Dispatch prompt and requirements
+- `.agents/worker_m2/progress.md` — Progress tracker and heartbeat
+- `.agents/worker_m2/changes.md` — Code changes record
+- `.agents/worker_m2/handoff.md` — Final handoff report
 
 ## Change Tracker
 - **Files modified**:
-  - `src/components/CategoryChips.tsx`: 2026 Linear/Vercel Dark Onyx sidebar, Lucide icons, 3 collapsible groups, Folder CRUD manager.
-  - `src/components/AppHeader.tsx`: Glassmorphic Onyx navbar, hero search cyan glow, ⌘K trigger, data-v view switcher, Folder import fix.
-  - `src/App.tsx`: Sidebar container Onyx styling, CategoryChips CRUD props wiring, CommandDialog 2026 Onyx & JetBrains Mono footer.
-- **Build status**: PASS (`npm run build` completed in 3.70s with 0 errors).
-- **Pending issues**: None.
+  - `src/components/DefectCard.tsx`: localized copy state, emerald glow, inline badge, .rnum capsule, .rtxt contrast, tactile buttons
+  - `src/index.css`: active scale states (`:active`), `@keyframes badgeFadeIn`, `.inline-copied-badge` styling
+  - `tests/m2-challenger-stress.test.ts`: added 5 tests verifying R2 micro-interactions, capsule pill, and tactile states
+- **Build status**: PASS (237/237 tests passing, vite build 0 errors)
+- **Pending issues**: none
 
 ## Quality Status
-- **Build/test result**: PASS (55/55 tests passed in `npm test`, 0 failures).
-- **Lint status**: PASS (`npm run lint` completed with 0 errors).
-- **Tests added/modified**: 0 (all existing tests pass without modification).
-
-## Loaded Skills
-- None.
-
-## Artifact Index
-- `.agents/worker_m2/DISPATCH.md` — Task prompt instructions
-- `.agents/worker_m2/BRIEFING.md` — Persistent briefing
-- `.agents/worker_m2/progress.md` — Liveness heartbeat
-- `.agents/worker_m2/handoff.md` — Final handoff report
+- **Build/test result**: PASS (237/237 tests passing across 70 suites, 0 failures)
+- **Lint status**: 0 errors (`tsc --noEmit` clean)
+- **Tests added/modified**: 5 new tests in `tests/m2-challenger-stress.test.ts`

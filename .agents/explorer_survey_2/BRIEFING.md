@@ -1,40 +1,60 @@
-# BRIEFING — 2026-08-09T13:40:45Z
+# BRIEFING — 2026-08-16T00:30:40Z
 
 ## Mission
-Survey UI features, state management, category pills & color coding, left border indicators, sticky sidebar, sub-code chips, user pin folder manager, top header, ⌘K spotlight search, view toggles, batch drawer, and Sonner toast integration against ORIGINAL_REQUEST.md.
+Investigate the QC Standard Wording codebase for Milestone R2: Defect Cards, List Rows, Table View, Typography, Tactile Action Buttons, and Inline Copy Micro-Interactions.
 
 ## 🔒 My Identity
-- Archetype: Teamwork explorer
-- Roles: Read-only investigator / UI feature surveyor
+- Archetype: explorer
+- Roles: read-only investigation, code & component mapping, test suite audit, synthesis & handoff report
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2
-- Original parent: bf6e760d-7808-42de-8375-ac02b3c7bfed
-- Milestone: UI & Feature Survey
+- Original parent: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Milestone: R2 - Defect Cards, List Rows, Table View & Inline Copy Micro-Interactions
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement application code changes
-- Write analysis to analysis.md and handoff report to handoff.md in working directory
-- Communicate back via send_message to parent when complete
+- Read-only investigation — do NOT implement
+- Must map Defect Card (Grid), List Row (List), Table View components
+- Must map typography, font weights, contrast, spacing, #code badge styling
+- Must map copy interaction triggers, clipboard helpers, toast invocation
+- Must determine how to implement the instant inline 'Copied ✓' micro-interaction badge + subtle border pulse transition
+- Must map tactile action buttons (Star folder dropdown, + Batch button, hover/active micro-states)
+- Must identify CSS/Tailwind classes, animation libraries, state hooks
+- Must check test files verifying card click, copy, star, and batch add interactions
 
 ## Current Parent
-- Conversation ID: bf6e760d-7808-42de-8375-ac02b3c7bfed
-- Updated: 2026-08-09T13:40:45Z
+- Conversation ID: e8fdfef6-5ec0-4309-84b9-2563f5e9ac1e
+- Updated: 2026-08-16T00:30:40Z
 
 ## Investigation State
-- **Explored paths**: `src/App.tsx`, `src/hooks/useQCState.ts`, `src/hooks/useAppearance.ts`, `src/types/qc.ts`, `src/utils/categoryColors.ts`, `src/utils/notifications.ts`, `src/data/qcData.ts`, `src/components/*`, `src/index.css`, `src/theme/tokens.ts`, `tests/*`
+- **Explored paths**:
+  - `src/components/DefectCard.tsx`
+  - `src/components/WordingContainer.tsx`
+  - `src/components/WordingGrid.tsx`
+  - `src/components/WordingList.tsx`
+  - `src/components/WordingTable.tsx`
+  - `src/utils/clipboard.ts`
+  - `src/utils/notifications.ts`
+  - `src/utils/categoryColors.ts`
+  - `src/hooks/useQCState.ts`
+  - `src/hooks/useAppearance.ts`
+  - `src/App.tsx`
+  - `src/index.css`
+  - `src/theme/tokens.ts`
+  - `src/types/qc.ts`
+  - Test suites: `tests/harness.js`, `tests/tier1-features.test.js` through `tier5-hardening.test.js`, `tests/m2-*.test.ts`, `tests/m3-*.test.js`
 - **Key findings**:
-  - Functional features (14 localStorage keys state layer, pin folders, spotlight ⌘K, batch drawer, toasts) are 100% complete.
-  - Palette & aesthetic currently use Deep Void / Zinc dark (`#050608` / `#0c0e12`) with neon cyan glows (`#06b6d4`) and heavy glassmorphic blurs (`backdrop-blur-xl`, `backdrop-blur-2xl`, `blur(16px)`).
-  - Design overhaul requires migration to Raycast Warm Stone palette (`#121214` dark / `#fcfcfc` light), warm grey borders (`border-stone-800` / `border-stone-200`), soft muted category color pills, solid subtle overlays (no heavy blurs), and minimalist floating toasts while retaining all 30+ DOM element IDs and `data-testid` markers.
-- **Unexplored areas**: None (Full survey complete).
+  - All 203 existing test suites pass cleanly with 0 failures; `npm run build` succeeds in 4.09s.
+  - `DefectCard.tsx` is the central component handling Grid, List, and Table views via `variant` prop.
+  - Copy interaction is currently triggered at container `onClick` calling `onCopyItem(item.t)` -> clipboard write, recent history push, mobile vibration, and Sonner/floating toast.
+  - Adding local `copied` state and inline 'Copied ✓' micro-badge in `DefectCard.tsx` is completely non-intrusive and preserves all existing test selectors (`.rnum`, `.rtxt`, `.rpill`, `.racts`, `data-id`, `data-act`).
+  - Tactile action buttons (Star dropdown, `+ Batch`, Edit, Del) can be elevated with `active:scale-95` micro-states, refined hover glow, and crisp focus rings.
+- **Unexplored areas**: None for Milestone R2.
 
 ## Key Decisions Made
-- Initialized briefing and dispatch tracking
-- Completed comprehensive feature survey & code audit
-- Authored analysis report in `analysis.md`
-- Authored 5-component handoff report in `handoff.md`
+- Fully cataloged all DOM selectors, CSS classes, test invariants, and interaction flows for Milestone R2.
+- Designed complete before/after architectural blueprint and concrete code snippets for `DefectCard.tsx`, `index.css`, and related components.
 
 ## Artifact Index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2\DISPATCH.md — Dispatch log
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2\BRIEFING.md — Persistent memory index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2\analysis.md — Full UI Feature & State Architecture Survey Analysis
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_survey_2\handoff.md — 5-Component Handoff Report
+- `.agents/explorer_survey_2/DISPATCH.md` — Original task dispatch
+- `.agents/explorer_survey_2/BRIEFING.md` — Agent state and working memory
+- `.agents/explorer_survey_2/analysis.md` — In-depth architectural analysis and implementation specification
+- `.agents/explorer_survey_2/handoff.md` — Self-contained 5-component handoff report
