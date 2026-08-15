@@ -1,37 +1,50 @@
 # Original User Request
 
-## Initial Request — 2026-08-16T00:27:51+08:00
+## 2026-08-16T01:36:23+08:00
 
-Execute a comprehensive UI/UX overhaul and deep visual refinement across the entire QC Standard Wording application. Eliminate visual clutter, de-duplicate stacked horizontal toolbars, unify the header and sidebar navigation, elevate card/row typography and tactile interactions with inline 'Copied ✓' micro-interactions, and deliver a smooth, high-end, human-crafted experience.
+<USER_REQUEST>
+Comprehensive overhaul to make the QC Standard Wording application 100% touch-screen friendly (optimized for Samsung Galaxy Tab S9+ and tablets), ensure 100% shadcn/ui component styling across every element (including custom scrollbars and Radix Selects), make all appearance settings fully functional, build a full-featured Category & Sub-Category Manager (create with icon/emoji/color, reorder, edit), and redesign the History section into a dedicated, rich inspection log drawer.
 
 Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
 Integrity mode: development
 
 ## Requirements
 
-### R1. Layout De-Cluttering & Unified Header
-- Eliminate Stacked Horizontal Strips: Replace bulky StatsDashboard banners and redundant bars with an integrated sleek status summary (e.g. 139 Defects • 12 Categories • 3 Starred) and clean, non-intrusive action controls.
-- Top Header Modernization: Balanced layout with brand logo, central hero search bar (⌘K Spotlight), view switcher (List / Grid / Table), and clean action group.
-- Sticky Sidebar Polish: Refined category buttons with smooth active indicator bars, crisp Lucide icons, aligned count pills, and sleek Pin Folders accordion.
+### R1. Samsung Tab S9+ Touch Ergonomics & 100% shadcn Styling
+- Tablet Touch Optimization: Minimum 44px-48px touch targets, comfortable finger padding, smooth touch scrolling (-webkit-overflow-scrolling: touch), and responsive tablet landscape/portrait layouts.
+- 100% shadcn Component Polish: Replace any remaining native HTML elements (selects, inputs, scrollbars) with Radix UI / shadcn primitives (Select, ScrollArea, Popover, Dialog, DropdownMenu). Custom sleek scrollbar (w-1.5 thumb-stone-700 track-transparent).
 
-### R2. Defect Cards, List Rows & Inline Copy Micro-Interactions
-- Typography & Visual Polish: Enhanced font weights, line-heights, and contrast for defect titles and #code labels.
-- Instant Copy Micro-Interactions: Visual feedback upon clicking/copying with a subtle border pulse and an inline Copied ✓ badge transition alongside the floating toast notification.
-- Tactile Action Buttons: Refined Star (★/☆) folder dropdown and sleek + Batch button with smooth hover states.
+### R2. 100% Functional Settings Engine
+- Connect all settings in SettingsModal.tsx to active live state and localStorage:
+  - Theme: Dark, Light, Auto/System
+  - Density: Compact, Cozy, Tablet/Touch (larger buttons & touch padding)
+  - Corner Radius: 0px (Sharp), 6px (Sm), 10px (Md), 16px (Lg)
+  - Font Size: Small (13px), Normal (14px), Large (16px)
+  - Accent Colors: Warm Amber, Sage Emerald, Slate Stone, Rose Red, Ocean Blue
+  - Reduced Motion Toggle: Disable animations for high-speed performance
 
-### R3. Batch Drawer & Floating Toasts Polish
-- Batch Drawer: Clean slide-out panel with delimiter segmented tabs (\n, ,, ;, space), smooth item reordering, and prominent "Copy All" action.
-- Floating Toasts: Minimalist, non-intrusive floating Sonner pills with copy preview and auto-dismiss timer.
+### R3. Advanced Category & Sub-Category Manager (Edit Mode)
+- Create & Edit Categories: Hybrid icon selector (choose from curated Lucide icons OR enter any custom emoji), color picker, and position placement.
+- Reorder & Organize: Move categories up/down or drag-to-reorder, with persistence in localStorage (qc-categories).
+- Sub-Category Editor: Add, edit, or remove sub-code chips (e.g. FCPB, FCPW, etc.) per category.
 
-### R4. Performance & Test Suite Integrity
-- Maintain 100% test pass rate across all 203 test suites and 0 build errors (npm run build & npm run test).
+### R4. Rich History Panel / Drawer Redesign
+- Redesign from an afterthought strip into a dedicated, slide-out Inspection History Drawer:
+  - Relative timestamps ("Just now", "5m ago", "10:45 AM").
+  - Search & filter history items.
+  - One-click copy, pin to folder, and "Add all to batch queue".
+  - Clear history with confirmation.
+
+### R5. Test Suite & Build Verification
+- Maintain 100% test pass rate across all existing and new test suites with clean production build (npm run build).
 
 ## Acceptance Criteria
 
-### Deep UI/UX Polish
-- [ ] Clean, uncluttered layout without redundant stacked horizontal strips.
-- [ ] Sleek top header, refined sidebar navigation, and polished pin folders.
-- [ ] Elevated typography, contrast, and tactile button styling across List, Grid, and Table views.
-- [ ] Inline Copied ✓ micro-interaction and subtle border pulse on click.
-- [ ] Polished slide-out Batch Drawer and floating toast feedback.
-- [ ] npm run build and npm run test pass cleanly with 100% success rate (203/203 tests passing).
+### Tablet & Power Features Overhaul
+- [ ] 44px+ touch targets and smooth scrolling for Samsung Tab S9+ tablet ergonomics.
+- [ ] 100% shadcn/ui styling with custom sleek scrollbars and Radix Select dropdowns.
+- [ ] 100% functional settings (Theme, Density, Radius, Text Size, Accent Color, Reduced Motion).
+- [ ] Category Manager with hybrid icon/emoji/color selection and reordering.
+- [ ] Dedicated History panel/drawer with timestamps and batch actions.
+- [ ] Clean build and test passes via npm run build and npm run test.
+</USER_REQUEST>

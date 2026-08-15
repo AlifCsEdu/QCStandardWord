@@ -21,7 +21,7 @@ interface StatsDashboardProps {
   onSelectCategory?: (cat: CategoryKey) => void;
 }
 
-const CATEGORY_NAMES: Record<CategoryKey, string> = {
+const CATEGORY_NAMES: Record<string, string> = {
   all: 'All Categories',
   codes: 'Panel Codes',
   screen: 'Screen & Display',
@@ -56,37 +56,37 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = React.memo(({
     <div
       id="statsDashboard"
       data-testid="stats-dashboard"
-      className="stats-dashboard w-full px-4 sm:px-6 py-2.5 bg-stone-900/50 border-b border-stone-800/80 text-stone-300 flex flex-wrap items-center justify-between gap-3 text-xs select-none"
+      className="stats-dashboard w-full px-4 sm:px-6 py-2.5 min-h-[48px] bg-muted/40 border-b border-border text-foreground flex flex-wrap items-center justify-between gap-3 text-xs select-none"
     >
       {/* Left: Metric Summary Strip */}
       <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap min-w-0">
-        <div className="flex items-center gap-1.5 text-stone-100 font-medium">
-          <IconDashboard className="size-3.5 text-stone-400 shrink-0" />
-          <span className="font-semibold text-stone-100">
+        <div className="flex items-center gap-1.5 text-foreground font-medium">
+          <IconDashboard className="size-4 text-muted-foreground shrink-0" />
+          <span className="font-semibold text-foreground">
             {totalFilteredCount} {totalFilteredCount === 1 ? 'Defect' : 'Defects'}
           </span>
         </div>
 
-        <span className="text-stone-600 font-mono text-[10px] select-none">•</span>
+        <span className="text-muted-foreground font-mono text-[10px] select-none">•</span>
 
-        <span className="text-stone-300 hidden sm:inline">
+        <span className="text-muted-foreground hidden sm:inline">
           {selectedCategory === 'all'
             ? '12 Categories'
             : CATEGORY_NAMES[selectedCategory] || selectedCategory}
         </span>
 
-        <span className="text-stone-600 font-mono text-[10px] hidden sm:inline select-none">•</span>
+        <span className="text-muted-foreground font-mono text-[10px] hidden sm:inline select-none">•</span>
 
         <div className="flex items-center gap-1 text-amber-400 font-medium">
-          <IconBookmark className="size-3 text-amber-400/90 shrink-0" />
+          <IconBookmark className="size-3.5 text-amber-400/90 shrink-0" />
           <span>{pinnedCount} Starred</span>
         </div>
 
         {batchCount > 0 && (
           <>
-            <span className="text-stone-600 font-mono text-[10px] select-none">•</span>
-            <div className="flex items-center gap-1 text-stone-200 font-medium bg-stone-800/60 px-2 py-0.5 rounded-full border border-stone-700/60">
-              <IconLayers className="size-3 text-stone-400 shrink-0" />
+            <span className="text-muted-foreground font-mono text-[10px] select-none">•</span>
+            <div className="flex items-center gap-1 text-foreground font-medium bg-muted px-2.5 py-1 rounded-full border border-border">
+              <IconLayers className="size-3.5 text-muted-foreground shrink-0" />
               <span>{batchCount} in Batch</span>
             </div>
           </>
@@ -97,14 +97,14 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = React.memo(({
       <div className="flex items-center gap-2 flex-wrap">
         {hasActiveFilter ? (
           <div className="flex items-center gap-1.5 flex-wrap">
-            <IconFilter className="size-3 text-stone-500 shrink-0" />
-            <span className="text-[11px] text-stone-500 font-medium hidden md:inline">
+            <IconFilter className="size-3.5 text-muted-foreground shrink-0" />
+            <span className="text-[11px] text-muted-foreground font-medium hidden md:inline">
               Filter:
             </span>
             {selectedCategory !== 'all' && (
               <Badge
                 variant="outline"
-                className="bg-stone-800/80 border-stone-700/80 text-stone-200 text-[11px] px-2 py-0 h-5 font-normal"
+                className="bg-muted border-border text-foreground text-[11px] px-2.5 py-0.5 min-h-[24px] font-normal"
               >
                 Cat: {CATEGORY_NAMES[selectedCategory] || selectedCategory}
               </Badge>
@@ -112,7 +112,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = React.memo(({
             {selectedCategory === 'codes' && selectedSubCategory !== 'ALL' && (
               <Badge
                 variant="outline"
-                className="bg-stone-800/80 border-stone-700/80 text-stone-200 text-[11px] px-2 py-0 h-5 font-normal"
+                className="bg-muted border-border text-foreground text-[11px] px-2.5 py-0.5 min-h-[24px] font-normal"
               >
                 Sub: {selectedSubCategory}
               </Badge>
@@ -120,15 +120,15 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = React.memo(({
             {searchQuery.trim() && (
               <Badge
                 variant="outline"
-                className="bg-stone-800/80 border-stone-600 text-stone-100 text-[11px] px-2 py-0 h-5 font-normal"
+                className="bg-muted border-border text-foreground text-[11px] px-2.5 py-0.5 min-h-[24px] font-normal"
               >
                 Query: "{searchQuery.trim()}"
               </Badge>
             )}
           </div>
         ) : (
-          <div className="hidden lg:flex items-center gap-1.5 text-[11px] text-stone-400 font-mono">
-            <Sparkles className="size-3 text-stone-400" />
+          <div className="hidden lg:flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">
+            <Sparkles className="size-3.5 text-muted-foreground" />
             <span>Ready for QC Inspection</span>
           </div>
         )}
@@ -136,5 +136,3 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = React.memo(({
     </div>
   );
 });
-
-

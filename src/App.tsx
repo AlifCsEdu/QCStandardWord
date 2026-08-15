@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { ArrowUp, Search as IconSearch, Folder, Copy, Star } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 import { AppHeader } from './components/AppHeader.tsx';
 import { BatchDrawer } from './components/BatchDrawer.tsx';
@@ -10,6 +10,8 @@ import { EditToolbar } from './components/EditToolbar.tsx';
 import { HistoryBar } from './components/HistoryBar.tsx';
 import { SettingsModal } from './components/SettingsModal.tsx';
 import { StatsDashboard } from './components/StatsDashboard.tsx';
+import { CategoryManagerModal } from './components/CategoryManagerModal.tsx';
+import { HistoryDrawer } from './components/HistoryDrawer.tsx';
 import { ToastsContainer } from './components/ToastsContainer.tsx';
 import { WordingContainer } from './components/WordingContainer.tsx';
 import { Button } from './components/ui/button.tsx';
@@ -48,8 +50,6 @@ export const AppContent: React.FC = () => {
     appearance,
     theme,
     layout,
-    radius,
-    density,
     setTheme,
     setLayout,
     setRadius,
@@ -106,6 +106,25 @@ export const AppContent: React.FC = () => {
     setBatchDrawerOpen,
     settingsModalOpen,
     setSettingsModalOpen,
+    categories,
+    categoryOrder,
+    addCategory,
+    updateCategory,
+    deleteCategory,
+    moveCategoryUp,
+    moveCategoryDown,
+    addSubCategoryCode,
+    removeSubCategoryCode,
+    categoryManagerOpen,
+    setCategoryManagerOpen,
+    historyEntries,
+    historyDrawerOpen,
+    setHistoryDrawerOpen,
+    pushHistoryEntry,
+    clearHistoryEntries,
+    addAllHistoryToBatch,
+    copyHistoryEntry,
+    pinHistoryEntryToFolder,
     toasts,
     removeToast,
     exportChanges,
@@ -197,7 +216,7 @@ export const AppContent: React.FC = () => {
   }, [setSettingsModalOpen]);
 
   return (
-    <div className="min-h-screen bg-[#121214] text-stone-100 flex flex-col font-sans selection:bg-stone-700 selection:text-stone-100">
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-stone-700 selection:text-stone-100 touch-manipulation">
       {/* Header */}
       <AppHeader
         searchQuery={searchQuery}
@@ -216,6 +235,8 @@ export const AppContent: React.FC = () => {
         mobileOpened={mobileOpened}
         onToggleMobile={toggleMobile}
         folderCount={folders.length}
+        onOpenHistory={() => setHistoryDrawerOpen(true)}
+        historyCount={historyEntries.length}
       />
 
       <div className="flex flex-1 relative">
@@ -223,13 +244,14 @@ export const AppContent: React.FC = () => {
         <aside
           data-testid="app-navbar"
           id="sidebarNav"
-          className={`sidebar-nav fixed sm:sticky top-[60px] h-[calc(100vh-60px)] w-[260px] bg-[#121214] border-r border-stone-800 overflow-y-auto z-30 transition-transform duration-200 ${
+          className={`sidebar-nav fixed sm:sticky top-[64px] h-[calc(100vh-64px)] w-[270px] bg-background border-r border-border overflow-y-auto z-30 transition-transform duration-200 touch-scroll ${
             mobileOpened ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
           }`}
         >
           <CategoryChips
             selectedCategory={selectedCategory}
             onSelectCategory={handleSelectCategory}
+            categories={categories}
             categoryCounts={categoryCounts}
             folders={folders}
             activeFolderId={activeFolderId}
@@ -237,16 +259,18 @@ export const AppContent: React.FC = () => {
             onCreateFolder={createFolder}
             onDeleteFolder={deleteFolder}
             onRenameFolder={renameFolder}
+            onOpenCategoryManager={() => setCategoryManagerOpen(true)}
           />
           <CodeSubChips
             selectedCategory={selectedCategory}
             selectedSubCategory={selectedSubCategory}
             onSelectSubCategory={setSelectedSubCategory}
+            categories={categories}
           />
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 min-w-0 flex flex-col bg-[#121214]">
+        <main className="flex-1 min-w-0 flex flex-col bg-background">
           {/* Inspection Stats Dashboard Header */}
           <StatsDashboard
             categoryCounts={categoryCounts}
@@ -321,6 +345,7 @@ export const AppContent: React.FC = () => {
             editingItem={editingItem}
             onSave={saveWordingItem}
             onClose={closeModal}
+            categories={categories}
           />
 
           {/* Settings Modal */}
@@ -334,6 +359,35 @@ export const AppContent: React.FC = () => {
             onSetTextSize={setTextSize}
             onSetMotion={setMotion}
             onSetAccent={setAccent}
+            onSetTheme={setTheme}
+          />
+
+          {/* Category & Sub-Category Manager Modal */}
+          <CategoryManagerModal
+            isOpen={categoryManagerOpen}
+            onClose={() => setCategoryManagerOpen(false)}
+            categories={categories}
+            categoryOrder={categoryOrder}
+            onAddCategory={addCategory}
+            onUpdateCategory={updateCategory}
+            onDeleteCategory={deleteCategory}
+            onMoveUp={moveCategoryUp}
+            onMoveDown={moveCategoryDown}
+            onAddSubCode={addSubCategoryCode}
+            onRemoveSubCode={removeSubCategoryCode}
+          />
+
+          {/* Rich History Drawer */}
+          <HistoryDrawer
+            isOpen={historyDrawerOpen}
+            onClose={() => setHistoryDrawerOpen(false)}
+            historyEntries={historyEntries}
+            onCopyEntry={copyHistoryEntry}
+            onClearHistory={clearHistoryEntries}
+            onAddToBatch={addToBatch}
+            onAddAllToBatch={addAllHistoryToBatch}
+            folders={folders}
+            onPinToFolder={pinHistoryEntryToFolder}
           />
 
           {/* Cmd+K Spotlight Search CommandDialog */}
@@ -352,7 +406,7 @@ export const AppContent: React.FC = () => {
                         copySingleItem(item.t);
                         setSpotlightOpen(false);
                       }}
-                      className="cursor-pointer flex items-center justify-between py-2.5 px-3 rounded-lg data-[selected=true]:bg-stone-800 data-[selected=true]:text-stone-100 transition-colors"
+                      className="cursor-pointer flex items-center justify-between py-2.5 px-3 rounded-lg data-[selected=true]:bg-stone-800 data-[selected=true]:text-stone-100 transition-colors min-h-[44px]"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <span className="font-mono text-xs font-semibold text-stone-300 bg-stone-800/80 px-1.5 py-0.5 rounded border border-stone-700">
@@ -385,7 +439,7 @@ export const AppContent: React.FC = () => {
             <Button
               id="scrollTopBtn"
               onClick={scrollToTop}
-              className="fixed bottom-6 right-6 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-100 border border-stone-700 font-semibold text-xs shadow-lg z-50 gap-1.5 h-10 px-4"
+              className="fixed bottom-6 right-6 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-100 border border-stone-700 font-semibold text-xs shadow-lg z-50 gap-1.5 min-h-[44px] h-11 px-5 cursor-pointer"
             >
               <ArrowUp className="size-4" />
               <span>Scroll to Top</span>
@@ -400,4 +454,3 @@ export const AppContent: React.FC = () => {
 export default function App() {
   return <AppContent />;
 }
-

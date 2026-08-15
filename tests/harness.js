@@ -713,6 +713,147 @@ export function createAppInstance(options = {}) {
       } catch (e) {
         return raw;
       }
+    },
+
+    // R1-R4 Enhanced E2E Helpers
+    openSettingsModal: async () => {
+      runWithFlush(() => {
+        const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"], button[aria-label*="Settings"]');
+        if (setBtn) setBtn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    closeSettingsModal: async () => {
+      runWithFlush(() => {
+        const doneBtn = document.querySelector('#setdone, [data-testid="settings-close-btn"], button[aria-label*="Close"]');
+        if (doneBtn) doneBtn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    setDensity: async (densityMode) => {
+      runWithFlush(() => {
+        let btn = document.querySelector(`[data-density="${densityMode}"], [data-testid="density-${densityMode}"]`);
+        if (!btn) {
+          const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
+          if (setBtn) setBtn.click();
+          btn = document.querySelector(`[data-density="${densityMode}"], [data-testid="density-${densityMode}"]`);
+        }
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    setRadius: async (radiusOption) => {
+      runWithFlush(() => {
+        let btn = document.querySelector(`[data-radius="${radiusOption}"], [data-testid="radius-${radiusOption}"]`);
+        if (!btn) {
+          const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
+          if (setBtn) setBtn.click();
+          btn = document.querySelector(`[data-radius="${radiusOption}"], [data-testid="radius-${radiusOption}"]`);
+        }
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    setTextSize: async (sizeOption) => {
+      runWithFlush(() => {
+        let btn = document.querySelector(`[data-size="${sizeOption}"], [data-fontsize="${sizeOption}"], [data-testid="font-size-${sizeOption}"]`);
+        if (!btn) {
+          const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
+          if (setBtn) setBtn.click();
+          btn = document.querySelector(`[data-size="${sizeOption}"], [data-fontsize="${sizeOption}"], [data-testid="font-size-${sizeOption}"]`);
+        }
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    setAccent: async (accentOption) => {
+      runWithFlush(() => {
+        let btn = document.querySelector(`[data-accent="${accentOption}"], [data-testid="accent-${accentOption}"]`);
+        if (!btn) {
+          const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
+          if (setBtn) setBtn.click();
+          btn = document.querySelector(`[data-accent="${accentOption}"], [data-testid="accent-${accentOption}"]`);
+        }
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    setMotion: async (motionOption) => {
+      runWithFlush(() => {
+        let btn = document.querySelector(`[data-motion="${motionOption}"], [data-testid="motion-${motionOption}"]`);
+        if (!btn) {
+          const setBtn = document.querySelector('#setBtn, [data-testid="settings-btn"]');
+          if (setBtn) setBtn.click();
+          btn = document.querySelector(`[data-motion="${motionOption}"], [data-testid="motion-${motionOption}"]`);
+        }
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    openBatchDrawer: async () => {
+      runWithFlush(() => {
+        const btn = document.querySelector('#batchBtn, [data-testid="batch-btn"], button[aria-label*="Batch"]');
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    closeBatchDrawer: async () => {
+      runWithFlush(() => {
+        const closeBtn = document.querySelector('#bclose, [data-testid="close-batch-drawer"], button[aria-label*="Close"]');
+        if (closeBtn) closeBtn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    openHistoryDrawer: async () => {
+      runWithFlush(() => {
+        const btn = document.querySelector('#histBtn, [data-testid="history-drawer-btn"], [data-testid="history-btn"], button[aria-label*="History"]');
+        if (btn) btn.click();
+      });
+      await waitAsync(30);
+      ensureFlushed();
+      return helpers;
+    },
+
+    getHistoryDrawer: () => {
+      ensureFlushed();
+      return document.querySelector('[data-testid="history-drawer"], #historyDrawer, .history-drawer, [role="dialog"][aria-label*="History"]');
+    },
+
+    getHistoryEntries: () => {
+      ensureFlushed();
+      const entries = Array.from(document.querySelectorAll('[data-testid="history-entry"], .history-entry, #histlist .hitem, #hchips .hchip'));
+      return entries.map((el, i) => {
+        const text = el.querySelector('[data-testid="history-text"], .htxt, .item-text')?.textContent || el.textContent;
+        const time = el.querySelector('[data-testid="history-time"], .htime, .timestamp')?.textContent || '';
+        return { index: i, text: (text || '').trim(), time: time.trim(), element: el };
+      });
     }
   };
 

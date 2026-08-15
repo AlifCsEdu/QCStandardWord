@@ -1,37 +1,22 @@
 # Original User Request
 
-## Initial Request — 2026-08-16T00:27:51+08:00
+## Initial Request — 2026-08-16T01:36:35+08:00
 
-Execute a comprehensive UI/UX overhaul and deep visual refinement across the entire QC Standard Wording application. Eliminate visual clutter, de-duplicate stacked horizontal toolbars, unify the header and sidebar navigation, elevate card/row typography and tactile interactions with inline 'Copied ✓' micro-interactions, and deliver a smooth, high-end, human-crafted experience.
+You are the Project Orchestrator for the following mission:
 
-Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
-Integrity mode: development
+Project Mission:
+Comprehensive overhaul to make the QC Standard Wording application 100% touch-screen friendly (optimized for Samsung Galaxy Tab S9+ and tablets), ensure 100% shadcn/ui component styling across every element (including custom scrollbars and Radix Selects), make all appearance settings fully functional, build a full-featured Category & Sub-Category Manager (create with icon/emoji/color, reorder, edit), and redesign the History section into a dedicated, rich inspection log drawer.
 
-## Requirements
+Workspace: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
+Authoritative user request: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\ORIGINAL_REQUEST.md
+Your working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_orchestrator_1
 
-### R1. Layout De-Cluttering & Unified Header
-- Eliminate Stacked Horizontal Strips: Replace bulky StatsDashboard banners and redundant bars with an integrated sleek status summary (e.g. 139 Defects • 12 Categories • 3 Starred) and clean, non-intrusive action controls.
-- Top Header Modernization: Balanced layout with brand logo, central hero search bar (⌘K Spotlight), view switcher (List / Grid / Table), and clean action group.
-- Sticky Sidebar Polish: Refined category buttons with smooth active indicator bars, crisp Lucide icons, aligned count pills, and sleek Pin Folders accordion.
+Requirements to fulfill:
+1. R1. Samsung Tab S9+ Touch Ergonomics & 100% shadcn Styling (min 44-48px touch targets, comfortable finger padding, smooth touch scrolling, Radix UI / shadcn primitives throughout, custom sleek scrollbars).
+2. R2. 100% Functional Settings Engine (Theme: Dark/Light/Auto, Density: Compact/Cozy/Tablet, Radius: 0/6/10/16px, Font Size: Small 13px/Normal 14px/Large 16px, Accent Colors: Warm Amber/Sage Emerald/Slate Stone/Rose Red/Ocean Blue, Reduced Motion toggle - all live and persisted in localStorage).
+3. R3. Advanced Category & Sub-Category Manager with Edit Mode (Create & Edit categories with hybrid icon selector [curated Lucide OR custom emoji], color picker, position placement; Reorder & Organize with localStorage persistence; Sub-Category Editor to add/edit/remove sub-code chips).
+4. R4. Rich History Panel / Drawer Redesign (Dedicated slide-out Inspection History Drawer with relative timestamps, search & filter, one-click copy, pin to folder, "Add all to batch queue", clear history with confirmation).
+5. R5. Test Suite & Build Verification (100% test pass rate across existing and new test suites with clean production build `npm run build` and `npm run test`).
 
-### R2. Defect Cards, List Rows & Inline Copy Micro-Interactions
-- Typography & Visual Polish: Enhanced font weights, line-heights, and contrast for defect titles and #code labels.
-- Instant Copy Micro-Interactions: Visual feedback upon clicking/copying with a subtle border pulse and an inline Copied ✓ badge transition alongside the floating toast notification.
-- Tactile Action Buttons: Refined Star (★/☆) folder dropdown and sleek + Batch button with smooth hover states.
-
-### R3. Batch Drawer & Floating Toasts Polish
-- Batch Drawer: Clean slide-out panel with delimiter segmented tabs (\n, ,, ;, space), smooth item reordering, and prominent "Copy All" action.
-- Floating Toasts: Minimalist, non-intrusive floating Sonner pills with copy preview and auto-dismiss timer.
-
-### R4. Performance & Test Suite Integrity
-- Maintain 100% test pass rate across all 203 test suites and 0 build errors (npm run build & npm run test).
-
-## Acceptance Criteria
-
-### Deep UI/UX Polish
-- [ ] Clean, uncluttered layout without redundant stacked horizontal strips.
-- [ ] Sleek top header, refined sidebar navigation, and polished pin folders.
-- [ ] Elevated typography, contrast, and tactile button styling across List, Grid, and Table views.
-- [ ] Inline Copied ✓ micro-interaction and subtle border pulse on click.
-- [ ] Polished slide-out Batch Drawer and floating toast feedback.
-- [ ] npm run build and npm run test pass cleanly with 100% success rate (203/203 tests passing).
+Maintain `progress.md` and `plan.md` in your working directory.
+When all requirements and acceptance criteria are completely implemented and verified, send a message declaring completion/victory so an independent victory audit can be conducted.

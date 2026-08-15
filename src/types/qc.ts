@@ -13,19 +13,10 @@ export type CategoryKey =
   | 'body'
   | 'system'
   | 'pinned'
-  | 'recent';
+  | 'recent'
+  | (string & {});
 
-export type SubCategoryCode =
-  | 'ALL'
-  | 'FCPB'
-  | 'FCPW'
-  | 'FCPC'
-  | 'RCPB'
-  | 'RCPW'
-  | 'RCPC'
-  | 'FCDS'
-  | 'RCDS'
-  | 'PC';
+export type SubCategoryCode = string;
 
 export interface QCItem {
   id: string;
@@ -45,10 +36,15 @@ export interface CustomPinFolder {
 }
 
 export interface CategoryInfo {
-  id: CategoryKey;
+  id: string;
   name: string;
   color: string;
   desc: string;
+  iconType?: 'lucide' | 'emoji';
+  iconValue?: string;
+  subCodes?: string[];
+  order?: number;
+  isDefault?: boolean;
 }
 
 export interface CodeSubInfo {
@@ -69,10 +65,12 @@ export interface HighlightSegment {
 }
 
 export type LayoutMode = 'list' | 'grid' | 'table';
-export type RadiusOption = 'sharp' | 'soft' | 'round';
-export type TextSizeOption = 's' | 'm' | 'l';
-export type DensityMode = 'cozy' | 'compact';
+export type RadiusOption = '0' | '6' | '10' | '16' | 'sharp' | 'soft' | 'round';
+export type TextSizeOption = '13' | '14' | '16' | 's' | 'm' | 'l';
+export type DensityMode = 'compact' | 'cozy' | 'tablet';
 export type MotionMode = 'full' | 'reduced';
+export type AccentOption = 'amber' | 'emerald' | 'stone' | 'rose' | 'blue' | string;
+export type ThemeMode = 'dark' | 'light' | 'auto';
 export type DelimiterKey = 'nl' | 'comma' | 'semi' | 'space' | 'pipe' | 'bullet';
 export type SortOption = 'default' | 'alpha' | 'num';
 
@@ -80,10 +78,19 @@ export interface AppearanceSettings {
   layout: LayoutMode;
   radius: RadiusOption;
   textsize: TextSizeOption;
-  accent: string;
+  accent: AccentOption | string;
   density: DensityMode;
   motion: MotionMode;
-  theme: 'light' | 'dark' | 'auto';
+  theme: ThemeMode;
+}
+
+export interface HistoryEntry {
+  id: string;
+  text: string;
+  itemNumber?: number;
+  category?: string;
+  timestamp: number;
+  source?: 'single' | 'batch';
 }
 
 export interface ToastNotice {

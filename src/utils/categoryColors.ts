@@ -17,16 +17,46 @@ import {
   Folder,
   Star,
   History,
+  Sparkles,
+  ShieldCheck,
+  Layers,
+  Tag,
+  Wrench,
+  Flame,
+  Zap,
   type LucideIcon,
 } from 'lucide-react';
 import { CATEGORIES } from '../data/qcData.ts';
+import type { CategoryInfo } from '../types/qc.ts';
 
-const CATEGORY_COLOR_MAP: Record<string, string> = CATEGORIES.reduce((acc, cat) => {
-  acc[cat.id.trim().toLowerCase()] = cat.color;
-  return acc;
-}, {} as Record<string, string>);
+// 24 Curated Lucide Icons for Category Picker
+export const CURATED_CATEGORY_ICONS: { name: string; label: string; icon: LucideIcon }[] = [
+  { name: 'Monitor', label: 'Screen/Monitor', icon: Monitor },
+  { name: 'Camera', label: 'Camera', icon: Camera },
+  { name: 'Sliders', label: 'Buttons/Controls', icon: Sliders },
+  { name: 'Radio', label: 'Wireless/Radio', icon: Radio },
+  { name: 'Battery', label: 'Battery', icon: Battery },
+  { name: 'Smartphone', label: 'Device/Backcover', icon: Smartphone },
+  { name: 'Lock', label: 'Locks/Security', icon: Lock },
+  { name: 'PenTool', label: 'S-Pen/Stylus', icon: PenTool },
+  { name: 'Droplets', label: 'Water/Liquid', icon: Droplets },
+  { name: 'Volume2', label: 'Audio/Speaker', icon: Volume2 },
+  { name: 'Cpu', label: 'Body/Mainboard', icon: Cpu },
+  { name: 'Settings', label: 'System/Settings', icon: Settings },
+  { name: 'Activity', label: 'Activity/Diagnostics', icon: Activity },
+  { name: 'Code', label: 'Part Codes', icon: Code },
+  { name: 'Folder', label: 'Folder/General', icon: Folder },
+  { name: 'Star', label: 'Starred/Favorites', icon: Star },
+  { name: 'History', label: 'Recent/History', icon: History },
+  { name: 'Sparkles', label: 'Special/Cosmetic', icon: Sparkles },
+  { name: 'ShieldCheck', label: 'Inspection/QC', icon: ShieldCheck },
+  { name: 'Layers', label: 'Layers/Assembly', icon: Layers },
+  { name: 'Tag', label: 'Labels/Tags', icon: Tag },
+  { name: 'Wrench', label: 'Hardware/Tools', icon: Wrench },
+  { name: 'Flame', label: 'Thermal/Heat', icon: Flame },
+  { name: 'Zap', label: 'Power/Charging', icon: Zap },
+];
 
-// Map all 15 category keys / aliases to dedicated Lucide Icons
 export const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
   screen: Monitor,
   monitor: Monitor,
@@ -49,18 +79,35 @@ export const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
   pinned: Star,
   favorites: Star,
   recent: History,
+  sparkles: Sparkles,
+  shieldcheck: ShieldCheck,
+  layers: Layers,
+  tag: Tag,
+  wrench: Wrench,
+  flame: Flame,
+  zap: Zap,
 };
+
+const DEFAULT_CATEGORY_COLOR_MAP: Record<string, string> = CATEGORIES.reduce((acc, cat) => {
+  acc[cat.id.trim().toLowerCase()] = cat.color;
+  return acc;
+}, {} as Record<string, string>);
 
 /**
  * Returns category hex color. Fallbacks to slate #64748b if unknown.
+ * Supports custom categories array and case-insensitive whitespace-trimmed lookups.
  */
-export function getCategoryColor(categoryKey: string): string {
+export function getCategoryColor(categoryKey: string, customCategories?: CategoryInfo[]): string {
   const key = (categoryKey || '').trim().toLowerCase();
-  return CATEGORY_COLOR_MAP[key] || '#64748b';
+  if (customCategories && Array.isArray(customCategories)) {
+    const found = customCategories.find((c) => (c.id || '').trim().toLowerCase() === key);
+    if (found && found.color) return found.color;
+  }
+  return DEFAULT_CATEGORY_COLOR_MAP[key] || '#64748b';
 }
 
 function hexToRgb(hex: string): string {
-  let c = hex.replace('#', '');
+  let c = (hex || '').replace('#', '');
   if (c.length === 3) {
     c = c.split('').map((x) => x + x).join('');
   }
@@ -69,44 +116,35 @@ function hexToRgb(hex: string): string {
   return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
 }
 
-const BADGE_STYLE_CACHE: Record<string, React.CSSProperties> = {};
-const BORDER_STYLE_CACHE: Record<string, React.CSSProperties> = {};
-
 /**
  * Returns inline styling for category badges.
  */
-export function getCategoryBadgeStyle(categoryKey: string): React.CSSProperties {
+export function getCategoryBadgeStyle(categoryKey: string, customColor?: string): React.CSSProperties {
   const key = (categoryKey || '').trim().toLowerCase();
-  if (BADGE_STYLE_CACHE[key]) return BADGE_STYLE_CACHE[key];
-  const color = getCategoryColor(key);
+  const color = customColor || getCategoryColor(key);
   const rgb = hexToRgb(color);
-  const style = {
+  return {
     backgroundColor: `rgba(${rgb}, 0.18)`,
     borderColor: `rgba(${rgb}, 0.45)`,
     color: color,
   };
-  BADGE_STYLE_CACHE[key] = style;
-  return style;
 }
 
 /**
- * Returns category left border accent styling (`border-l-4`) with inline color or Tailwind class.
+ * Returns category left border accent styling (`border-l-4`).
  */
-export function getCategoryLeftBorderStyle(categoryKey: string): React.CSSProperties {
+export function getCategoryLeftBorderStyle(categoryKey: string, customColor?: string): React.CSSProperties {
   const key = (categoryKey || '').trim().toLowerCase();
-  if (BORDER_STYLE_CACHE[key]) return BORDER_STYLE_CACHE[key];
-  const color = getCategoryColor(key);
-  const style = {
+  const color = customColor || getCategoryColor(key);
+  return {
     borderLeftWidth: '4px',
     borderLeftStyle: 'solid',
     borderLeftColor: color,
   };
-  BORDER_STYLE_CACHE[key] = style;
-  return style;
 }
 
 /**
- * Returns Tailwind class string for category left border accent.
+ * Returns Lucide icon component mapped to a category key.
  */
 export function getCategoryIconComponent(categoryKey: string): LucideIcon {
   const key = (categoryKey || '').trim().toLowerCase();
@@ -118,10 +156,47 @@ export function getCategoryIcon(categoryKey: string, props?: any): React.ReactNo
   return React.createElement(IconComponent, props || {});
 }
 
+/**
+ * Hybrid Icon & Emoji Renderer supporting both Lucide icons and Custom Emoji strings.
+ */
+export function renderCategoryIcon(
+  category: { iconType?: 'lucide' | 'emoji'; iconValue?: string; id?: string } | string,
+  props: { className?: string; style?: React.CSSProperties } = {}
+): React.ReactNode {
+  const cls = props.className || 'size-4';
+  if (typeof category === 'string') {
+    const IconComp = getCategoryIconComponent(category);
+    return React.createElement(IconComp, { className: cls, style: props.style });
+  }
+
+  if (category?.iconType === 'emoji' && category?.iconValue) {
+    return React.createElement(
+      'span',
+      {
+        className: `inline-flex items-center justify-center text-sm leading-none shrink-0 select-none ${cls}`,
+        style: props.style,
+      },
+      category.iconValue
+    );
+  }
+
+  if (category?.iconType === 'lucide' && category?.iconValue) {
+    const foundIcon = CURATED_CATEGORY_ICONS.find(
+      (i) => i.name.toLowerCase() === category.iconValue?.toLowerCase()
+    )?.icon;
+    if (foundIcon) {
+      return React.createElement(foundIcon, { className: cls, style: props.style });
+    }
+  }
+
+  const IconComp = getCategoryIconComponent(category?.id || '');
+  return React.createElement(IconComp, { className: cls, style: props.style });
+}
+
 const categoryBadgeCache = new Map<string, React.ReactNode>();
 
 /**
- * Returns a static cached category badge element to avoid re-instantiating Lucide icons per card.
+ * Returns a static cached category badge element.
  */
 export function getCategoryBadgeElement(categoryKey: string): React.ReactNode {
   const key = (categoryKey || '').trim().toLowerCase();

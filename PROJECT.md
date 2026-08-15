@@ -1,72 +1,94 @@
-# Project: QC Standard Wording UI/UX Overhaul & Visual Refinement
+# Project: QC Standard Wording (Tablet S9+ & Raycast Warm Stone Overhaul)
 
 ## Architecture
-The application is a high-performance React + TypeScript + Vite + Tailwind CSS PWA for quality control defect standard wording inspection and batch aggregation.
-- **State Layer**: Custom hook `useQCState` synchronizing 14 `localStorage` keys (`qc-pins`, `qc-pin-folders`, `qc-recents`, `qc-history`, `qc-batch`, `qc-join`, `qc-autoclear`, `qc-edits`, `qc-dels`, `qc-custom`, `qc-appearance`, `qc-theme`, `qc-density`, `qc-sort`).
-- **Search Engine**: Typo-tolerant Levenshtein search engine in `src/utils/searchEngine.ts`.
-- **Presentation Layer**:
-  - `src/App.tsx`: App shell orchestrating header, sticky sidebar navigation, main content, and batch drawer.
-  - `src/components/AppHeader.tsx`: Unified top navigation with Spotlight ⌘K search, view switcher, and compact action controls.
-  - `src/components/StatsDashboard.tsx`: Integrated status summary strip (`139 Defects • 12 Categories • 3 Starred`).
-  - `src/components/CategoryChips.tsx` & `src/components/CodeSubChips.tsx`: Sticky sidebar with quick views, pin folders, and defect categories.
-  - `src/components/DefectCard.tsx` (and `WordingGrid`, `WordingList`, `WordingTable`, `WordingContainer`): Defect card/row/table rendering with inline 'Copied ✓' micro-interactions, elevated typography, and tactile buttons.
-  - `src/components/BatchDrawer.tsx`: Slide-out queue with delimiter segmented tabs (\n, ,, ;, space), reordering, and prominent Copy All.
-  - `src/components/ToastsContainer.tsx` & `src/utils/notifications.ts`: Minimalist floating toast notifications.
+- **Framework**: React 19.2.8 + TypeScript 5.7.2 + Vite 6.0.0 + Tailwind CSS v4.0.0 + Radix UI Primitives + Lucide React.
+- **Design System & Styling**:
+  - Full shadcn/ui component primitive coverage (Dialog, DropdownMenu, Select, Sheet, ToggleGroup, Checkbox, Tooltip, ScrollArea, Badge, Button, Input, Card).
+  - Dynamic CSS custom properties injected on `document.documentElement` (`--radius`, `--font-size-base`, `--touch-target-min`, `--accent-primary`, `--accent-ring`, `--spacing-density-card`, `--spacing-density-btn`).
+  - Sleek custom scrollbars for WebKit & Firefox on all scrollable viewports.
+  - Full Dark/Light/Auto theme support with semantic color tokens (`bg-background`, `bg-card`, `text-foreground`, `border-border`).
+- **Data & State Persistence**:
+  - Centralized hook architecture: `useQCState` and `useAppearance`.
+  - 14 validated LocalStorage keys + new keys (`qc-categories`, `qc-category-order`, `qc-history-entries`).
+  - Cross-tab synchronization via `storage` event listeners and defensive `safeJSONParse` fallbacks.
+- **Testing Architecture**:
+  - Node.js built-in runner (`node:test` via `tsx` with in-memory `esbuild` IIFE bundling + `JSDOM` harness in `tests/harness.js`).
+  - 4-Tier test hierarchy + Tier 5 adversarial hardening suite + Specialized R1-R4 test suites.
 
 ## Feature Inventory
 | # | Feature | Description | Milestone | Source |
 |---|---------|-------------|-----------|--------|
-| 1 | R1.1: De-Clutter Horizontal Strips | Consolidate bulky StatsDashboard card into a sleek, integrated status summary strip preserving `#statsDashboard` and `[data-testid="stats-dashboard"]` | M1 | ORIGINAL_REQUEST §R1 |
-| 2 | R1.2: Modernized Unified Header | Balanced 3-column header with logo, centered hero ⌘K spotlight search, view switcher, and clean action group preserving all button IDs | M1 | ORIGINAL_REQUEST §R1 |
-| 3 | R1.3: Polished Sticky Sidebar | Sidebar category buttons with smooth indicator bars, Lucide icons, count pills, and Pin Folders accordion | M1 | ORIGINAL_REQUEST §R1 |
-| 4 | R2.1: Defect Card Typography & Hierarchy | Elevated typography, font weights, line-heights, contrast, and `#code` capsule pill styling across List, Grid, Table | M2 | ORIGINAL_REQUEST §R2 |
-| 5 | R2.2: Inline Copy Micro-Interactions | Localized click feedback with subtle emerald border pulse and inline `Copied ✓` badge alongside floating toast | M2 | ORIGINAL_REQUEST §R2 |
-| 6 | R2.3: Tactile Action Buttons | Physical click feel (`active:scale-95`), Star (★/☆) folder dropdown, and sleek + Batch button | M2 | ORIGINAL_REQUEST §R2 |
-| 7 | R3.1: Batch Drawer Polish & Segmented Tabs | Slide-out panel with delimiter segmented tabs (\n, ,, ;, space) synced with `#joinSel`, smooth reordering, and prominent Copy All | M3 | ORIGINAL_REQUEST §R3 |
-| 8 | R3.2: Floating Toast Notifications | Sleek floating Sonner toast styling with progress bar, copy preview, and auto-dismiss | M3 | ORIGINAL_REQUEST §R3 |
-| 9 | R4.1: Test Suite & Build Verification | Maintain 100% test pass rate across all 203 test suites and 0 build errors (`npm test` & `npm run build`) | M4 | ORIGINAL_REQUEST §R4 |
+| F1 | Samsung Tab S9+ Touch Ergonomics | Min 44-48px touch targets, comfortable finger padding, `touch-manipulation`, `overscroll-behavior-y: contain` | M1 | ORIGINAL_REQUEST §1, Survey 1 |
+| F2 | 100% shadcn/Radix Component Styling | Replace native `<select>`, `<input type="checkbox">`, and raw button lists with Radix Select, Checkbox, ToggleGroup, Sheet | M1 | ORIGINAL_REQUEST §1, Survey 1 |
+| F3 | Custom Sleek Scrollbars | Custom touch-friendly scrollbars across sidebar, wording container, history and batch drawers | M1 | ORIGINAL_REQUEST §1, Survey 1 |
+| F4 | Theme Engine (Dark/Light/Auto) | Live theme switcher with system preference detection and semantic color token fixes | M2 | ORIGINAL_REQUEST §2, Survey 2 |
+| F5 | Density Modes (Compact/Cozy/Tablet) | 3 density levels scaling touch targets (36px, 44px, 48px), spacing, and padding | M2 | ORIGINAL_REQUEST §2, Survey 2 |
+| F6 | Border Radius Customization | 0px (Sharp), 6px (Subtle), 10px (Medium), 16px (Rounded) mapped to `--radius` | M2 | ORIGINAL_REQUEST §2, Survey 2 |
+| F7 | Root Font Size Scaling | Small (13px), Normal (14px), Large (16px) with dynamic `fontSize` root scaling | M2 | ORIGINAL_REQUEST §2, Survey 2 |
+| F8 | Accent Color Palettes | 5 rich palettes: Warm Amber, Sage Emerald, Slate Stone, Rose Red, Ocean Blue | M2 | ORIGINAL_REQUEST §2, Survey 2 |
+| F9 | Reduced Motion Toggle | Global animation and transition suppression via CSS override | M2 | ORIGINAL_REQUEST §2, Survey 2 |
+| F10 | Category & Sub-Category Manager | Full CRUD for defect categories with position placement and localStorage persistence | M3 | ORIGINAL_REQUEST §3, Survey 3 |
+| F11 | Hybrid Icon & Emoji Picker | Curated Lucide icons (24 items) OR custom emoji selector for category iconography | M3 | ORIGINAL_REQUEST §3, Survey 3 |
+| F12 | Category Color Picker | 6 preset palette swatches + custom hex color picker for categories | M3 | ORIGINAL_REQUEST §3, Survey 3 |
+| F13 | Category Reordering & Organization | Up/Down reordering and sorting persisted in `qc-category-order` / `qc-categories` | M3 | ORIGINAL_REQUEST §3, Survey 3 |
+| F14 | Sub-Category Code Editor | Add, edit, remove sub-category code chips associated with categories | M3 | ORIGINAL_REQUEST §3, Survey 3 |
+| F15 | Dedicated Inspection History Drawer | Slide-out Radix Sheet with interactive history feed, relative timestamps, search & filter | M4 | ORIGINAL_REQUEST §4, Survey 2 |
+| F16 | History One-Click Copy & Pinning | 1-click copy with tactile/visual feedback, pin to custom folders directly from history | M4 | ORIGINAL_REQUEST §4, Survey 2 |
+| F17 | History Bulk Actions & Clear Dialog | "Add all to batch queue" button, "Clear History" with Radix confirmation dialog | M4 | ORIGINAL_REQUEST §4, Survey 2 |
+| F18 | Legacy Compatibility & Test Integrity | Preserve DOM test IDs (`#setmodal`, `#histbar`, `#hchips`, etc.) and all 14 legacy storage keys | M1-M5 | ORIGINAL_REQUEST §5, Surveys 1-3 |
+| F19 | Automated Test Suite Expansion | Comprehensive test cases across Tiers 1-4 for touch, settings, category manager, and history | E2E Track | ORIGINAL_REQUEST §5, Survey 3 |
+| F20 | Production Build & Adversarial Hardening | 100% test pass rate, clean `npm run build`, white-box gap analysis and forensic integrity audit | M5 | ORIGINAL_REQUEST §5, Surveys 1-3 |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Layout De-Cluttering & Unified Header | De-clutter horizontal strips, modernize top header (⌘K spotlight & view switchers), polish sticky sidebar | None | DONE |
-| M2 | Defect Cards, List Rows & Inline Copy | Defect card/row/table typography, `#code` badges, tactile buttons, inline 'Copied ✓' micro-interaction & border pulse | M1 | DONE |
-| M3 | Batch Drawer & Floating Toasts Polish | Delimiter segmented tabs (\n, ,, ;, space), item reorder micro-states, prominent Copy All, sleek floating toast styling | M2 | DONE |
-| M4 | Final Integration, Test Hardening & Forensic Audit | Verification across all 203 test suites, 0 build errors, adversarial review, and forensic integrity audit | M1, M2, M3 | DONE |
+| E2E | E2E Testing Suite Track | Design & implement comprehensive automated tests for R1-R4 (Tiers 1-4) in `tests/` | None | DONE |
+| M1 | Touch Ergonomics & shadcn Component Styling (R1) | 44-48px touch targets, custom scrollbars, Radix Select, Checkbox, Sheet, ToggleGroup, Light theme semantic tokens | None | DONE |
+| M2 | 100% Functional Settings Engine (R2) | Live theme, density (compact/cozy/tablet), radius (0/6/10/16), font (13/14/16), 5 accents, motion toggle | M1 | DONE |
+| M3 | Advanced Category & Sub-Category Manager (R3) | Category CRUD, hybrid Lucide/Emoji picker, color picker, reorder, sub-category chips, persistence | M1 | DONE |
+| M4 | Dedicated Rich Inspection History Drawer (R4) | Slide-out Sheet, relative timestamps, search/filter, 1-click copy, pin to folder, batch add, clear dialog | M1 | DONE |
+| M5 | 100% Test Pass, Build Verification & Adversarial Hardening (R5) | Full test suite execution (100% pass), clean `npm run build`, Tier 5 adversarial hardening, forensic audit | E2E, M1-M4 | DONE |
 
 ## Interface Contracts
+### Appearance & Settings (`src/types/qc.ts`, `src/hooks/useAppearance.ts`, `src/index.css`)
+- `AppearanceSettings`: `{ layout: LayoutMode, radius: RadiusOption, textsize: TextSizeOption, accent: AccentOption | string, density: DensityMode, motion: MotionMode, theme: ThemeMode }`
+- Density values: `'compact' | 'cozy' | 'tablet'`
+- Radius values: `'0' | '6' | '10' | '16' | 'sharp' | 'soft' | 'round'`
+- TextSize values: `'13' | '14' | '16' | 's' | 'm' | 'l'`
+- Accent values: `'amber' | 'emerald' | 'stone' | 'rose' | 'blue' | string`
+- Theme values: `'dark' | 'light' | 'auto'`
+- Motion values: `'full' | 'reduced'`
+- DOM attributes applied on `<html>`: `data-theme`, `data-density`, `data-radius`, `data-font-size`, `data-accent`, `data-motion`, `.dark` class.
 
-### AppHeader ↔ App
-- Preserves all element IDs and data-testids: `#appHeader`, `#search`, `[data-testid="header-search-input"]`, `#clearBtn`, `#spotlightBtn`, `[data-testid="spotlight-trigger"]`, `#setLayout`, `[data-testid="view-switcher"]`, `data-v="list|grid|table"`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`.
-- Emits standard callbacks: `onSearchChange`, `onClearSearch`, `onOpenSpotlight`, `onLayoutChange`, `onToggleEditMode`, `onOpenBatchDrawer`, `onOpenSettings`, `onDownloadOffline`, `onToggleTheme`.
+### Category & Sub-Category Store (`src/types/qc.ts`, `src/hooks/useQCState.ts`)
+- `CategoryInfo`: `{ id: string, name: string, color: string, desc: string, iconType?: 'lucide' | 'emoji', iconValue?: string, subCodes?: string[], order?: number, isDefault?: boolean }`
+- Storage keys: `qc-categories`, `qc-category-order` (and backward-compatible seed fallback to `CATEGORIES`).
+- Actions: `addCategory`, `updateCategory`, `deleteCategory`, `reorderCategories`, `addSubCategoryCode`, `removeSubCategoryCode`.
 
-### StatsDashboard ↔ App
-- Element: `#statsDashboard[data-testid="stats-dashboard"]`.
-- Props: `totalFilteredCount`, `totalAllCount`, `activeCategory`, `activeSub`, `searchQuery`, `pinnedCount`, `batchCount`, `categoryMap`.
-- Output: Compact, clean single-line status bar with badges and filter pills.
-
-### CategoryChips ↔ App
-- Elements: `#sidebarNav[data-testid="app-navbar"]`, `button[data-cat="..."]`, `[data-testid="category-tab-..."]`, `[data-folder="..."]`, `[data-testid="pin-folder-..."]`, `border-l-4`, `span.rounded-full`.
-- Props: `activeCat`, `onSelectCat`, `pinnedCount`, `recentCount`, `allCount`, `categoryCounts`, `folders`, `activeFolder`, `onSelectFolder`, `onCreateFolder`, `onRenameFolder`, `onDeleteFolder`.
-
-### DefectCard ↔ Container
-- Container Elements: `.gcard` (grid), `.row` (list), `.trow` (table), with `data-id={item.id}`, `border-l-4`.
-- Internal Elements: `.rnum` (code label), `.rtxt` (text), `.rpill` (category pill), `.racts` (actions container), `.pin-btn` (`data-act="pin"`), `.add-batch-btn` (`data-act="add"`), `.edit-item-btn` (`data-act="edit"`), `.del-item-btn` (`data-act="del"`).
-- Micro-Interaction: Local state `copied` (1200ms) adding `ring-2 ring-emerald-500/40 border-emerald-500/70` and inline `Copied ✓` badge while executing `onCopyItem(item.t)`.
-
-### BatchDrawer ↔ App
-- Element: `#batchDrawer`, `#joinSel[data-testid="delimiter-select"]` (synchronized with visual segmented tabs), `#autoclear`, `#bcopy`, `#bcopycount`, `#bclear`, `#blist .bitem[data-bi]`, `[data-rm]`, `[data-mvup]`, `[data-mvdn]`, `#bpaste`.
+### History Entry & Drawer Store (`src/types/qc.ts`, `src/hooks/useQCState.ts`, `src/components/HistoryDrawer.tsx`)
+- `HistoryEntry`: `{ id: string, text: string, itemNumber?: number, category?: string, timestamp: number, source?: 'single' | 'batch' }`
+- Storage keys: `qc-history-entries`, synced to legacy string arrays `qc-recents` and `qc-history`.
+- Actions: `addHistoryEntry`, `clearHistoryEntries`, `copyHistoryEntry`, `pinHistoryEntryToFolder`, `addAllHistoryToBatch`.
 
 ## Code Layout
-- `src/App.tsx`: Layout composition and root view state.
-- `src/components/AppHeader.tsx`: Header component.
-- `src/components/StatsDashboard.tsx`: Compact status summary bar.
-- `src/components/CategoryChips.tsx`: Sticky sidebar category and pin folder navigation.
-- `src/components/CodeSubChips.tsx`: Subcategory chips.
-- `src/components/DefectCard.tsx`: Card, row, and table row renderer.
-- `src/components/WordingContainer.tsx`: List and layout wrapper.
-- `src/components/BatchDrawer.tsx`: Batch drawer panel.
-- `src/components/ToastsContainer.tsx`: Floating toasts renderer.
-- `src/utils/notifications.ts`: Sonner toast dispatch and icon mapping.
-- `src/index.css`: Global styles and animation keyframes.
-- `tests/`: 58 test suites (203 tests across Tiers 1-5, Challenger, Stress, Latency).
+- `src/components/ui/`: Radix UI & shadcn primitives (button, card, dialog, dropdown-menu, select, sheet, scroll-area, toggle-group, checkbox, badge, tooltip, input).
+- `src/components/`:
+  - `AppHeader.tsx`: Header with touch targets, search, theme/settings/batch/history triggers.
+  - `CategoryChips.tsx`: Sidebar with Quick Views, Pin Folders, Defect Categories, and "Manage Categories" trigger.
+  - `CategoryManagerModal.tsx`: Dedicated modal/drawer for creating, editing, reordering categories, picking icons/emojis/colors, and editing subcategory chips.
+  - `CodeSubChips.tsx`: Horizontal subcategory chip bar supporting dynamic sub-codes.
+  - `DefectCard.tsx`: Touch-friendly defect cards/rows with 44-48px touch targets and isolated action buttons.
+  - `BatchDrawer.tsx`: Batch queue drawer standardized with shadcn Sheet, Checkbox, and custom scrollbar.
+  - `HistoryDrawer.tsx`: Dedicated slide-out Inspection History Drawer with search, timestamps, batch add, pin, and confirmation dialog.
+  - `HistoryBar.tsx`: Compact/backward-compatible history bar.
+  - `SettingsModal.tsx`: Full settings dialog with Theme, Density, Radius, Font Size, 5 Accents, and Motion controls.
+  - `EditModal.tsx`: Add/Edit defect modal standardized with Radix Select.
+  - `StatsDashboard.tsx`: Touch-friendly status strip.
+- `src/hooks/`:
+  - `useQCState.ts`: Master state hook managing items, pins, folders, categories, history, batch, and edits.
+  - `useAppearance.ts`: Appearance hook managing settings, DOM attribute injection, and CSS variables.
+- `src/utils/`:
+  - `categoryColors.ts`: Category color derivation, badge styling, left borders, and hybrid Lucide/Emoji icon renderer.
+  - `timeUtils.ts`: Relative timestamp formatting ("Just now", "2m ago", "1h ago").
+- `src/index.css`: Tailwind v4 theme variables, density spacing, radius rules, accent palettes, sleek scrollbars, reduced motion overrides.
+- `tests/`: Automated test suites across Tiers 1-5 verifying all requirements.
