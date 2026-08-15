@@ -16,7 +16,7 @@ interface WordingViewProps {
   isPinnedInFolder?: (itemId: string | number, folderId: string) => boolean;
 }
 
-export const WordingList: React.FC<WordingViewProps> = ({
+export const WordingList: React.FC<WordingViewProps> = React.memo(({
   results,
   pinsSet,
   editMode,
@@ -55,6 +55,6 @@ export const WordingList: React.FC<WordingViewProps> = ({
       })}
     </div>
   );
-};
+});
 
 

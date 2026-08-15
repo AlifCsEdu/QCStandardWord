@@ -8,7 +8,7 @@ interface EditToolbarProps {
   onReset: () => void;
 }
 
-export const EditToolbar: React.FC<EditToolbarProps> = ({
+export const EditToolbar: React.FC<EditToolbarProps> = React.memo(({
   editMode,
   onOpenAddModal,
   onExport,
@@ -56,17 +56,16 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
   return (
     <div
       id="editstrip"
-      className={`editstrip-container ${editMode ? 'show flex' : 'hidden'} items-center justify-between px-5 py-2.5 bg-cyan-950/20 border-b border-cyan-500/20 backdrop-blur-md`}
-      style={{ display: editMode ? 'flex' : 'none' }}
+      className={`editstrip-container ${editMode ? 'flex' : 'hidden'} items-center justify-between px-5 py-2.5 bg-stone-900 border-b border-stone-800`}
     >
       <div className="flex items-center gap-2">
-        <span className="text-sm font-bold text-cyan-400">
+        <span className="text-sm font-bold text-stone-200">
           Edit Mode Controls:
         </span>
         <button
           id="addBtn"
           onClick={onOpenAddModal}
-          className="bg-cyan-600 hover:bg-cyan-500 text-white border border-cyan-400/30 px-3.5 py-1.5 rounded-md font-semibold text-xs cursor-pointer transition-colors shadow-sm"
+          className="bg-stone-700 hover:bg-stone-600 text-stone-100 border border-stone-600 px-3.5 py-1.5 rounded-md font-semibold text-xs cursor-pointer transition-colors shadow-xs"
         >
           + Add Wording
         </button>
@@ -76,7 +75,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
         <button
           id="exportBtn"
           onClick={onExport}
-          className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors"
+          className="bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors"
         >
           Export JSON
         </button>
@@ -84,7 +83,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
         <button
           id="importBtn"
           onClick={handleImportButtonClick}
-          className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors"
+          className="bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors"
         >
           Import JSON
         </button>
@@ -94,15 +93,15 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
           ref={fileInputRef}
           onChange={handleFileChange}
           accept=".json"
-          style={{ display: 'none' }}
+          className="hidden"
         />
 
         <button
           id="resetBtn"
           className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-all duration-150 border ${
             armedReset
-              ? 'arm bg-red-600 hover:bg-red-500 border-red-500 text-white animate-pulse'
-              : 'bg-red-950/20 hover:bg-red-950/40 border-red-500/30 text-red-400'
+              ? 'arm bg-rose-600 hover:bg-rose-500 border-rose-500 text-white animate-pulse'
+              : 'bg-stone-800 hover:bg-stone-700 border-stone-700 text-rose-400'
           }`}
           onClick={handleResetClick}
         >
@@ -111,4 +110,4 @@ export const EditToolbar: React.FC<EditToolbarProps> = ({
       </div>
     </div>
   );
-};
+});

@@ -1,15 +1,14 @@
-## 2026-08-09T13:13:29Z
-You are explorer_m1_1 (role: teamwork_preview_explorer).
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_1
+## 2026-08-09T21:40:53Z
+You are an Explorer subagent for the E2E Testing Track.
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_1
+Read the following specification files:
+1. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+3. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\TEST_INFRA.md
 
-MANDATORY INPUTS:
-- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-
-ASSIGNMENT (Milestone M1: Aesthetic Engine & Theme Tokens):
-1. Read ORIGINAL_REQUEST.md and PROJECT.md.
-2. Investigate src/index.css in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording.
-   Analyze current theme tokens (--background: #09090b, --card: #18181b), legacy --mantine-color-body variables, font definitions, border colors, and cyan glow utilities.
-3. Formulate precise modification plan to update src/index.css to Deep Void Midnight (#050608) background, Onyx container surfaces (#0c0e12), razor borders (border-white/[0.08] / border-zinc-800), ambient cyan glow, and Geist/Inter + JetBrains Mono fonts.
-4. Write your analysis and fix strategy to strategy_index_css.md in your working directory.
-5. When finished, send a completion message with summary to parent.
+Your task:
+1. Investigate package.json, vitest configuration, existing test runner setup, and existing test files in the codebase.
+2. Analyze existing test files, test utility setup (e.g. `@testing-library/react`, `vitest`, DOM environment, happy-dom/jsdom, setup files), and test command behavior (`npm run test`).
+3. Identify how tests are currently organized and run.
+4. Recommend how to structure tests for Tier 1 (Feature Coverage), Tier 2 (Boundary & Corner Cases), Tier 3 (Cross-Feature Pairwise), and Tier 4 (Real-World Scenarios) without touching internal implementation code.
+5. Write your detailed analysis to analysis.md and a self-contained handoff to handoff.md in your working directory (c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_1). Send a completion message back to parent.

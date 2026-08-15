@@ -1,25 +1,25 @@
-## 2026-08-07T13:30:17Z
-Implement Requirement R1: 2026 Deep Slate & Charcoal Theme & Design Tokens Setup:
-1. Create `src/theme/tokens.ts`: Define design tokens (palettes for `deepSlate`: `#0f172a` bg, `#1e293b` container, `#334155` border; and `cyanAccent`: `#06b6d4` / `#0284c7`; shadows; 150ms transitions).
-2. Create `src/theme/index.ts`: Create and export custom Mantine `theme` using `createTheme()` with `primaryColor: 'cyanAccent'`, 10-shade color tuples for `dark`, `deepSlate`, `cyanAccent`, and default props/styles for `Card`, `Paper`, `Drawer`, `Modal`.
-3. Update `src/index.css`: Define CSS custom properties under `:root`, `[data-theme='dark']`, `[data-mantine-color-scheme='dark']`, and `[data-theme='light']`:
-   - `--bg-deep-slate: #0f172a;`
-   - `--container-charcoal: #1e293b;`
-   - `--border-contrast: #334155;`
-   - `--accent-cyan: #06b6d4;`
-   - `--accent-sky: #0284c7;`
-   - `--text-primary: #f8fafc;`
-   - `--text-secondary: #94a3b8;`
-   - `--drawer-backdrop-bg: rgba(15, 23, 42, 0.4);`
-   - `--drawer-backdrop-blur: blur(8px);`
-   - `--mantine-color-body: var(--bg-deep-slate);`
-   - `--header-bg: var(--container-charcoal);`
-   - Apply global body background and color styling with smooth transition (`150ms ease`).
-4. Update `src/App.tsx`: Import custom `theme` from `./theme` (relative path) and configure `<MantineProvider theme={theme} defaultColorScheme="dark">`.
-5. Update `src/hooks/useAppearance.ts`: Update `DEFAULT_SETTINGS` theme default to `'dark'`.
-6. Verification Requirements:
-   Run verification commands and include raw output in handoff report:
-   - `npm run lint` (or `npx tsc --noEmit`)
-   - `npm run build` (`tsc && vite build`)
-   - `npm run test` (`node --test tests/**/*.test.js`)
-   - `npx tsx --test tests/searchEngine.test.ts`
+## 2026-08-09T13:49:55Z
+You are Worker 1 for Milestone 2: Muted Semantic Color-Coding & Iconography.
+Your working directory is c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2_1. Create your directory and maintain progress.md and handoff.md in it.
+
+Read:
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orch_m2\SCOPE.md
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1\handoff.md
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2\handoff.md
+- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_3\handoff.md
+
+Your mission:
+1. Update `src/utils/categoryColors.ts` and `src/data/qcData.ts` (if applicable) to implement the soft muted semantic color palette:
+   - Soft Green for Battery (#38a169 / #2f9e44)
+   - Muted Amber for Buttons (#d97706 / #f59f00)
+   - Steel Blue for Screen (#4682b4 / #1971c2)
+   - Muted Plum for Pen (#9d4edd / #c2255c)
+   - Rose for Locks (#f43f5e / #e03131)
+   - Slate for Codes/Other (#64748b)
+2. Ensure dedicated clean Lucide icons are mapped to all 15 defect categories in `CATEGORY_ICON_MAP` / `categoryColors.ts` and used consistently across badge pills (`.rpill`), category filter chips (`CategoryChips.tsx`), buttons, and navigation.
+3. Ensure crisp left border accent indicators (`border-l-4`) with distinct visual contrast are properly applied for defect cards, list items, and table rows in List (`WordingList.tsx`), Grid Cards (`WordingGrid.tsx`), and Table (`WordingTable.tsx`) view modes via `DefectCard.tsx` / `getCategoryLeftBorderStyle`.
+4. Check layout alignment in `DefectCard.tsx` for `table` view mode if needed so columns align cleanly with `WordingTable.tsx` headers.
+5. Ensure zero broken DOM selectors or data attributes (`data-cat`, `data-v`, `data-testid`).
+6. Run `npm run build` and `npm run test` using `run_command` and verify they pass cleanly. Record full test execution log and exit codes in `handoff.md`.

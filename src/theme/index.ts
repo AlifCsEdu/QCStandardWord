@@ -1,7 +1,7 @@
 import { colors, shadows, transitions } from './tokens.ts';
 
 export const theme = {
-  primaryColor: 'cyanAccent',
+  primaryColor: 'stoneAccent',
   colors,
   shadows,
   transitions,

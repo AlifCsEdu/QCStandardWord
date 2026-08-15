@@ -5,7 +5,7 @@ const DEFAULT_SETTINGS: AppearanceSettings = {
   layout: 'list',
   radius: 'soft',
   textsize: 'm',
-  accent: 'indigo',
+  accent: 'stone',
   density: 'cozy',
   motion: 'full',
   theme: 'dark',
@@ -44,7 +44,8 @@ function safeStorageSet(key: string, value: string): void {
 export function useAppearance() {
   const [appearance, setAppearanceState] = useState<AppearanceSettings>(() => {
     const savedApp = safeJSONParse<Partial<AppearanceSettings>>('qc-appearance', {});
-    const savedTheme = safeStorageGet('qc-theme', savedApp.theme || 'dark') as AppearanceSettings['theme'];
+    const rawTheme = safeStorageGet('qc-theme', savedApp.theme || 'dark');
+    const savedTheme = (['dark', 'light', 'auto'].includes(rawTheme) ? rawTheme : 'dark') as AppearanceSettings['theme'];
     const savedDensity = safeStorageGet('qc-density', savedApp.density || 'cozy') as DensityMode;
     return {
       ...DEFAULT_SETTINGS,
@@ -84,8 +85,15 @@ export function useAppearance() {
     safeStorageSet('qc-sort', sortOption);
   }, [sortOption]);
 
-  const setTheme = useCallback((theme: AppearanceSettings['theme']) => {
-    setAppearanceState((prev) => ({ ...prev, theme }));
+  const setTheme = useCallback((themeOrFn: AppearanceSettings['theme'] | ((prev: AppearanceSettings['theme']) => AppearanceSettings['theme'])) => {
+    setAppearanceState((prev) => {
+      const nextTheme = typeof themeOrFn === 'function' ? themeOrFn(prev.theme) : themeOrFn;
+      const validTheme = ['dark', 'light', 'auto'].includes(nextTheme) ? nextTheme : 'dark';
+      return {
+        ...prev,
+        theme: validTheme,
+      };
+    });
   }, []);
 
   const setLayout = useCallback((layout: LayoutMode) => {

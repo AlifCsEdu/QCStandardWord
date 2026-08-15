@@ -51,20 +51,19 @@ export const EditModal: React.FC<EditModalProps> = ({
       <div
         id="modal"
         data-testid="edit-modal"
-        className={`modal-container ${isOpen ? 'open' : ''}`}
-        style={{ display: isOpen ? 'block' : 'none' }}
+        className={`modal-container ${isOpen ? 'block' : 'hidden'}`}
       >
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-          <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-md">
+          <DialogContent className="bg-stone-900 border-stone-800 text-stone-100 max-w-md">
             <DialogHeader>
-              <DialogTitle id="mtitle" className="text-lg font-bold text-zinc-100">
+              <DialogTitle id="mtitle" className="text-lg font-bold text-stone-100">
                 {editingItem ? `Edit Defect #${editingItem.n}` : 'Add Custom Defect Wording'}
               </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSave} className="flex flex-col gap-4 py-2">
               <div>
-                <label htmlFor="mtext" className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label htmlFor="mtext" className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Wording Text:
                 </label>
                 <Input
@@ -74,13 +73,13 @@ export const EditModal: React.FC<EditModalProps> = ({
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="e.g. Screen Scratched Heavy"
-                  className="w-full bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
+                  className="w-full bg-stone-950 border-stone-800 text-stone-100 text-sm focus-visible:ring-stone-600"
                 />
               </div>
 
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label htmlFor="mcat" className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                  <label htmlFor="mcat" className="block mb-1.5 text-xs font-semibold text-stone-300">
                     Category:
                   </label>
                   <select
@@ -88,7 +87,7 @@ export const EditModal: React.FC<EditModalProps> = ({
                     data-testid="modal-category-select"
                     value={category}
                     onChange={(e) => setCategory(e.target.value as CategoryKey)}
-                    className="w-full h-9 px-3 py-1 rounded-md border border-zinc-800 bg-zinc-950 text-zinc-100 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    className="w-full h-9 px-3 py-1 rounded-md border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-1 focus:ring-stone-600"
                   >
                     {categoriesOptions.map((cat) => (
                       <option key={cat.id} value={cat.id}>
@@ -99,7 +98,7 @@ export const EditModal: React.FC<EditModalProps> = ({
                 </div>
 
                 <div className="w-24">
-                  <label htmlFor="mnum" className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                  <label htmlFor="mnum" className="block mb-1.5 text-xs font-semibold text-stone-300">
                     Number:
                   </label>
                   <Input
@@ -108,7 +107,7 @@ export const EditModal: React.FC<EditModalProps> = ({
                     type="number"
                     value={number}
                     onChange={(e) => setNumber(parseInt(e.target.value, 10) || 0)}
-                    className="w-full bg-zinc-950 border-zinc-800 text-zinc-100 text-sm focus-visible:ring-cyan-500"
+                    className="w-full bg-stone-950 border-stone-800 text-stone-100 text-sm focus-visible:ring-stone-600"
                   />
                 </div>
               </div>
@@ -120,7 +119,7 @@ export const EditModal: React.FC<EditModalProps> = ({
                   data-testid="modal-cancel-btn"
                   variant="outline"
                   onClick={onClose}
-                  className="bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 font-semibold"
+                  className="bg-stone-800 border-stone-700 text-stone-300 hover:bg-stone-700 font-semibold"
                 >
                   Cancel
                 </Button>
@@ -129,7 +128,7 @@ export const EditModal: React.FC<EditModalProps> = ({
                   id="msave"
                   data-testid="modal-save-btn"
                   onClick={handleSave}
-                  className="bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400"
+                  className="bg-stone-100 text-stone-900 font-bold hover:bg-white"
                 >
                   Save Changes
                 </Button>

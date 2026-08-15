@@ -1,39 +1,37 @@
-# BRIEFING — 2026-08-09T13:20:23Z
+# BRIEFING — 2026-08-09T13:49:30Z
 
 ## Mission
-Investigate CategoryChips.tsx (Sticky Left Sidebar & Custom Pin Folder Manager) for Milestone M2 and formulate strategy_sidebar.md.
+Analyze category colors, semantic color palette, Lucide icon mappings across 15 defect categories, and consumption of categoryColors.ts helper functions in QCStandardWording for Milestone 2.
 
 ## 🔒 My Identity
-- Archetype: teamwork_preview_explorer
-- Roles: explorer
+- Archetype: Explorer
+- Roles: Read-only investigator
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_1
-- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
-- Milestone: M2 - Sticky Left Sidebar & Custom Pin Folder Manager
+- Original parent: df7f8a56-e4de-46bb-9f55-2328bf3f86bc
+- Milestone: Milestone 2 (Muted Semantic Color-Coding & Iconography)
 
 ## 🔒 Key Constraints
-- Read-only investigation of source code (do NOT edit src/ components directly).
-- Produce strategy_sidebar.md and handoff.md in working directory.
-- Preserve #sidebarNav, data-cat, data-testid, and folder DOM contracts.
+- Read-only investigation — do NOT modify project source files.
+- Deliver analysis report in handoff.md and send_message to parent.
 
 ## Current Parent
-- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
-- Updated: 2026-08-09T13:20:23Z
+- Conversation ID: df7f8a56-e4de-46bb-9f55-2328bf3f86bc
+- Updated: 2026-08-09T13:49:30Z
 
 ## Investigation State
-- **Explored paths**: `src/components/CategoryChips.tsx`, `src/App.tsx`, `src/utils/categoryColors.ts`, `src/hooks/useQCState.ts`, `tests/harness.js`, `tests/m3-pin-folders.test.js`, `tests/tier1-features.test.js`
+- **Explored paths**: `src/utils/categoryColors.ts`, `src/data/qcData.ts`, `src/types/qc.ts`, `src/components/DefectCard.tsx`, `src/components/CategoryChips.tsx`, `src/components/WordingList.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingTable.tsx`, `src/index.css`, `tests/`
 - **Key findings**:
-  - `CategoryChips.tsx` needs 3 collapsible group sections (Quick Views, Custom Pin Folders, Defect Categories).
-  - Pin Folder CRUD manager needs `onCreateFolder`, `onDeleteFolder`, `onRenameFolder` props connected to existing `useQCState` methods.
-  - Linear/Vercel 2026 dark theme palette: Onyx container surface `#0c0e12`, 1px razor borders `border-white/[0.08]`, ambient cyan glow `shadow-[0_0_12px_rgba(6,182,212,0.15)]`, 150ms ease hover transitions, theme-aware cyan/emerald pill badges.
-  - Strict preservation of `#sidebarNav`, `#nav`, `#chips`, `data-cat`, `data-folder`, `data-testid` is required for 100% test compatibility.
-- **Unexplored areas**: None.
+  - `CategoryKey` in `src/types/qc.ts` defines 15 items (`all`, `codes`, `screen`, `camera`, `buttons`, `battery`, `backcover`, `locks`, `pen`, `water`, `audio`, `body`, `system`, `pinned`, `recent`).
+  - `src/data/qcData.ts` defines `CATEGORIES` array with 15 category objects using legacy bright color hexes.
+  - `src/utils/categoryColors.ts` builds `CATEGORY_COLOR_MAP` from `CATEGORIES` and exports `CATEGORY_ICON_MAP` with Lucide icons for all 15 categories and aliases.
+  - Helper functions `getCategoryBadgeStyle`, `getCategoryLeftBorderStyle`, `getCategoryIconComponent` are consumed in `DefectCard.tsx` (for badge pills & border-l-4 accents in list, grid, table views) and `CategoryChips.tsx` (for sidebar category tabs & left border accents).
+- **Unexplored areas**: None within Milestone 2 scope.
 
 ## Key Decisions Made
-- Formulated complete refactoring strategy in `strategy_sidebar.md`.
-- Produced 5-component handoff report in `handoff.md`.
+- Prepared detailed recommendations for soft muted semantic colors (Soft Green `#38a169`, Muted Amber `#d97706`, Steel Blue `#4682b4`, Muted Plum `#9d4edd`, Rose `#f43f5e`, Slate `#64748b`) and verified 100% clean Lucide icon coverage.
 
 ## Artifact Index
-- DISPATCH.md — Initial dispatch prompt
-- BRIEFING.md — Working briefing index
-- strategy_sidebar.md — Comprehensive refactoring strategy & code blueprint for CategoryChips.tsx
-- handoff.md — 5-component handoff report
+- DISPATCH.md — Dispatch history log
+- BRIEFING.md — Working memory state
+- progress.md — Heartbeat & progress log
+- handoff.md — Final investigation handoff report

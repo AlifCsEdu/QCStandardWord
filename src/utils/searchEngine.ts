@@ -1,17 +1,31 @@
 import type { CategoryKey, HighlightSegment, QCItem, SearchResult, SubCategoryCode } from '../types/qc.ts';
-import { ALIAS, CATKEY } from '../data/qcData.ts';
+import { ALIAS, CATKEY, BASE_ITEMS } from '../data/qcData.ts';
+
+const htmlEscapeCache = new Map<string, string>();
 
 /**
  * Escapes special HTML characters to prevent XSS / script injection when rendered via dangerouslySetInnerHTML.
  */
 export function escapeHtml(str: string): string {
-  return str
+  let cached = htmlEscapeCache.get(str);
+  if (cached !== undefined) return cached;
+  cached = str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+  htmlEscapeCache.set(str, cached);
+  return cached;
 }
+
+/**
+ * Computes bounded Levenshtein distance between strings `a` and `b`.
+ * Returns distance if <= `cap`, otherwise returns `cap + 1`.
+ */
+const LEV_MAX = 256;
+const levPrev = new Int32Array(LEV_MAX);
+const levCur = new Int32Array(LEV_MAX);
 
 /**
  * Computes bounded Levenshtein distance between strings `a` and `b`.
@@ -21,29 +35,29 @@ export function lev(a: string, b: string, cap: number): number {
   const m = a.length;
   const n = b.length;
   if (Math.abs(m - n) > cap) return cap + 1;
+  if (n >= LEV_MAX) return cap + 1;
 
-  let prev = new Array<number>(n + 1);
-  let cur = new Array<number>(n + 1);
-  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let j = 0; j <= n; j++) levPrev[j] = j;
+
+  let p = levPrev;
+  let c = levCur;
 
   for (let i = 1; i <= m; i++) {
-    cur[0] = i;
-    let rowMin = cur[0];
+    c[0] = i;
+    let rowMin = c[0];
+    const charA = a[i - 1];
     for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      cur[j] = Math.min(
-        prev[j] + 1,
-        cur[j - 1] + 1,
-        prev[j - 1] + cost
-      );
-      if (cur[j] < rowMin) rowMin = cur[j];
+      const cost = charA === b[j - 1] ? 0 : 1;
+      const val = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + cost);
+      c[j] = val;
+      if (val < rowMin) rowMin = val;
     }
     if (rowMin > cap) return cap + 1;
-    const t = prev;
-    prev = cur;
-    cur = t;
+    const tmp = p;
+    p = c;
+    c = tmp;
   }
-  return prev[n];
+  return p[n];
 }
 
 /**
@@ -79,13 +93,24 @@ export interface EnrichedItem extends QCItem {
   words: string[];
 }
 
+const enrichCache = new WeakMap<QCItem, EnrichedItem>();
+const enrichKeyCache = new Map<string, EnrichedItem>();
+
 /**
  * Enriches a QC item with lowercased haystack, normalized text, and token words.
  */
 export function enrichItem(item: QCItem): EnrichedItem {
+  let cached = enrichCache.get(item);
+  if (cached) return cached;
+  const key = `${item.id}_${item.c}_${item.t}`;
+  cached = enrichKeyCache.get(key);
+  if (cached) {
+    enrichCache.set(item, cached);
+    return cached;
+  }
   const hay = (item.t + ' ' + (CATKEY[item.c] || '')).toLowerCase();
   const titleLow = item.t.toLowerCase();
-  return {
+  cached = {
     ...item,
     hay,
     normText: norm(hay),
@@ -93,6 +118,16 @@ export function enrichItem(item: QCItem): EnrichedItem {
     titleWords: titleLow.split(/[^a-z0-9]+/).filter(Boolean),
     words: hay.split(/[^a-z0-9]+/).filter(Boolean),
   };
+  enrichCache.set(item, cached);
+  enrichKeyCache.set(key, cached);
+  return cached;
+}
+
+// Pre-enrich static BASE_ITEMS on module initialization
+if (typeof BASE_ITEMS !== 'undefined' && Array.isArray(BASE_ITEMS)) {
+  for (let i = 0; i < BASE_ITEMS.length; i++) {
+    enrichItem(BASE_ITEMS[i]);
+  }
 }
 
 /**
@@ -214,14 +249,32 @@ export function highlightSegments(text: string, query: string): HighlightSegment
   return segments;
 }
 
+const escapeCache = new WeakMap<QCItem, string>();
+export function escapeHtmlItem(item: QCItem): string {
+  let cached = escapeCache.get(item);
+  if (cached) return cached;
+  cached = escapeHtml(item.t);
+  escapeCache.set(item, cached);
+  return cached;
+}
+
+const highlightCache = new Map<string, string>();
+
 /**
  * Returns string with matching query substrings wrapped in <mark> tags.
  */
 export function highlightText(text: string, query: string): string {
+  if (!query.trim()) return escapeHtml(text);
+  const key = query + '|||' + text;
+  let cached = highlightCache.get(key);
+  if (cached !== undefined) return cached;
   const segments = highlightSegments(text, query);
-  return segments
+  cached = segments
     .map((s) => (s.isMatch ? `<mark>${escapeHtml(s.text)}</mark>` : escapeHtml(s.text)))
     .join('');
+  if (highlightCache.size > 2000) highlightCache.clear();
+  highlightCache.set(key, cached);
+  return cached;
 }
 
 /**
@@ -247,6 +300,15 @@ export function searchQCItems(
     );
   } else if (category === 'recent') {
     const recentsSet = new Set(recentsList);
+    const recentIndexMap = new Map<string | number, number>();
+    recentsList.forEach((r, idx) => {
+      if (!recentIndexMap.has(r)) recentIndexMap.set(r, idx);
+      if (typeof r === 'string' || typeof r === 'number') {
+        const str = String(r);
+        if (!recentIndexMap.has(str)) recentIndexMap.set(str, idx);
+      }
+    });
+
     filtered = items.filter(
       (item) =>
         recentsSet.has(item.t) ||
@@ -257,19 +319,19 @@ export function searchQCItems(
     );
     filtered.sort((a, b) => {
       const getIdx = (item: QCItem) => {
-        let i = recentsList.indexOf(item.t);
-        if (i !== -1) return i;
-        i = recentsList.indexOf(item.id);
-        if (i !== -1) return i;
-        i = recentsList.indexOf(String(item.id));
-        if (i !== -1) return i;
-        i = recentsList.indexOf(item.n as any);
-        if (i !== -1) return i;
-        return recentsList.indexOf(String(item.n) as any);
+        let i = recentIndexMap.get(item.t);
+        if (i !== undefined) return i;
+        i = recentIndexMap.get(item.id);
+        if (i !== undefined) return i;
+        i = recentIndexMap.get(String(item.id));
+        if (i !== undefined) return i;
+        i = recentIndexMap.get(item.n as any);
+        if (i !== undefined) return i;
+        i = recentIndexMap.get(String(item.n) as any);
+        if (i !== undefined) return i;
+        return 999;
       };
-      const idxA = getIdx(a);
-      const idxB = getIdx(b);
-      return (idxA !== -1 ? idxA : 999) - (idxB !== -1 ? idxB : 999);
+      return getIdx(a) - getIdx(b);
     });
   } else if (category !== 'all') {
     filtered = items.filter((item) => item.c === category);
@@ -285,15 +347,49 @@ export function searchQCItems(
     });
   }
 
+const emptyResultCache = new Map<string, SearchResult[]>();
+let lastActiveItemsRef: QCItem[] | null = null;
+let lastPinsSetRef: Set<string | number> | null = null;
+let lastRecentsRef: (string | number)[] | null = null;
+
+function getEmptyQueryResult(
+  items: QCItem[],
+  category: CategoryKey,
+  subCategory: SubCategoryCode,
+  pinsSet: Set<string | number>,
+  recentsList: (string | number)[],
+  filtered: QCItem[]
+): SearchResult[] {
+  if (
+    items !== lastActiveItemsRef ||
+    pinsSet !== lastPinsSetRef ||
+    recentsList !== lastRecentsRef
+  ) {
+    emptyResultCache.clear();
+    lastActiveItemsRef = items;
+    lastPinsSetRef = pinsSet;
+    lastRecentsRef = recentsList;
+  }
+
+  const cacheKey = `${category}:${subCategory}`;
+  let cached = emptyResultCache.get(cacheKey);
+  if (cached) return cached;
+
+  cached = filtered.map((item) => ({
+    item,
+    score: 100,
+    isApprox: false,
+    highlightedText: escapeHtmlItem(item),
+  }));
+
+  emptyResultCache.set(cacheKey, cached);
+  return cached;
+}
+
   const qTrim = query.trim();
 
   if (!qTrim) {
-    return filtered.map((item) => ({
-      item,
-      score: 100,
-      isApprox: false,
-      highlightedText: escapeHtml(item.t),
-    }));
+    return getEmptyQueryResult(items, category, subCategory, pinsSet, recentsList, filtered);
   }
 
   const qLow = qTrim.toLowerCase();
@@ -309,7 +405,7 @@ export function searchQCItems(
         item: { id: e.id, n: e.n, t: e.t, c: e.c, sub: e.sub, custom: e.custom },
         score: 100,
         isApprox: false,
-        highlightedText: highlightText(e.t, qTrim),
+        highlightedText: '',
       });
       continue;
     }
@@ -355,12 +451,15 @@ export function searchQCItems(
         item: { id: e.id, n: e.n, t: e.t, c: e.c, sub: e.sub, custom: e.custom },
         score: finalScore,
         isApprox: isApprox(finalScore),
-        highlightedText: highlightText(e.t, qTrim),
+        highlightedText: '',
       });
     }
   }
 
   scored.sort((a, b) => b.score - a.score || a.item.n - b.item.n);
 
-  return scored;
+  return scored.map((s) => ({
+    ...s,
+    highlightedText: highlightText(s.item.t, qTrim),
+  }));
 }

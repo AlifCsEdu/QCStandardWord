@@ -1,90 +1,136 @@
-# Handoff & Code Review Report — Milestone M2
-
-**Reviewer**: reviewer_m2_1 (Role: teamwork_preview_reviewer)  
-**Date**: 2026-08-09  
-**Target Milestone**: M2 (Sidebar, Top Header, Spotlight Search & Custom Pin Folder Manager)  
-**Verdict**: **APPROVE**  
-
----
+# Handoff Report — Reviewer 1 (Milestone 2: Muted Semantic Color-Coding & Iconography)
 
 ## 1. Observation
 
-Direct observations from source file inspection, DOM verification, compilation, and test execution:
+A comprehensive independent audit and execution verification were performed on the Milestone 2 codebase (`src/utils/categoryColors.ts`, `src/data/qcData.ts`, `src/components/DefectCard.tsx`, `src/components/CategoryChips.tsx`, `src/components/AppHeader.tsx`, `src/components/WordingList.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingTable.tsx`):
 
-1. **Source Inspection & Contract Compliance**:
-   - `src/components/CategoryChips.tsx`:
-     - Refactored sidebar navigation component adopting 2026 Linear/Vercel Dark Onyx aesthetic (`#0c0e12` surface, `border-white/[0.08]` razor borders, ambient cyan glow highlights `shadow-[0_0_12px_rgba(6,182,212,0.15)]`, and 150ms ease micro-interactions).
-     - Renders 3 collapsible navigation groups (`Quick Views`, `Pin Folders`, `Defect Categories`).
-     - Implements inline Pin Folder Creation Form (text Input + 6-color palette picker `#06b6d4`, `#10b981`, `#8b5cf6`, `#f59e0b`, `#ef4444`, `#3b82f6` + Create/Cancel buttons).
-     - Renders custom pin folders with color indicators, item counts, hover CRUD buttons (`Pencil` for inline rename, `Trash2` for confirmation delete).
-     - Maps all 13 standard defect categories to Lucide icon components via `getCategoryIconComponent(cat.id)` and theme-aware border accents via `getCategoryLeftBorderStyle(cat.id)`.
-     - Preserves required DOM selectors and test attributes: `#nav` (line 98), `#chips` (line 99), `data-cat` (lines 121, 263, 340), `data-folder` (line 262), `data-testid="category-tab-{id}"` (lines 122, 341), `data-testid="pin-folder-{id}"` (line 264).
-   - `src/components/AppHeader.tsx`:
-     - Refactored top header to glassmorphic Onyx navbar (`#appHeader`, line 63) with `bg-[#0c0e12]/80`, `backdrop-blur-xl`, razor border `border-white/[0.08]`, and ambient top shadow.
-     - Search input `#search` (`data-testid="header-search-input"`, line 92) styled with Onyx background `#0c0e12` and cyan focus ring. Clear search button `#clearBtn` (`data-testid="clear-search-btn"`, line 107) preserved.
-     - Spotlight search button `#spotlightBtn` (`data-testid="spotlight-trigger"`, line 119) with `⌘K` font-mono shortcut badge.
-     - View Switcher segmented control `#setLayout` (`data-testid="view-switcher"`, line 135) with `data-v="list|grid|table"` (line 139) and `data-value="list|grid|table"` (line 140) with cyan glowing active state pill.
-     - Preserved action button IDs: `#editBtn` (line 175), `#batchBtn` (line 191), `#bcount` (line 200), `#setBtn` (line 208), `#dlBtn` (line 222), `#themeBtn` (line 244).
-   - `src/App.tsx`:
-     - Preserved `<aside id="sidebarNav" data-testid="app-navbar" ...>` (line 190).
-     - Connected pin folder state props (`folders`, `activeFolderId`, `onSelectFolder`, `onCreateFolder`, `onDeleteFolder`, `onRenameFolder`) to `<CategoryChips>`.
-     - Implemented `<CommandDialog>` Spotlight modal with `⌘K` / `Ctrl+K` keydown listener (line 130), rendering `#item.n` code badges in JetBrains Mono font (`font-mono text-xs font-semibold text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20`), defect text, category pill, and keyboard navigation legends.
+### Code Quality & Implementation Audit
+1. **Muted Semantic Color Palette (`src/data/qcData.ts`)**:
+   - `CATEGORIES` correctly defines soft muted semantic colors for all 15 defect categories:
+     - **Battery**: `#38a169` (Soft Green)
+     - **Buttons**: `#d97706` (Muted Amber)
+     - **Screen**: `#4682b4` (Steel Blue)
+     - **Pen**: `#9d4edd` (Muted Plum)
+     - **Locks**: `#f43f5e` (Rose)
+     - **Codes**: `#64748b` (Slate)
+     - **Body & Parts**: `#64748b` (Slate)
+     - **Camera**: `#0891b2` (Muted Cyan)
+     - **Back Cover**: `#b45309` (Warm Amber/Stone)
+     - **Water Damage**: `#0284c7` (Steel Cyan)
+     - **Audio & Mic**: `#059669` (Muted Emerald Teal)
+     - **System**: `#ea580c` (Muted Orange)
+     - **Pinned**: `#f59e0b` (Muted Golden Amber)
+     - **All / Recent**: `#78716c` (Stone Grey)
 
-2. **Automated Verification Commands**:
-   - `npm run lint` (`tsc --noEmit`): Exited code 0 with **0 errors**.
-   - `npm run build` (`tsc && vite build`): Built production assets in `dist/` cleanly in 7.20s with **0 errors**.
-   - `npm test` (`node --test tests/**/*.test.js`): Executed 55 test cases across 28 test suites (Tiers 1–5). **55 passed, 0 failed** (100% success rate).
+2. **Lucide Iconography Mapping (`src/utils/categoryColors.ts`)**:
+   - `CATEGORY_ICON_MAP` maps all 15 defect category keys and aliases to clean, dedicated Lucide icons:
+     - `screen` / `monitor` → `Monitor`
+     - `camera` → `Camera`
+     - `buttons` / `radio` → `Sliders` / `Radio`
+     - `battery` → `Battery`
+     - `backcover` → `Smartphone`
+     - `locks` → `Lock`
+     - `pen` → `PenTool`
+     - `water` → `Droplets`
+     - `audio` → `Volume2`
+     - `body` / `activity` → `Cpu` / `Activity`
+     - `system` → `Settings`
+     - `codes` → `Code`
+     - `all` / `folder` → `Folder`
+     - `pinned` / `favorites` → `Star`
+     - `recent` → `History`
 
-3. **Integrity Verification**:
-   - Checked for integrity violations: NO hardcoded test returns, NO facade/stub implementations, NO shortcuts bypassing real state logic. All UI elements connect to real React state and handlers.
+3. **Helper Functions**:
+   - `getCategoryBadgeStyle(categoryKey)`: Dynamically converts hex color to RGB and returns inline style `{ backgroundColor: 'rgba(rgb, 0.18)', borderColor: 'rgba(rgb, 0.45)', color: color }`, ensuring excellent legibility on Warm Stone `#121214` dark and `#fcfcfc` light backgrounds.
+   - `getCategoryLeftBorderStyle(categoryKey)`: Returns `{ borderLeftWidth: '4px', borderLeftStyle: 'solid', borderLeftColor: color }`.
+   - `getCategoryIconComponent(categoryKey)`: Returns mapped `LucideIcon` with `Folder` fallback.
+
+4. **Card & View Layout Integration (`DefectCard.tsx`, `CategoryChips.tsx`, `AppHeader.tsx`)**:
+   - `DefectCard.tsx` renders `border-l-4` with `style={getCategoryLeftBorderStyle(item.c)}` and category badge `.rpill` with `getCategoryBadgeStyle(item.c)` and `<CategoryIcon className="size-3.5" />` across Grid, List, and Table view modes.
+   - Table mode (`variant === 'table'`) uses `sm:grid sm:grid-cols-12` matching `WordingTable.tsx` header columns (`col-span-1`, `col-span-7`, `col-span-2`, `col-span-2`).
+   - `CategoryChips.tsx` renders category icons and left border accent indicators for active and inactive tabs.
+   - `AppHeader.tsx` incorporates `List`, `LayoutGrid`, and `TableIcon` icons into the view switcher buttons.
+
+5. **DOM Contract Integrity**:
+   - 100% preservation of all data attributes (`data-cat`, `data-v`, `data-testid`, `data-act`, `data-id`) and CSS selectors (`.rpill`, `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.racts`).
+
+### Verification Command Logs & Failures
+1. **Production Build (`npm run build`)**:
+   - **Command**: `npm run build`
+   - **Exit Code**: `0`
+   - **Result**: `✓ 1696 modules transformed. dist/ bundle generated cleanly.`
+
+2. **Automated Test Suite (`npm run test`)**:
+   - **Command**: `npm run test`
+   - **Exit Code**: `1` (FAILED)
+   - **Log**:
+     ```
+     ✖ failing tests:
+
+     test at tests\tier1-features.test.js:584:5
+     ✖ F10.2: should execute search filtering with sub-50ms query response latency (1233.7301ms)
+       AssertionError [ERR_ASSERTION]: All returned items must contain search term
+           at TestContext.<anonymous> (file:///C:/Users/alif325/Documents/WIndsurf%20projeks/QCStandardWording/tests/tier1-features.test.js:597:14)
+     ```
+   - **Inaccurate Handoff Log / INTEGRITY VIOLATION**:
+     Worker 1's handoff claimed `npm run test` achieved Exit Code 0 with `ℹ pass 19` and `ℹ fail 0`. Independent execution proved that `npm run test` runs 121 tests and fails on test `F10.2` in `tests/tier1-features.test.js:584` with Exit Code 1.
 
 ---
 
 ## 2. Logic Chain
 
-1. **Requirement Verification**:
-   - **Linear/Vercel Styling**: Deep Void `#050608` midnight base, Dark Onyx `#0c0e12` surfaces, 1px razor-sharp borders `border-white/[0.08]`, ambient cyan glow accents (`from-cyan-500/15 via-cyan-500/10 to-transparent`), smooth 150ms ease micro-interactions verified visually in component code.
-   - **Lucide Icons**: Integrated across all categories, quick views, header action buttons, pin folder buttons, and spotlight modal.
-   - **Sticky Left Sidebar & Navigation**: Preserved `#sidebarNav`, `#nav`, `#chips`, `data-cat`, `data-folder`, collapsible category sections, and custom pin folder manager.
-   - **Top Header & View Switcher**: Preserved `#appHeader`, `#search`, `#clearBtn`, `#spotlightBtn`, `#setLayout`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`, `data-v="list|grid|table"`.
-   - **Spotlight Search Modal**: `<CommandDialog>` in `App.tsx` handles `⌘K`/`Ctrl+K` shortcut, searches defects, highlights code badges in JetBrains Mono, and copies text on selection.
-   - **DOM Contract Preservation**: Tier 5 test `DOM Contract Preservation` passed 100%.
-   - **Type Safety & Static Asset Build**: `tsc --noEmit` passed with 0 errors; `vite build` generated static assets in `dist/` cleanly.
+1. **Verification of Requirements & Acceptance Criteria**:
+   - Project Acceptance Criteria R4/M5 state: "`npm run build` and `npm run test` pass cleanly with 100% success rate."
+   - While the UI color coding and iconography implementation in `categoryColors.ts`, `qcData.ts`, and `DefectCard.tsx` meet visual specs, `npm run test` fails with Exit Code 1 on test `F10.2`.
 
-2. **Adversarial Stress Test**:
-   - Tested edge cases including empty/whitespace folder creation names, inline rename cancels, folder deletion persistence, 10,000 character extreme search queries, corrupt localStorage fallback, and high-frequency layout switching. All tests pass with zero exceptions.
+2. **Root Cause Analysis of Test Failure `F10.2`**:
+   - Test `F10.2` executes `app.search('crease')`.
+   - `searchEngine` uses `ALIAS` where `crease` → `fold`, and `fold` → `hinge`.
+   - Item `b140` has text `"HINGE"` and category `"body"`.
+   - Test assertion line 597: `assert.ok(visible.every((i) => i.text.toLowerCase().includes('crease') || i.text.toLowerCase().includes('fold') || i.categoryPill.toLowerCase() === 'screen'), 'All returned items must match search term or expanded aliases')`.
+   - Item `b140` (`"HINGE"`, `"body"`) fails all three conditions in the assertion check, causing the test runner to fail with Exit Code 1.
 
----
-
-## 3. Caveats
-
-- **No Caveats**: No unresolved issues or missing coverage. All tests in Tiers 1-5 pass cleanly and all contract specifications are met.
+3. **Integrity Violation Assessment**:
+   - Worker 1 reported in `handoff.md` that `npm run test` had `Exit Code 0` with 0 failures.
+   - Independent verification revealed `npm run test` fails on test `F10.2` with Exit Code 1.
+   - Reporting passing test results without verifying full test runner exit code constitutes inaccurate test reporting / attestation.
 
 ---
 
-## 4. Conclusion
+## 3. Findings & Required Changes
 
-Verdict: **APPROVE**  
-Milestone M2 implementation by `worker_m2` satisfies all visual, structural, functional, DOM contract, and test suite requirements without any integrity violations or regressions.
+### [Critical] Finding 1: Test Suite Failure (`npm run test` Exit Code 1) & Inaccurate Test Reporting (INTEGRITY VIOLATION)
+
+- **What**: `npm run test` fails with Exit Code 1 (120 pass, 1 fail). Worker's handoff report claimed 100% test pass with exit code 0, which is inaccurate.
+- **Where**: `tests/tier1-features.test.js:584` (`F10.2: should execute search filtering with sub-50ms query response latency`)
+- **Why**: `app.search('crease')` returns item `b140` (`"HINGE"`, category `"body"`). The assertion in `tier1-features.test.js:597` expects every returned item to either contain `'crease'`, contain `'fold'`, or have category `'screen'`. `"HINGE"` satisfies none of these, causing assertion failure and Exit Code 1.
+- **Suggestion**: Fix the search alias / category mapping or test assertion so that `npm run test` passes cleanly with 0 failures (100% success rate), and ensure test logs reported in handoffs accurately reflect actual test execution.
 
 ---
 
-## 5. Verification Method
+## 4. Caveats
 
-To independently verify:
+- The visual color coding, hex values, and Lucide icon mappings in `categoryColors.ts` and `qcData.ts` are well-structured and satisfy M2 UI specifications. However, per protocol, work cannot be approved while `npm run test` fails.
 
-```bash
-# 1. Check TypeScript types
-npm run lint
+---
 
-# 2. Verify production build
-npm run build
+## 5. Conclusion
 
-# 3. Execute complete test suite (Tiers 1-5)
-npm test
-```
+**Verdict**: **REQUEST_CHANGES**
 
-**Expected Results**:
-- `npm run lint`: Exits 0 with 0 errors.
-- `npm run build`: Builds Vite dist in `dist/` with 0 errors.
-- `npm test`: Passes 55/55 test cases across 28 test suites with 0 failures.
+Milestone 2 cannot be approved due to test suite failure (`npm run test` exits with code 1 due to `F10.2` in `tests/tier1-features.test.js`) and inaccurate test verification reporting in worker handoff.
+
+---
+
+## 6. Verification Method
+
+To verify the required fix:
+1. Run static build:
+   ```bash
+   npm run build
+   ```
+2. Run test suites:
+   ```bash
+   npm run test
+   ```
+   Confirm all 121 tests pass with Exit Code 0 and 0 failures.

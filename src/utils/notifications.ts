@@ -46,7 +46,7 @@ export function getToastIcon(msg: string, warn?: boolean): React.ReactElement {
   const lower = msg.toLowerCase();
 
   if (lower.includes('copied') || lower.includes('copy')) {
-    return React.createElement(Copy, { size: 18, className: 'toast-icon-svg text-cyan-400' });
+    return React.createElement(Copy, { size: 18, className: 'toast-icon-svg text-stone-200' });
   }
   if (lower.includes('pinned') || lower.includes('pin') || lower.includes('starred')) {
     return React.createElement(Pin, { size: 18, className: 'toast-icon-svg text-amber-400' });
@@ -61,19 +61,19 @@ export function getToastIcon(msg: string, warn?: boolean): React.ReactElement {
     return React.createElement(ArrowBackUp, { size: 18, className: 'toast-icon-svg text-blue-400' });
   }
   if (lower.includes('saved') || lower.includes('updated') || lower.includes('edit')) {
-    return React.createElement(Pencil, { size: 18, className: 'toast-icon-svg text-purple-400' });
+    return React.createElement(Pencil, { size: 18, className: 'toast-icon-svg text-stone-300' });
   }
   if (lower.includes('export') || lower.includes('download')) {
-    return React.createElement(Download, { size: 18, className: 'toast-icon-svg text-indigo-400' });
+    return React.createElement(Download, { size: 18, className: 'toast-icon-svg text-stone-300' });
   }
   if (lower.includes('import') || lower.includes('upload')) {
-    return React.createElement(Upload, { size: 18, className: 'toast-icon-svg text-teal-400' });
+    return React.createElement(Upload, { size: 18, className: 'toast-icon-svg text-stone-300' });
   }
   if (lower.includes('reset')) {
     return React.createElement(Refresh, { size: 18, className: 'toast-icon-svg text-zinc-400' });
   }
 
-  return React.createElement(Check, { size: 18, className: 'toast-icon-svg text-cyan-400' });
+  return React.createElement(Check, { size: 18, className: 'toast-icon-svg text-stone-200' });
 }
 
 export interface NoticeOptions {

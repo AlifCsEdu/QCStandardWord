@@ -47,7 +47,7 @@ describe('Tier 5: White-Box Adversarial Stress Testing & Boundary Edge Cases', (
           { corrupt: true },
           null,
           'string_folder',
-          { id: 'valid_1', name: 'Valid Folder', color: '#06b6d4', itemIds: ['s101'] },
+          { id: 'valid_1', name: 'Valid Folder', color: '#78716c', itemIds: ['s101'] },
         ]),
       };
 
@@ -142,7 +142,7 @@ describe('Tier 5: White-Box Adversarial Stress Testing & Boundary Edge Cases', (
         folderList.push({
           id: `f_capacity_${i}`,
           name: `Capacity Folder ${i}`,
-          color: i % 2 === 0 ? '#06b6d4' : '#8b5cf6',
+          color: i % 2 === 0 ? '#78716c' : '#71717a',
           itemIds: [`s${100 + (i % 10)}`],
           createdAt: Date.now() + i,
         });

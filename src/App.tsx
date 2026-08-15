@@ -137,45 +137,80 @@ export const AppContent: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const toggleMobile = () => setMobileOpened((prev) => !prev);
+  const toggleMobile = React.useCallback(() => setMobileOpened((prev) => !prev), []);
 
-  // Compute category item counts
+  // Compute category item counts in a single pass
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
       all: activeItems.length,
-      pinned: activeItems.filter((item) => pinsSet.has(item.id) || pinsSet.has(item.n)).length,
+      pinned: 0,
       recent: recents.length,
     };
-    for (const item of activeItems) {
+    for (let i = 0; i < activeItems.length; i++) {
+      const item = activeItems[i];
+      if (pinsSet.has(item.id) || pinsSet.has(item.n)) {
+        counts.pinned++;
+      }
       counts[item.c] = (counts[item.c] || 0) + 1;
     }
     return counts;
-  }, [activeItems, pinsSet, recents]);
+  }, [activeItems, pinsSet, recents.length]);
 
-  const handleToggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-  };
+  const handleSelectCategory = React.useCallback(
+    (cat: CategoryKey) => {
+      setSelectedCategory(cat);
+      setSelectedSubCategory('ALL');
+    },
+    [setSelectedCategory, setSelectedSubCategory]
+  );
 
-  const scrollToTop = () => {
+  const handleOpenSpotlight = React.useCallback(() => {
+    setSpotlightOpen(true);
+  }, []);
+
+  const handleToggleTheme = React.useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
+
+  const scrollToTop = React.useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  const handleClearSearch = React.useCallback(() => {
+    setSearchQuery('');
+  }, [setSearchQuery]);
+
+  const handleOpenBatchDrawer = React.useCallback(() => {
+    setBatchDrawerOpen(true);
+  }, [setBatchDrawerOpen]);
+
+  const handleOpenSettings = React.useCallback(() => {
+    setSettingsModalOpen(true);
+  }, [setSettingsModalOpen]);
+
+  const handleCloseBatchDrawer = React.useCallback(() => {
+    setBatchDrawerOpen(false);
+  }, [setBatchDrawerOpen]);
+
+  const handleCloseSettingsModal = React.useCallback(() => {
+    setSettingsModalOpen(false);
+  }, [setSettingsModalOpen]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen bg-[#121214] text-stone-100 flex flex-col font-sans selection:bg-stone-700 selection:text-stone-100">
       {/* Header */}
       <AppHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onClearSearch={() => setSearchQuery('')}
+        onClearSearch={handleClearSearch}
         layoutMode={layout}
         onSetLayout={setLayout}
-        onOpenSpotlight={() => setSpotlightOpen(true)}
+        onOpenSpotlight={handleOpenSpotlight}
         editMode={editMode}
         onToggleEditMode={toggleEditMode}
         batchCount={batchQueue.length}
-        onOpenBatchDrawer={() => setBatchDrawerOpen(true)}
-        onOpenSettings={() => setSettingsModalOpen(true)}
+        onOpenBatchDrawer={handleOpenBatchDrawer}
+        onOpenSettings={handleOpenSettings}
         theme={theme}
         onToggleTheme={handleToggleTheme}
         mobileOpened={mobileOpened}
@@ -188,16 +223,13 @@ export const AppContent: React.FC = () => {
         <aside
           data-testid="app-navbar"
           id="sidebarNav"
-          className={`sidebar-nav fixed sm:sticky top-[60px] h-[calc(100vh-60px)] w-[260px] bg-[#0c0e12] border-r border-white/[0.08] overflow-y-auto z-30 transition-transform duration-200 ${
+          className={`sidebar-nav fixed sm:sticky top-[60px] h-[calc(100vh-60px)] w-[260px] bg-[#121214] border-r border-stone-800 overflow-y-auto z-30 transition-transform duration-200 ${
             mobileOpened ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
           }`}
         >
           <CategoryChips
             selectedCategory={selectedCategory}
-            onSelectCategory={(cat) => {
-              setSelectedCategory(cat);
-              setSelectedSubCategory('ALL');
-            }}
+            onSelectCategory={handleSelectCategory}
             categoryCounts={categoryCounts}
             folders={folders}
             activeFolderId={activeFolderId}
@@ -214,7 +246,7 @@ export const AppContent: React.FC = () => {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 min-w-0 flex flex-col bg-zinc-950">
+        <main className="flex-1 min-w-0 flex flex-col bg-[#121214]">
           {/* Inspection Stats Dashboard Header */}
           <StatsDashboard
             categoryCounts={categoryCounts}
@@ -224,11 +256,8 @@ export const AppContent: React.FC = () => {
             totalFilteredCount={searchResults.length}
             batchCount={batchQueue.length}
             pinnedCount={pinsSet.size}
-            onOpenSpotlight={() => setSpotlightOpen(true)}
-            onSelectCategory={(cat) => {
-              setSelectedCategory(cat);
-              setSelectedSubCategory('ALL');
-            }}
+            onOpenSpotlight={handleOpenSpotlight}
+            onSelectCategory={handleSelectCategory}
           />
 
           {/* Copy History Feed Bar */}
@@ -251,7 +280,7 @@ export const AppContent: React.FC = () => {
           <WordingContainer
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            onClearSearch={() => setSearchQuery('')}
+            onClearSearch={handleClearSearch}
             results={searchResults}
             layoutMode={layout}
             onSetLayout={setLayout}
@@ -270,7 +299,7 @@ export const AppContent: React.FC = () => {
           {/* Batch Drawer */}
           <BatchDrawer
             isOpen={batchDrawerOpen}
-            onClose={() => setBatchDrawerOpen(false)}
+            onClose={handleCloseBatchDrawer}
             batchQueue={batchQueue}
             onRemoveItem={removeFromBatch}
             onClearBatch={clearBatch}
@@ -297,7 +326,7 @@ export const AppContent: React.FC = () => {
           {/* Settings Modal */}
           <SettingsModal
             isOpen={settingsModalOpen}
-            onClose={() => setSettingsModalOpen(false)}
+            onClose={handleCloseSettingsModal}
             appearance={appearance}
             onSetLayout={setLayout}
             onSetRadius={setRadius}
@@ -308,43 +337,45 @@ export const AppContent: React.FC = () => {
           />
 
           {/* Cmd+K Spotlight Search CommandDialog */}
-          <CommandDialog open={spotlightOpen} onOpenChange={setSpotlightOpen}>
-            <CommandInput placeholder="Search QC defects or type a command (e.g. battery, screen)..." />
-            <CommandList className="max-h-[360px]">
-              <CommandEmpty className="py-8 text-center text-sm text-zinc-500 font-sans">
-                No matching QC wording defects found.
-              </CommandEmpty>
-              <CommandGroup heading="QC Wording Defects">
-                {searchResults.slice(0, 20).map(({ item }) => (
-                  <CommandItem
-                    key={item.id}
-                    onSelect={() => {
-                      copySingleItem(item.t);
-                      setSpotlightOpen(false);
-                    }}
-                    className="cursor-pointer flex items-center justify-between py-2.5 px-3 rounded-lg data-[selected=true]:bg-cyan-500/10 data-[selected=true]:text-cyan-200 transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="font-mono text-xs font-semibold text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
-                        #{item.n}
+          {spotlightOpen && (
+            <CommandDialog open={spotlightOpen} onOpenChange={setSpotlightOpen}>
+              <CommandInput placeholder="Search QC defects or type a command (e.g. battery, screen)..." />
+              <CommandList className="max-h-[360px]">
+                <CommandEmpty className="py-8 text-center text-sm text-stone-500 font-sans">
+                  No matching QC wording defects found.
+                </CommandEmpty>
+                <CommandGroup heading="QC Wording Defects">
+                  {searchResults.slice(0, 20).map(({ item }) => (
+                    <CommandItem
+                      key={item.id}
+                      onSelect={() => {
+                        copySingleItem(item.t);
+                        setSpotlightOpen(false);
+                      }}
+                      className="cursor-pointer flex items-center justify-between py-2.5 px-3 rounded-lg data-[selected=true]:bg-stone-800 data-[selected=true]:text-stone-100 transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="font-mono text-xs font-semibold text-stone-300 bg-stone-800/80 px-1.5 py-0.5 rounded border border-stone-700">
+                          #{item.n}
+                        </span>
+                        <span className="truncate text-sm text-stone-100 font-sans font-medium">{item.t}</span>
+                      </div>
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-stone-800/80 text-stone-300 border border-stone-700/80 font-mono capitalize">
+                        {item.c}
                       </span>
-                      <span className="truncate text-sm text-zinc-100 font-sans font-medium">{item.t}</span>
-                    </div>
-                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-300 border border-zinc-700/80 font-mono capitalize">
-                      {item.c}
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-            <div className="flex items-center justify-between border-t border-white/[0.08] px-4 py-2 bg-zinc-950/80 text-[11px] font-mono text-zinc-400">
-              <div className="flex items-center gap-3">
-                <span><kbd className="bg-zinc-800 px-1 py-0.5 rounded border border-zinc-700">↑↓</kbd> Navigate</span>
-                <span><kbd className="bg-zinc-800 px-1 py-0.5 rounded border border-zinc-700">↵</kbd> Copy & Close</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+              <div className="flex items-center justify-between border-t border-stone-800 px-4 py-2 bg-stone-900 text-[11px] font-mono text-stone-400">
+                <div className="flex items-center gap-3">
+                  <span><kbd className="bg-stone-800 px-1 py-0.5 rounded border border-stone-700">↑↓</kbd> Navigate</span>
+                  <span><kbd className="bg-stone-800 px-1 py-0.5 rounded border border-stone-700">↵</kbd> Copy & Close</span>
+                </div>
+                <span><kbd className="bg-stone-800 px-1 py-0.5 rounded border border-stone-700">ESC</kbd> Exit</span>
               </div>
-              <span><kbd className="bg-zinc-800 px-1 py-0.5 rounded border border-zinc-700">ESC</kbd> Exit</span>
-            </div>
-          </CommandDialog>
+            </CommandDialog>
+          )}
 
           {/* Toast Notifications */}
           <ToastsContainer toasts={toasts} onRemoveToast={removeToast} />
@@ -354,7 +385,7 @@ export const AppContent: React.FC = () => {
             <Button
               id="scrollTopBtn"
               onClick={scrollToTop}
-              className="fixed bottom-6 right-6 rounded-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs shadow-lg z-50 gap-1.5 h-10 px-4"
+              className="fixed bottom-6 right-6 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-100 border border-stone-700 font-semibold text-xs shadow-lg z-50 gap-1.5 h-10 px-4"
             >
               <ArrowUp className="size-4" />
               <span>Scroll to Top</span>

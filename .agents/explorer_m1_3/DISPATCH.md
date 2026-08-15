@@ -1,16 +1,13 @@
-## 2026-08-09T13:13:30Z
-<USER_REQUEST>
-You are explorer_m1_3 (role: teamwork_preview_explorer).
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_3
+## 2026-08-09T13:40:54Z
+You are an Explorer subagent for the E2E Testing Track.
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_3
+Read the following specification files:
+1. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+3. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\TEST_INFRA.md
 
-MANDATORY INPUTS:
-- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-
-ASSIGNMENT (Milestone M1: DOM & Test Impact Verification):
-1. Read ORIGINAL_REQUEST.md and PROJECT.md.
-2. Cross-check proposed styling changes in src/index.css, HistoryBar.tsx, EditToolbar.tsx, and CodeSubChips.tsx against test files in tests/ to verify zero breakage of test selectors (#histbar, #editstrip, data-cat, data-v, etc.).
-3. Document any required DOM attributes or class preserves to ensure 100% test success rate.
-4. Write your verification analysis to test_impact_analysis.md in your working directory.
-5. When finished, send a completion message with summary to parent.
-</USER_REQUEST>
+Your task:
+1. Analyze requirements for Tier 1 (>=5 per feature), Tier 2 (>=5 per feature), Tier 3 (pairwise interactions), and Tier 4 (real-world workflows).
+2. Design specific test file naming conventions and directory layout (e.g. `src/__tests__/tier1_*.test.tsx`, `tier2_*.test.tsx`, `tier3_*.test.tsx`, `tier4_*.test.tsx`).
+3. Formulate concrete test case titles and assertions for every single feature across Tiers 1 to 4, ensuring a total target of >= 138 test cases.
+4. Write your detailed analysis to analysis.md and a self-contained handoff to handoff.md in your working directory (c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_3). Send a completion message back to parent.

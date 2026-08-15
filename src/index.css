@@ -4,58 +4,59 @@
 @theme {
   --font-sans: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --color-deep-void: #050608;
-  --color-onyx: #0c0e12;
-  --color-razor-border: rgba(255, 255, 255, 0.08);
-  --color-glow-cyan: #06b6d4;
+  --color-warm-stone-dark: #121214;
+  --color-warm-stone-light: #fcfcfc;
+  --color-stone-card-dark: #18181b;
+  --color-stone-card-light: #ffffff;
+  --color-warm-border-dark: #27272a;
+  --color-warm-border-light: #e4e4e7;
 }
 
 @layer base {
   :root,
   [data-theme='dark'],
   .dark {
-    --background: #050608;
-    --foreground: #f8fafc;
-    --card: #0c0e12;
-    --card-foreground: #f8fafc;
-    --popover: #0c0e12;
-    --popover-foreground: #f8fafc;
-    --primary: #06b6d4;
-    --primary-foreground: #ffffff;
-    --secondary: #18181b;
-    --secondary-foreground: #f8fafc;
-    --muted: #18181b;
-    --muted-foreground: #94a3b8;
-    --accent: #18181b;
-    --accent-foreground: #f8fafc;
+    --background: #121214;
+    --foreground: #f4f4f5;
+    --card: #18181b;
+    --card-foreground: #f4f4f5;
+    --popover: #18181b;
+    --popover-foreground: #f4f4f5;
+    --primary: #e4e4e7;
+    --primary-foreground: #18181b;
+    --secondary: #27272a;
+    --secondary-foreground: #f4f4f5;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    --accent: #27272a;
+    --accent-foreground: #f4f4f5;
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
-    --border: rgba(255, 255, 255, 0.08);
-    --input: rgba(255, 255, 255, 0.08);
-    --ring: #06b6d4;
+    --border: #27272a;
+    --input: #27272a;
+    --ring: #71717a;
     --radius: 0.5rem;
 
-    /* Custom variables mapped to Deep Void Midnight (#050608) & Onyx (#0c0e12) */
-    --bg-deep-slate: #050608;
-    --container-charcoal: #0c0e12;
-    --border-contrast: rgba(255, 255, 255, 0.08);
-    --accent-cyan: #06b6d4;
-    --accent-sky: #0284c7;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --drawer-backdrop-bg: rgba(5, 6, 8, 0.6);
-    --drawer-backdrop-blur: blur(12px);
-    --header-bg: #0c0e12;
+    /* Custom variables mapped to Raycast Warm Stone (#121214) & Card Charcoal (#18181b) */
+    --bg-deep-slate: #121214;
+    --container-charcoal: #18181b;
+    --border-contrast: #27272a;
+    --accent-stone: #d4d4d8;
+    --accent-sky: #a1a1aa;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --drawer-backdrop-bg: rgba(0, 0, 0, 0.6);
+    --header-bg: #121214;
   }
 
   [data-theme='light'] {
-    --background: #ffffff;
-    --foreground: #050608;
+    --background: #fcfcfc;
+    --foreground: #18181b;
     --card: #ffffff;
-    --card-foreground: #050608;
+    --card-foreground: #18181b;
     --popover: #ffffff;
-    --popover-foreground: #050608;
-    --primary: #06b6d4;
+    --popover-foreground: #18181b;
+    --primary: #27272a;
     --primary-foreground: #ffffff;
     --secondary: #f4f4f5;
     --secondary-foreground: #18181b;
@@ -67,19 +68,18 @@
     --destructive-foreground: #ffffff;
     --border: #e4e4e7;
     --input: #e4e4e7;
-    --ring: #06b6d4;
+    --ring: #a1a1aa;
     --radius: 0.5rem;
 
-    --bg-deep-slate: #f8fafc;
+    --bg-deep-slate: #fcfcfc;
     --container-charcoal: #ffffff;
-    --border-contrast: #e2e8f0;
-    --accent-cyan: #06b6d4;
-    --accent-sky: #0284c7;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --drawer-backdrop-bg: rgba(15, 23, 42, 0.2);
-    --drawer-backdrop-blur: blur(4px);
-    --header-bg: #ffffff;
+    --border-contrast: #e4e4e7;
+    --accent-stone: #27272a;
+    --accent-sky: #52525b;
+    --text-primary: #18181b;
+    --text-secondary: #71717a;
+    --drawer-backdrop-bg: rgba(0, 0, 0, 0.4);
+    --header-bg: #fcfcfc;
   }
 }
 
@@ -95,24 +95,7 @@ body {
 }
 
 /* ==========================================================================
-   Ambient Cyan Glow Utilities (2026 Linear / Vercel Aesthetic)
-   ========================================================================== */
-
-.ambient-cyan-glow {
-  background-image: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.1));
-}
-
-.glow-cyan-subtle {
-  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.25);
-}
-
-.glow-cyan-border {
-  border-color: rgba(6, 182, 212, 0.4);
-  box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
-}
-
-/* ==========================================================================
-   Floating Toast Notifications System (2026 Deep Slate Pill Theme)
+   Floating Toast Notifications System (Raycast Warm Stone Theme)
    ========================================================================== */
 
 #toasts,
@@ -136,12 +119,10 @@ body {
   gap: 12px;
   padding: 12px 18px;
   border-radius: 9999px;
-  background: rgba(12, 14, 18, 0.90);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #f8fafc;
-  box-shadow: 0 10px 38px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.20);
+  background: #18181b;
+  border: 1px solid var(--border-contrast);
+  color: var(--text-primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   font-size: 0.875rem;
   font-weight: 500;
   overflow: hidden;
@@ -151,24 +132,24 @@ body {
 
 .toast:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.6), 0 0 25px rgba(6, 182, 212, 0.30);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
 }
 
 .toast.warn {
   border-color: rgba(239, 68, 68, 0.4);
-  box-shadow: 0 10px 38px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.25);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   color: #fecdd3;
 }
 
 .toast.warn:hover {
-  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.6), 0 0 28px rgba(239, 68, 68, 0.35);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
 }
 
 .ticon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-cyan, #06b6d4);
+  color: #a1a1aa;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
@@ -190,9 +171,9 @@ body {
   justify-content: center;
   padding: 4px 12px;
   border-radius: 9999px;
-  border: 1px solid rgba(6, 182, 212, 0.4);
-  background: rgba(6, 182, 212, 0.12);
-  color: #38bdf8;
+  border: 1px solid #3f3f46;
+  background: #27272a;
+  color: #e4e4e7;
   font-size: 0.775rem;
   font-weight: 600;
   cursor: pointer;
@@ -202,8 +183,8 @@ body {
 }
 
 .tact:hover {
-  background: rgba(6, 182, 212, 0.25);
-  border-color: #06b6d4;
+  background: #3f3f46;
+  border-color: #52525b;
   color: #ffffff;
 }
 
@@ -225,13 +206,13 @@ body {
   left: 0;
   height: 2.5px;
   width: 100%;
-  background: linear-gradient(90deg, #06b6d4, #3b82f6);
+  background: #a1a1aa;
   transform-origin: left;
   animation: toastProgress 4.2s linear forwards;
 }
 
 .toast.warn .tprogress {
-  background: linear-gradient(90deg, #ef4444, #f97316);
+  background: #ef4444;
 }
 
 .toast:hover .tprogress {
@@ -276,7 +257,7 @@ body {
 }
 
 /* ==========================================================================
-   Glassmorphic Backdrop Overlay & Batch Drawer
+   Solid Subtle Backdrop Overlay & Batch Drawer (Raycast Warm Stone)
    ========================================================================== */
 
 #backdrop,
@@ -286,54 +267,50 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--drawer-backdrop-bg, rgba(5, 6, 8, 0.6));
-  backdrop-filter: var(--drawer-backdrop-blur, blur(12px));
-  -webkit-backdrop-filter: var(--drawer-backdrop-blur, blur(12px));
+  background: rgba(0, 0, 0, 0.6);
   z-index: 998;
   transition: opacity 200ms ease;
 }
 
 #batchDrawer,
 .batch-drawer {
-  background: var(--drawer-panel-bg, rgba(12, 14, 18, 0.85));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #18181b;
 }
 
 /* ==========================================================================
-   High-Contrast Defect Cards, Tables & Visual Differentiation
+   Tactile Defect Cards, Tables & Warm Stone Visual Differentiation
    ========================================================================== */
 
 /* CSS Variables for Defect Items */
 :root,
 [data-theme='dark'] {
-  --defect-card-bg: var(--container-charcoal, #0c0e12);
-  --defect-card-bg-hover: #12151c;
-  --defect-card-bg-pinned: rgba(245, 159, 0, 0.1);
-  --defect-card-border: var(--border-contrast, rgba(255, 255, 255, 0.08));
-  --defect-card-border-hover: var(--accent-cyan, #06b6d4);
-  --defect-card-border-pinned: rgba(245, 159, 0, 0.5);
-  --defect-card-glow-hover: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.2);
-  --defect-rnum-color: #94a3b8;
-  --defect-rtxt-color: var(--text-primary, #f8fafc);
-  --defect-act-btn-bg: rgba(255, 255, 255, 0.04);
-  --defect-act-btn-border: rgba(255, 255, 255, 0.08);
-  --defect-act-btn-color: #94a3b8;
+  --defect-card-bg: #18181b;
+  --defect-card-bg-hover: #27272a;
+  --defect-card-bg-pinned: rgba(245, 159, 0, 0.08);
+  --defect-card-border: #27272a;
+  --defect-card-border-hover: #3f3f46;
+  --defect-card-border-pinned: rgba(245, 159, 0, 0.4);
+  --defect-card-glow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --defect-rnum-color: #a1a1aa;
+  --defect-rtxt-color: #f4f4f5;
+  --defect-act-btn-bg: #27272a;
+  --defect-act-btn-border: #3f3f46;
+  --defect-act-btn-color: #a1a1aa;
 }
 
 [data-theme='light'] {
   --defect-card-bg: #ffffff;
-  --defect-card-bg-hover: #f8fafc;
-  --defect-card-bg-pinned: #fff9db;
-  --defect-card-border: #cbd5e1;
-  --defect-card-border-hover: var(--accent-sky, #0284c7);
-  --defect-card-border-pinned: #ffe066;
-  --defect-card-glow-hover: 0 4px 16px rgba(2, 132, 199, 0.15);
-  --defect-rnum-color: #64748b;
-  --defect-rtxt-color: #0f172a;
-  --defect-act-btn-bg: #f1f5f9;
-  --defect-act-btn-border: #cbd5e1;
-  --defect-act-btn-color: #475569;
+  --defect-card-bg-hover: #f4f4f5;
+  --defect-card-bg-pinned: #fffbe6;
+  --defect-card-border: #e4e4e7;
+  --defect-card-border-hover: #d4d4d8;
+  --defect-card-border-pinned: #fde047;
+  --defect-card-glow-hover: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --defect-rnum-color: #71717a;
+  --defect-rtxt-color: #18181b;
+  --defect-act-btn-bg: #f4f4f5;
+  --defect-act-btn-border: #e4e4e7;
+  --defect-act-btn-color: #52525b;
 }
 
 /* High-Contrast Defect Cards & Rows */
@@ -349,9 +326,9 @@ body {
   border-color: var(--defect-card-border-pinned);
 }
 
-/* Hover States (150ms ease, elevation & border cyan glow) */
+/* Hover States (150ms ease, elevation & border definition) */
 .gcard:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: var(--defect-card-border-hover);
   box-shadow: var(--defect-card-glow-hover);
 }
@@ -359,13 +336,13 @@ body {
 .row:hover {
   transform: translateY(-1px);
   border-color: var(--defect-card-border-hover);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3), 0 0 12px rgba(6, 182, 212, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .trow:hover {
   border-color: var(--defect-card-border-hover);
   background-color: var(--defect-card-bg-hover);
-  box-shadow: 0 2px 10px rgba(6, 182, 212, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Typography Hierarchy */
@@ -378,7 +355,7 @@ body {
 }
 
 .gcard:hover .rnum, .row:hover .rnum, .trow:hover .rnum {
-  color: var(--accent-cyan, #06b6d4);
+  color: #e4e4e7;
 }
 
 .rtxt {
@@ -388,8 +365,8 @@ body {
 }
 
 .rtxt mark {
-  background: rgba(6, 182, 212, 0.25);
-  color: var(--accent-cyan, #06b6d4);
+  background: rgba(250, 204, 21, 0.2);
+  color: #fef08a;
   border-radius: 2px;
   padding: 0 2px;
 }
@@ -441,9 +418,9 @@ body {
 }
 
 .pin-btn:hover {
-  border-color: var(--accent-cyan, #06b6d4);
-  color: var(--accent-cyan, #06b6d4);
-  background: rgba(6, 182, 212, 0.15);
+  border-color: #52525b;
+  color: #f4f4f5;
+  background: #3f3f46;
 }
 
 .pin-btn.pinned {
@@ -461,9 +438,9 @@ body {
 .add-batch-btn {
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1px solid rgba(6, 182, 212, 0.4);
-  background: rgba(6, 182, 212, 0.15);
-  color: #38bdf8;
+  border: 1px solid #3f3f46;
+  background: #27272a;
+  color: #e4e4e7;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
@@ -474,10 +451,9 @@ body {
 }
 
 .add-batch-btn:hover {
-  background: rgba(6, 182, 212, 0.3);
-  border-color: var(--accent-cyan, #06b6d4);
+  background: #3f3f46;
+  border-color: #52525b;
   color: #ffffff;
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
 }
 
 .edit-item-btn {
@@ -515,3 +491,4 @@ body {
   border-color: #ef4444;
   color: #ffffff;
 }
+

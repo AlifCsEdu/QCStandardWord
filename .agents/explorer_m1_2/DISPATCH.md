@@ -1,15 +1,13 @@
-## 2026-08-09T13:13:30Z
-You are explorer_m1_2 (role: teamwork_preview_explorer).
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_2
+## 2026-08-09T13:40:53Z
+You are an Explorer subagent for the E2E Testing Track.
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_2
+Read the following specification files:
+1. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+3. c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\TEST_INFRA.md
 
-MANDATORY INPUTS:
-- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-
-ASSIGNMENT (Milestone M1: Hardcoded Light Inline Style Purge):
-1. Read ORIGINAL_REQUEST.md and PROJECT.md.
-2. Investigate src/components/HistoryBar.tsx, src/components/EditToolbar.tsx, and src/components/CodeSubChips.tsx in c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording.
-   Locate hardcoded light-mode inline styles (#fff9db, #ffe066, #f59f00 in HistoryBar; #e7f5ff, #a5d8ff in EditToolbar; #7048e8 in CodeSubChips).
-3. Formulate precise refactoring strategy to replace inline light styles with dark-theme 2026 Tailwind CSS classes (zinc/slate dark backgrounds, subtle cyan/amber/blue accents, razor borders) while preserving all DOM IDs (#histbar, #editstrip, etc.) and test attributes.
-4. Write your analysis to strategy_inline_styles.md in your working directory.
-5. When finished, send a completion message with summary to parent.
+Your task:
+1. Investigate all UI components and features listed in PROJECT.md Feature Inventory (Features 1 to 12).
+2. Detail the exact DOM elements, roles, aria-labels, buttons, inputs, themes, category pills, border classes, spotlight search, drawer, toasts, pin folders, and localStorage keys used by each feature.
+3. Map out requirement-driven opaque-box assertion strategies for each of the 12 features for Tiers 1-4 testing.
+4. Write your detailed analysis to analysis.md and a self-contained handoff to handoff.md in your working directory (c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m1_2). Send a completion message back to parent.

@@ -13,7 +13,7 @@ export type MantineColorTuple = [
 
 export const colors: {
   deepSlate: MantineColorTuple;
-  cyanAccent: MantineColorTuple;
+  stoneAccent: MantineColorTuple;
   dark: MantineColorTuple;
 } = {
   deepSlate: [
@@ -28,17 +28,17 @@ export const colors: {
     '#1e293b', // 8: container charcoal / slate 800
     '#0f172a', // 9: bg deep slate / slate 900
   ],
-  cyanAccent: [
-    '#ecfeff', // 0
-    '#cffafe', // 1
-    '#a5f3fc', // 2
-    '#67e8f9', // 3
-    '#22d3ee', // 4
-    '#06b6d4', // 5: accent cyan (#06b6d4)
-    '#0891b2', // 6
-    '#0284c7', // 7: accent sky (#0284c7)
-    '#0369a1', // 8
-    '#075985', // 9
+  stoneAccent: [
+    '#f5f5f4', // 0
+    '#e7e5e4', // 1
+    '#d6d3d1', // 2
+    '#a8a29e', // 3
+    '#78716c', // 4
+    '#57534e', // 5
+    '#44403c', // 6
+    '#292524', // 7
+    '#1c1917', // 8
+    '#0c0a09', // 9
   ],
   dark: [
     '#f8fafc', // 0

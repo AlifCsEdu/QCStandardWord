@@ -48,7 +48,7 @@ export function useQCState() {
     const defaultFolder: CustomPinFolder = {
       id: 'starred',
       name: 'Starred Defects',
-      color: '#06b6d4',
+      color: '#78716c',
       itemIds: Array.isArray(legacyPins) ? legacyPins : [],
       createdAt: Date.now(),
     };
@@ -59,17 +59,9 @@ export function useQCState() {
 
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
 
-  const [pins, setPins] = useState<(string | number)[]>(() => {
-    const savedFolders = safeJSONParse<CustomPinFolder[]>('qc-pin-folders', []);
-    if (savedFolders && Array.isArray(savedFolders) && savedFolders.length > 0) {
-      const validFolders = savedFolders.filter((f) => f && typeof f === 'object' && Array.isArray(f.itemIds));
-      if (validFolders.length > 0) {
-        return Array.from(new Set(validFolders.flatMap((f) => f.itemIds || [])));
-      }
-    }
-    const legacyPins = safeJSONParse<(string | number)[]>('qc-pins', []);
-    return Array.isArray(legacyPins) ? legacyPins : [];
-  });
+  const pins = useMemo(() => {
+    return Array.from(new Set(folders.flatMap((f) => f.itemIds || [])));
+  }, [folders]);
 
   const updateFoldersAndPins = useCallback(
     (updater: CustomPinFolder[] | ((prev: CustomPinFolder[]) => CustomPinFolder[])) => {
@@ -77,7 +69,6 @@ export function useQCState() {
         const next = typeof updater === 'function' ? updater(prev) : updater;
         safeStorageSet('qc-pin-folders', next);
         const allPinnedIds = Array.from(new Set(next.flatMap((f) => f.itemIds || [])));
-        setPins(allPinnedIds);
         safeStorageSet('qc-pins', allPinnedIds);
         return next;
       });
@@ -243,7 +234,7 @@ export function useQCState() {
       const newFolder: CustomPinFolder = {
         id,
         name: name.trim() || 'New Folder',
-        color: color || '#06b6d4',
+        color: color || '#78716c',
         itemIds: [],
         createdAt: Date.now(),
       };
@@ -287,22 +278,37 @@ export function useQCState() {
     [updateFoldersAndPins]
   );
 
+  const itemFolderMap = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const f of folders) {
+      if (!Array.isArray(f.itemIds)) continue;
+      for (const id of f.itemIds) {
+        const strId = String(id);
+        let set = map.get(strId);
+        if (!set) {
+          set = new Set();
+          map.set(strId, set);
+        }
+        set.add(f.id);
+      }
+    }
+    return map;
+  }, [folders]);
+
   const isPinnedInFolder = useCallback(
     (itemId: string | number, folderId: string): boolean => {
-      const folder = folders.find((f) => f.id === folderId);
-      if (!folder) return false;
-      return folder.itemIds.some((id) => String(id) === String(itemId));
+      return itemFolderMap.get(String(itemId))?.has(folderId) ?? false;
     },
-    [folders]
+    [itemFolderMap]
   );
 
   const getItemFolderIds = useCallback(
     (itemId: string | number): string[] => {
-      return folders
-        .filter((f) => f.itemIds.some((id) => String(id) === String(itemId)))
-        .map((f) => f.id);
+      const set = itemFolderMap.get(String(itemId));
+      if (!set || set.size === 0) return [];
+      return folders.filter((f) => set.has(f.id)).map((f) => f.id);
     },
-    [folders]
+    [folders, itemFolderMap]
   );
 
   // Pinning
@@ -319,7 +325,7 @@ export function useQCState() {
         const newFolder: CustomPinFolder = {
           id: targetFolderId,
           name: 'Starred Defects',
-          color: '#06b6d4',
+          color: '#78716c',
           itemIds: [id],
           createdAt: Date.now(),
         };

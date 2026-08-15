@@ -1,36 +1,34 @@
-# BRIEFING — 2026-08-09T21:20:02Z
+# BRIEFING — 2026-08-09T21:49:45+08:00
 
 ## Mission
-Investigate AppHeader and CommandDialog (Spotlight modal) in QCStandardWording for Milestone M2: Top Header, Hero Search & Spotlight Command Modal, and formulate a 2026 Linear/Vercel aesthetic refactoring strategy while preserving key IDs, attributes, handlers, and shortcuts.
+Analyze UI components (DefectCard, WordingList, WordingGrid, WordingTable) for category badge pills, Lucide icons, and left border accent indicators (`border-l-4`) with distinct visual contrast across List, Grid Cards, and Table view modes for Milestone 2.
 
 ## 🔒 My Identity
-- Archetype: teamwork_preview_explorer
-- Roles: explorer
+- Archetype: Teamwork explorer
+- Roles: Explorer 2 for Milestone 2 (Muted Semantic Color-Coding & Iconography)
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\explorer_m2_2
-- Original parent: adb7f4fb-2540-41a1-acc7-6d53c653a05f
-- Milestone: M2 - Top Header, Hero Search & Spotlight Command Modal
+- Original parent: df7f8a56-e4de-46bb-9f55-2328bf3f86bc
+- Milestone: Milestone 2
 
 ## 🔒 Key Constraints
-- Read-only investigation — do NOT implement code changes in src/
-- Strictly preserve `#appHeader`, `data-v="list|grid|table"`, search input handlers, and modal trigger keybindings (⌘K / Ctrl+K)
-- Design target: 2026 Linear/Vercel dark UI (Onyx #0c0e12, glassmorphism backdrop-blur-xl, ambient cyan glow border #06b6d4, Geist/Inter font hierarchy)
+- Read-only investigation — do NOT modify project code files
+- Report findings via handoff.md and send_message
 
 ## Current Parent
-- Conversation ID: adb7f4fb-2540-41a1-acc7-6d53c653a05f
-- Updated: 2026-08-09T21:20:02Z
+- Conversation ID: df7f8a56-e4de-46bb-9f55-2328bf3f86bc
+- Updated: 2026-08-09T21:49:45+08:00
 
 ## Investigation State
-- **Explored paths**: `src/components/AppHeader.tsx`, `src/App.tsx`, `src/components/ui/command.tsx`, `src/components/ui/dialog.tsx`, `src/index.css`, `tests/harness.js`, `tests/tier1-features.test.js`
-- **Key findings**: Formulated complete 2026 Linear/Vercel aesthetic refactoring strategy for AppHeader and CommandDialog; identified unimported `FolderPin` icon defect in `AppHeader.tsx`.
-- **Unexplored areas**: None for Milestone M2 top header & command search modal.
+- **Explored paths**: `src/components/DefectCard.tsx`, `src/components/WordingList.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingTable.tsx`, `src/utils/categoryColors.ts`, `src/index.css`, `src/data/qcData.ts`
+- **Key findings**:
+  1. `border-l-4` left border accent is currently set via `style={borderLeftStyle}` using category colors from `categoryColors.ts`.
+  2. `DefectCard.tsx` has hardcoded dark mode utility classes (`bg-stone-900 border-stone-800 text-stone-100`) overriding CSS variable cascade for Warm Stone Light mode.
+  3. `WordingTable.tsx` header uses `grid-cols-12`, while `DefectCard` (`variant === 'table'`) uses flexbox layout, causing slight vertical column misalignment.
+  4. Category badge pills (`.rpill`) successfully render Lucide icons via `getCategoryIconComponent(item.c)`.
+- **Unexplored areas**: None (investigation complete).
 
 ## Key Decisions Made
-- Prepared technical strategy document `strategy_header_search.md`.
-- Completed handoff report `handoff.md`.
+- Completed read-only analysis and created detailed handoff report in `handoff.md`.
 
 ## Artifact Index
-- DISPATCH.md — Initial user request dispatch log
-- BRIEFING.md — Working memory index
-- strategy_header_search.md — Comprehensive technical analysis and refactoring strategy
-- progress.md — Heartbeat & step progress log
-- handoff.md — 5-component handoff report
+- handoff.md — Detailed analysis and recommendation report for Milestone 2

@@ -1,98 +1,95 @@
-# Milestone M1 Code Review & Handoff Report
+# Quality & Adversarial Review Report — Milestone 1: Warm Stone Base Theme & AI Tropes Elimination
 
-## Review Summary
-
-**Verdict**: APPROVE
-
-Milestone M1 changes in `src/index.css`, `src/components/HistoryBar.tsx`, `src/components/EditToolbar.tsx`, and `src/components/CodeSubChips.tsx` are fully verified. All inline light Mantine styles have been replaced with high-contrast Tailwind CSS v4 dark classes matching Linear 2026 aesthetics (Deep Void `#050608`, Onyx `#0c0e12`, razor borders `rgba(255, 255, 255, 0.08)`, and cyan accent highlights `#06b6d4`). All critical DOM IDs (`#histbar`, `#editstrip`, `#subchips`, `#hchips`, `#hclearAll`, `#addBtn`, `#exportBtn`, `#importBtn`, `#importFile`, `#resetBtn`) and data attributes (`data-hcopy`, `data-sub`, `.show`, `.arm`, `.active`) are strictly preserved. TypeScript compilation (`npm run build`) and test suites (`npm test`) pass with 100% success rate across all 5 tiers.
-
----
-
-## 1. Observation
-
-### 1.1 Direct Source Code Observations
-- **`src/index.css`**:
-  - Global Google Font import (`Geist`, `Inter`, `JetBrains Mono`) active on Line 1.
-  - `@theme` block defines `--font-sans`, `--font-mono`, `--color-deep-void: #050608`, `--color-onyx: #0c0e12`, `--color-razor-border: rgba(255, 255, 255, 0.08)`, and `--color-glow-cyan: #06b6d4`.
-  - `:root`, `[data-theme='dark']`, and `.dark` blocks map `--background` to `#050608` and `--card` to `#0c0e12`.
-  - Ambient cyan glow utility classes (`.ambient-cyan-glow`, `.glow-cyan-subtle`, `.glow-cyan-border`) defined.
-  - Defect card high-contrast variables and hover state rules established.
-  - Zero legacy `--mantine-color-body` references or `[data-mantine-color-scheme]` rules remain.
-
-- **`src/components/HistoryBar.tsx`**:
-  - DOM ID `#histbar` preserved on hidden wrapper (Line 16) and visible container (Line 22).
-  - DOM ID `#hchips` (Line 31), `data-hcopy` attribute (Line 37), `.htxt` class (Line 42), and `#hclearAll` (Line 48) preserved.
-  - Inline yellow styles (`#fff9db`, `#ffe066`, `#f59f00`) replaced with dark Tailwind CSS v4 glassmorphic classes (`bg-amber-950/20`, `border-amber-500/20`, `text-amber-400`, `bg-zinc-800/80`).
-
-- **`src/components/EditToolbar.tsx`**:
-  - DOM ID `#editstrip` preserved with dynamic `${editMode ? 'show flex' : 'hidden'}` visibility (Line 59).
-  - DOM IDs `#addBtn` (Line 67), `#exportBtn` (Line 77), `#importBtn` (Line 85), `#importFile` (Line 93), and `#resetBtn` (Line 101) preserved.
-  - Armed reset double-click confirmation state with `.arm` class preserved (Line 104).
-  - Light inline styles (`#e7f5ff`) replaced with dark cyan Tailwind glassmorphic styling (`bg-cyan-950/20`, `border-cyan-500/20`, `text-cyan-400`).
-
-- **`src/components/CodeSubChips.tsx`**:
-  - DOM ID `#subchips` preserved with `${isVisible ? 'show flex' : 'hidden'}` visibility (Line 21).
-  - `data-sub={sub}` attribute (Line 29), `.subchip-btn` class, and `.active` class (Line 31) preserved.
-  - Violet inline style (`#7048e8`) replaced with dark zinc surface (`bg-zinc-900/60`) and cool cyan active highlight (`bg-cyan-600 text-white border-cyan-400`).
-
-### 1.2 Command Verification Results
-- **`npm run build`**: Executed cleanly with exit code 0. Generated production static bundle in `dist/` with 0 TypeScript compilation errors.
-- **`npm test`**: Executed node test runner across 55 test specifications in 28 suites across Tiers 1-5. Pass rate: 55/55 (100% pass, 0 failures).
+**Reviewer**: Reviewer 1 (`reviewer_m1_1`)  
+**Target Milestone**: Milestone 1 (Warm Stone Base Theme & AI Tropes Elimination)  
+**Working Directory**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\reviewer_m1_1`  
+**Target Repository**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`  
+**Verdict**: **APPROVE**  
+**Date**: 2026-08-09  
 
 ---
 
-## 2. Logic Chain
+## 1. Executive Summary
 
-1. **Observed**: Worker M1 modified `src/index.css`, `HistoryBar.tsx`, `EditToolbar.tsx`, and `CodeSubChips.tsx` to establish the Linear 2026 Deep Void dark theme.
-2. **Verified**: Inspection of `src/index.css` confirms Deep Void Midnight `#050608` and Onyx `#0c0e12` palette tokens, typography rules (`Geist`, `Inter`, `JetBrains Mono`), and utility classes, with total removal of legacy Mantine declarations.
-3. **Verified**: Inspection of component source files confirms exact preservation of required DOM element IDs (`#histbar`, `#editstrip`, `#subchips`, `#hchips`, `#hclearAll`, `#addBtn`, `#exportBtn`, `#importBtn`, `#importFile`, `#resetBtn`) and attributes (`data-hcopy`, `data-sub`, `.show`, `.arm`, `.active`).
-4. **Verified**: Independent execution of `npm run build` and `npm test` confirmed 0 build errors and 55/55 test pass rate.
-5. **Verified**: No integrity violations (hardcoded test facades, dummy implementations, or work bypasses) exist in the codebase.
-6. **Conclusion**: M1 implementation is fully verified and approved.
+Milestone 1 implementation by `worker_m1_1` has been independently reviewed and stress-tested. The changes strictly adhere to the Raycast Warm Stone design palette (`#121214` dark base / `#fcfcfc` light base, `border-stone-800` / `border-stone-200`, tactile cards, and solid subtle overlays), completely purge generic AI design tropes (0 glassmorphism blurs, 0 neon gradients, 0 glowing halos), maintain clean typography, preserve all DOM element IDs and data attributes required by test suites, and achieve 100% pass rate on `npm run test` (121/121 tests) and `npm run build`.
 
 ---
 
-## 3. Findings
+## 2. Review Summary & Findings
 
-No findings requiring changes.
+### 2.1 Correctness & Palette Conformance
+- **`src/index.css`**: Configures Raycast Warm Stone palette tokens in `@theme` (`--color-warm-stone-dark: #121214; --color-warm-stone-light: #fcfcfc; --color-stone-card-dark: #18181b; --color-stone-card-light: #ffffff; --color-warm-border-dark: #27272a; --color-warm-border-light: #e4e4e7;`).
+- **Dark/Light Theme Custom Properties**: Mapped `:root` / `[data-theme='dark']` background to `#121214`, cards to `#18181b`, and borders to `#27272a`. Mapped `[data-theme='light']` base background to `#fcfcfc`, cards to `#ffffff`, and borders to `#e4e4e7`.
+- **Component Palette Consistency**: `App.tsx`, `AppHeader.tsx`, `HistoryBar.tsx`, `EditToolbar.tsx`, `CodeSubChips.tsx`, `BatchDrawer.tsx`, `DefectCard.tsx`, `CategoryChips.tsx`, `EditModal.tsx`, `SettingsModal.tsx`, `WordingContainer.tsx`, `WordingGrid.tsx`, `WordingList.tsx`, and `WordingTable.tsx` use Tailwind `bg-stone-900`, `border-stone-800`, `bg-[#121214]`, and `text-stone-100`.
 
-### Verified Claims
-- **Claim 1**: Deep Void Midnight (`#050608`) and Onyx (`#0c0e12`) theme variables declared in `src/index.css` → **PASS** (verified in `src/index.css` `@theme` and `:root` sections).
-- **Claim 2**: Purged all hardcoded Mantine light inline styles (`#fff9db`, `#e7f5ff`, `#7048e8`) → **PASS** (verified zero matches via file inspection).
-- **Claim 3**: Preserved all selector DOM IDs (`#histbar`, `#editstrip`, `#subchips`) and dataset attributes → **PASS** (verified exact string preservation).
-- **Claim 4**: Static production build succeeds → **PASS** (`npm run build` returned exit code 0).
-- **Claim 5**: Test suite passes 100% → **PASS** (`npm test` returned 55/55 passed across 28 suites).
+### 2.2 Complete AI Design Tropes Elimination (Audit Results)
+- **Glassmorphism Blurs**: Automated grep for `backdrop-blur` across `src/` yielded **0 matching lines**.
+- **Neon Gradients**: Automated grep for `bg-gradient` across `src/` yielded **0 matching lines**.
+- **Glowing Halos**: Automated grep for `shadow-[0_0_` and `shadow-cyan` / `shadow-purple` yielded **0 matching lines**.
+- **Low-Opacity Glass Borders**: Automated grep for `border-white/` yielded **0 matching lines**.
+- **Legacy Inline Displays**: Automated grep for `style={{ display` yielded **0 matching lines** (replaced with clean Tailwind visibility classes or conditional JSX).
+- **Solid Overlays**: Drawer/modal backdrops converted from high-blur filters to flat solid overlays (`bg-black/60`).
 
-### Coverage Gaps
-- None. All 4 target files for Milestone M1 were directly inspected and verified.
-
-### Unverified Items
-- None.
-
----
-
-## 4. Adversarial Stress-Test Assessment
-
-- **Attack Scenario 1**: Hidden state rendering breakdown for `#histbar`, `#editstrip`, or `#subchips` when inactive.
-  - *Result*: **PASS**. Components retain `style={{ display: 'none' }}` and `.hidden` classes while remaining mounted in DOM. Selector queries in test suites can locate element IDs regardless of active state.
-- **Attack Scenario 2**: Armed reset state timeout memory leaks or class omission.
-  - *Result*: **PASS**. `EditToolbar` uses `setTimeout` to clear `armedReset` after 4s, correctly applying the `.arm` class during armed mode for test Tier 4 verification.
-- **Attack Scenario 3**: CSS custom property fallback / dark theme inheritance.
-  - *Result*: **PASS**. `src/index.css` applies `--background: #050608` to `:root`, `[data-theme='dark']`, and `.dark`, guaranteeing robust rendering.
+### 2.3 Verification of Integrity & Test Compliance
+- **No Integrity Violations Found**: No hardcoded test outputs, no facade implementations, and no test shortcuts detected.
+- **Independent Build Execution**: `npm run build` compiled without TypeScript or Vite errors into `./dist` (PWA SW and 6 precached assets generated in 7.27s).
+- **Independent Test Suite Execution**: `npm run test` passed 100% of tests (121 passed, 0 failed, 9 test suites).
 
 ---
 
-## 5. Conclusion
+## 3. Verified Claims
 
-**Verdict**: APPROVE
-
-Milestone M1 implementation fulfills all requirements from `ORIGINAL_REQUEST.md` and `PROJECT.md`. Milestone M2 may proceed without restriction.
+| # | Worker Claim | Verification Method | Result |
+|---|--------------|---------------------|--------|
+| 1 | Warm Stone `#121214` dark / `#fcfcfc` light palette configured in CSS & components | Inspection of `src/index.css`, `App.tsx`, `AppHeader.tsx`, `DefectCard.tsx` | **VERIFIED PASS** |
+| 2 | 0 `backdrop-blur` blurs in `src/` | Grep search `backdrop-blur` across `src/` | **VERIFIED PASS** (0 occurrences) |
+| 3 | 0 `bg-gradient` neon gradients in `src/` | Grep search `bg-gradient` across `src/` | **VERIFIED PASS** (0 occurrences) |
+| 4 | 0 glowing halos (`shadow-[0_0_...`) in `src/` | Grep search `shadow-[0_0_` across `src/` | **VERIFIED PASS** (0 occurrences) |
+| 5 | 0 inline `style={{ display...` overrides in `src/` | Grep search `style={{ display` across `src/` | **VERIFIED PASS** (0 occurrences) |
+| 6 | Preservation of all DOM element IDs and data attributes | Inspection of `HistoryBar.tsx`, `EditToolbar.tsx`, `CodeSubChips.tsx`, `BatchDrawer.tsx`, `AppHeader.tsx` | **VERIFIED PASS** |
+| 7 | `npm run build` succeeds | Executed `npm run build` in working directory | **VERIFIED PASS** (0 errors) |
+| 8 | `npm run test` 100% pass rate | Executed `npm run test` in working directory | **VERIFIED PASS** (121/121 pass) |
 
 ---
 
-## 6. Verification Method
+## 4. Adversarial Attack Surface & Challenge Findings
 
-To re-verify independently:
-1. `npm run build` — verify Vite compilation succeeds with 0 errors.
-2. `npm test` — verify node test runner completes 55/55 passing tests.
-3. Inspect `src/index.css`, `HistoryBar.tsx`, `EditToolbar.tsx`, `CodeSubChips.tsx` for ID preservation and clean Tailwind styling.
+### 4.1 Stress Test: Backdrop & Overlay Performance
+- *Scenario*: Open Batch Drawer, Edit Modal, or Settings Modal in high-density viewport.
+- *Evaluation*: Solid `bg-black/60` backdrop eliminates GPU compositing overhead previously caused by `backdrop-filter: blur(16px)` and radial glow filters, reducing render cycles.
+
+### 4.2 Stress Test: DOM Element ID & Attribute Contract
+- *Scenario*: Test runners targeting `#histbar`, `#editstrip`, `#subchips`, `#batchDrawer`, `#backdrop`, `#bcount`, `data-hcopy`, `data-sub`, `data-bi`, `data-mvup`, `data-mvdn`, `data-bc`, `data-rm`.
+- *Evaluation*: All DOM IDs and data attributes are fully retained in TSX templates.
+
+### 4.3 Unchallenged Areas
+- Dynamic user custom pin folder border colors (`style={{ borderLeftColor: folder.color }}`) are domain requirements for user customization and were correctly preserved.
+
+---
+
+## 5. Verification Method
+
+To independently verify this review:
+1. **Static Trope Grep Audit**:
+   ```bash
+   grep -r "backdrop-blur" src/
+   grep -r "bg-gradient" src/
+   grep -r "shadow-\[0_0_" src/
+   grep -r "border-white/\[" src/
+   grep -r "style={{ display" src/
+   ```
+2. **Build Execution**:
+   ```bash
+   npm run build
+   ```
+3. **Test Execution**:
+   ```bash
+   npm run test
+   ```
+
+---
+
+## 6. Verdict
+
+**APPROVE**  
+Milestone 1 is fully complete, high quality, free of integrity violations, and ready to progress to Milestone 2.

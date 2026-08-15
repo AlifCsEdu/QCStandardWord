@@ -18,7 +18,7 @@ describe('Milestone 3: Custom Pin Folders & State Layer Overhaul', () => {
       const folders = JSON.parse(rawFolders);
       assert.equal(folders.length, 1, 'Should have auto-created 1 default folder');
       assert.equal(folders[0].name, 'Starred Defects');
-      assert.equal(folders[0].color, '#06b6d4');
+      assert.equal(folders[0].color, '#78716c');
       assert.deepEqual(folders[0].itemIds, legacyPins);
       assert.ok(folders[0].createdAt > 0, 'createdAt timestamp should be set');
     });

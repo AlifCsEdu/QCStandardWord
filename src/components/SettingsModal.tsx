@@ -32,13 +32,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       <div
         id="setmodal"
         data-testid="settings-modal"
-        className={`settings-modal-container ${isOpen ? 'open' : ''}`}
-        style={{ display: isOpen ? 'block' : 'none' }}
+        className={`settings-modal-container ${isOpen ? 'block' : 'hidden'}`}
       >
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-          <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-lg">
+          <DialogContent className="bg-stone-900 border-stone-800 text-stone-100 max-w-lg">
             <DialogHeader>
-              <DialogTitle className="text-lg font-bold text-zinc-100">
+              <DialogTitle className="text-lg font-bold text-stone-100">
                 Appearance & Display Preferences
               </DialogTitle>
             </DialogHeader>
@@ -46,7 +45,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="flex flex-col gap-4 py-2">
               {/* Layout Selector */}
               <div>
-                <label className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Layout View Mode:
                 </label>
                 <div id="setLayout" className="flex gap-2">
@@ -58,8 +57,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClick={() => onSetLayout(mode)}
                       className={`flex-1 py-1.5 px-3 rounded-md text-xs font-semibold border transition-colors capitalize cursor-pointer ${
                         appearance.layout === mode
-                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold'
-                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                          ? 'bg-stone-800 border-stone-700 text-stone-100 font-bold shadow-xs'
+                          : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                       }`}
                     >
                       {mode}
@@ -70,7 +69,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Density Selector */}
               <div>
-                <label className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Density:
                 </label>
                 <div id="setDensity" className="flex gap-2">
@@ -81,8 +80,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClick={() => onSetDensity(den)}
                       className={`flex-1 py-1.5 px-3 rounded-md text-xs font-semibold border transition-colors capitalize cursor-pointer ${
                         appearance.density === den
-                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold'
-                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                          ? 'bg-stone-800 border-stone-700 text-stone-100 font-bold shadow-xs'
+                          : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                       }`}
                     >
                       {den}
@@ -93,7 +92,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Radius Option */}
               <div>
-                <label className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Border Radius:
                 </label>
                 <div id="setRadius" className="flex gap-2">
@@ -104,8 +103,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClick={() => onSetRadius(rad)}
                       className={`flex-1 py-1.5 px-3 rounded-md text-xs font-semibold border transition-colors capitalize cursor-pointer ${
                         appearance.radius === rad
-                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold'
-                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                          ? 'bg-stone-800 border-stone-700 text-stone-100 font-bold shadow-xs'
+                          : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                       }`}
                     >
                       {rad}
@@ -116,7 +115,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Text Size Option */}
               <div>
-                <label className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Text Size:
                 </label>
                 <div id="setText" className="flex gap-2">
@@ -127,8 +126,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClick={() => onSetTextSize(sz)}
                       className={`flex-1 py-1.5 px-3 rounded-md text-xs font-semibold border transition-colors uppercase cursor-pointer ${
                         appearance.textsize === sz
-                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold'
-                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                          ? 'bg-stone-800 border-stone-700 text-stone-100 font-bold shadow-xs'
+                          : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                       }`}
                     >
                       {sz}
@@ -139,7 +138,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Motion Option */}
               <div>
-                <label className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Animations:
                 </label>
                 <div id="setMotion" className="flex gap-2">
@@ -150,8 +149,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClick={() => onSetMotion(mo)}
                       className={`flex-1 py-1.5 px-3 rounded-md text-xs font-semibold border transition-colors capitalize cursor-pointer ${
                         appearance.motion === mo
-                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold'
-                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                          ? 'bg-stone-800 border-stone-700 text-stone-100 font-bold shadow-xs'
+                          : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                       }`}
                     >
                       {mo}
@@ -162,19 +161,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Accent Color Palette */}
               <div>
-                <label className="block mb-1.5 text-xs font-semibold text-zinc-300">
+                <label className="block mb-1.5 text-xs font-semibold text-stone-300">
                   Accent Palette:
                 </label>
                 <div id="setAccent" className="flex flex-wrap gap-2">
-                  {['indigo', 'blue', 'teal', 'green', 'orange', 'red', 'grape'].map((col) => (
+                  {['stone', 'amber', 'green', 'steel', 'plum', 'rose'].map((col) => (
                     <button
                       key={col}
                       data-accent={col}
                       onClick={() => onSetAccent(col)}
                       className={`flex-1 min-w-[50px] py-1.5 px-2 rounded-md text-[11px] font-semibold border transition-colors capitalize cursor-pointer ${
                         appearance.accent === col
-                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold'
-                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                          ? 'bg-stone-800 border-stone-700 text-stone-100 font-bold shadow-xs'
+                          : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                       }`}
                     >
                       {col}
@@ -189,7 +188,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 id="setdone"
                 data-testid="settings-close-btn"
                 onClick={onClose}
-                className="bg-cyan-500 text-zinc-950 font-bold hover:bg-cyan-400 px-6"
+                className="bg-stone-100 text-stone-900 font-bold hover:bg-white px-6"
               >
                 Done
               </Button>

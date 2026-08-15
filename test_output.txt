@@ -1,0 +1,4 @@
+Γû╢ Tier 1: Feature Coverage Tests (Features 1 through 12)
+  Γû╢ Feature 1: Raycast Warm Stone Base Theme
+    Γ£ö F1.1: should initialize JSDOM root container and mount React app cleanly (12645.5849ms)
+    Γ£ö F1.2: should apply Warm Stone charcoal surface theme defaults on root elements (1608.6942ms)

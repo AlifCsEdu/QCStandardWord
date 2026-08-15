@@ -1,17 +1,19 @@
-## 2026-08-09T21:15:59+08:00
-<USER_REQUEST>
-You are challenger_m1_2 (role: teamwork_preview_challenger).
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m1_2
+## 2026-08-09T13:45:30Z
 
-MANDATORY INPUTS:
-- ORIGINAL_REQUEST.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
-- PROJECT.md: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-- worker_m1 handoff: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1\handoff.md
+You are Challenger 2 for Milestone 1 (Warm Stone Base Theme & AI Tropes Elimination).
+Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m1_2
 
-ASSIGNMENT (Milestone M1 Visual & Build Verification):
-1. Verify static build output in dist/ directory.
-2. Confirm 0 TypeScript compilation errors and 0 lint/CSS syntax warnings.
-3. Run npm test and verify 100% pass rate.
-4. Record verdict (APPROVE or REJECT) with evidence in handoff.md in your working directory.
-5. When finished, send a completion message with verdict to parent.
-</USER_REQUEST>
+Mandatory steps:
+1. Read c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+2. Read c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+3. Read c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orch_m1\SCOPE.md
+4. Read c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m1_1\handoff.md
+
+Challenger Stress Tasks:
+1. Stress test for Zero Layout Shift (CLS) and Zero Residual AI Design Tropes:
+   - Run grep pattern checks across `src/` for `backdrop-blur`, `bg-gradient-to`, `shadow-[0_0_`, `border-white/[`, `#0c0e12`, and `#fff9db`.
+   - Verify modal, drawer, and toolbar state transitions perform cleanly without layout shift.
+2. Execute `npm run build` and `npm run test` independently.
+3. Formulate explicit verdict: APPROVE or REJECT.
+4. Write your handoff report to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\challenger_m1_2\handoff.md` and update `progress.md` in your directory.
+5. When complete, send a message to the parent (conversation ID: 0bbef02d-1eed-4b0a-b759-e5df0a8e3939).

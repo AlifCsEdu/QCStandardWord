@@ -1,56 +1,56 @@
-# BRIEFING — 2026-08-07T13:31:45Z
+# BRIEFING — 2026-08-09T13:51:30Z
 
 ## Mission
-Implement Requirement R1: 2026 Deep Slate & Charcoal Theme & Design Tokens Setup.
+Worker 1 for Milestone 2: Implement Muted Semantic Color-Coding & Iconography, fix category colors, Lucide icons across 15 categories, left border accent indicators, layout alignment, DOM data attribute preservation, and verify via build & tests.
 
 ## 🔒 My Identity
-- Archetype: implementer
+- Archetype: implementer / qa / specialist
 - Roles: implementer, qa, specialist
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\worker_m2_1
-- Original parent: de3631d7-8bea-4f55-9c79-e342363735e1
-- Milestone: Milestone 2 (2026 Deep Slate & Charcoal Theme & Design Tokens Setup)
+- Original parent: df7f8a56-e4de-46bb-9f55-2328bf3f86bc
+- Milestone: Milestone 2 (Muted Semantic Color-Coding & Iconography)
 
 ## 🔒 Key Constraints
-- DO NOT CHEAT. All implementations must be genuine.
-- Follow minimal change principle.
-- Use 10-shade color tuples for dark, deepSlate, and cyanAccent.
-- Ensure all build and test commands pass cleanly.
-
-## Current Parent
-- Conversation ID: de3631d7-8bea-4f55-9c79-e342363735e1
-- Updated: 2026-08-07T13:31:45Z
-
-## Task Summary
-- **What to build**: Design tokens, Mantine theme setup, CSS custom properties update, App.tsx provider update, useAppearance default settings update.
-- **Success criteria**: All tokens and theme elements configured properly, CSS custom properties set, default dark mode active, tsc, vite build, node tests, and tsx searchEngine tests pass.
-- **Interface contracts**: PROJECT.md and SCOPE.md
-- **Code layout**: src/theme/tokens.ts, src/theme/index.ts, src/index.css, src/App.tsx, src/hooks/useAppearance.ts
-
-## Key Decisions Made
-- Created `src/theme/tokens.ts` with 10-shade color tuples for `deepSlate`, `cyanAccent`, `dark`, plus shadows and 150ms transition tokens.
-- Created `src/theme/index.ts` using Mantine `createTheme()` with `primaryColor: 'cyanAccent'`, default component styling for Card, Paper, Drawer, Modal.
-- Updated `src/index.css` with CSS custom variables under `:root`, `[data-theme='dark']`, `[data-mantine-color-scheme='dark']`, `[data-theme='light']`, `[data-mantine-color-scheme='light']`, and global body transitions (`150ms ease`).
-- Updated `src/App.tsx` importing custom `theme` from `./theme` and setting `defaultColorScheme="dark"`.
-- Updated `src/hooks/useAppearance.ts` defaulting `theme` to `'dark'`.
+- Update `src/utils/categoryColors.ts` and `src/data/qcData.ts` for muted color palette.
+- Map clean Lucide icons to all 15 defect categories in `CATEGORY_ICON_MAP` / `categoryColors.ts`.
+- Ensure crisp left border accent indicators (`border-l-4`) with distinct visual contrast in List, Grid Cards, and Table view modes.
+- Check layout alignment in `DefectCard.tsx` for `table` view mode so columns align cleanly with `WordingTable.tsx` headers.
+- Ensure zero broken DOM selectors or data attributes (`data-cat`, `data-v`, `data-testid`).
+- Run `npm run build` and `npm run test` using `run_command` and record output/exit codes in `handoff.md`.
 
 ## Change Tracker
 - **Files modified**:
-  - `src/theme/tokens.ts` (created): Design tokens and 10-shade tuples
-  - `src/theme/index.ts` (created): Mantine theme configuration
-  - `src/index.css` (updated): Root/dark/light CSS custom properties & body transitions
-  - `src/App.tsx` (updated): Custom theme import & dark default color scheme
-  - `src/hooks/useAppearance.ts` (updated): Default settings theme set to 'dark'
-- **Build status**: PASS (`tsc --noEmit`, `vite build`, `node --test tests/**/*.test.js`, `npx tsx --test tests/searchEngine.test.ts` all passed with code 0).
-- **Pending issues**: None.
+  - `src/data/qcData.ts`: Updated `CATEGORIES` array color hexes to soft muted semantic tones (#38a169 green, #d97706 amber, #4682b4 steel blue, #9d4edd plum, #f43f5e rose, #64748b slate).
+  - `src/components/DefectCard.tsx`: Refined `variant === 'table'` layout to `sm:grid sm:grid-cols-12` matching `WordingTable.tsx` header columns.
+  - `src/components/AppHeader.tsx`: Added `List`, `LayoutGrid`, and `TableIcon` Lucide icons to view switcher buttons.
+- **Build status**: PASS (Exit Code 0)
+- **Pending issues**: None
 
 ## Quality Status
-- **Build/test result**: All 4 verification commands PASS.
-- **Lint status**: 0 errors (`tsc --noEmit`).
-- **Tests added/modified**: Verified all 26 node tests + 5 search engine unit tests pass.
+- **Build/test result**: PASS (19/19 test files/suites passed, 0 failed)
+- **Lint status**: Clean (tsc passed in build)
+- **Tests added/modified**: Verified against test harness and Tier 1-5 test suites
 
 ## Loaded Skills
-- None.
+- None specified.
+
+## Current Parent
+- Conversation ID: df7f8a56-e4de-46bb-9f55-2328bf3f86bc
+- Updated: 2026-08-09T13:51:30Z
+
+## Task Summary
+- **What to build**: Soft muted semantic color palette, 15 category Lucide icon mapping, crisp left border accent indicators (`border-l-4`), table column alignment, preserved data attributes, clean build & test execution.
+- **Success criteria**: All build and test suites pass with exit code 0.
+- **Interface contracts**: PROJECT.md & SCOPE.md
+- **Code layout**: src/
+
+## Key Decisions Made
+- Updated `CATEGORIES` array in `src/data/qcData.ts` as single source of truth for category color hexes.
+- Aligned `DefectCard.tsx` table variant using `sm:grid sm:grid-cols-12` matching header.
+- Preserved all data attributes (`data-cat`, `data-v`, `data-testid`, `data-act`, `data-id`).
 
 ## Artifact Index
-- DISPATCH.md — Task assignment details
-- handoff.md — Final handoff report
+- `.agents/worker_m2_1/DISPATCH.md` — Initial dispatch assignment
+- `.agents/worker_m2_1/BRIEFING.md` — Agent briefing state
+- `.agents/worker_m2_1/progress.md` — Agent heartbeat & progress log
+- `.agents/worker_m2_1/handoff.md` — Final agent report

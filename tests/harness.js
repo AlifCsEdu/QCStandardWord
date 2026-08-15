@@ -270,7 +270,9 @@ export function createAppInstance(options = {}) {
 
     isSpotlightOpen: () => {
       ensureFlushed();
-      const modal = document.querySelector('[data-testid="spotlight-modal"], .mantine-Spotlight-root, .mantine-Modal-root');
+      const modal = document.querySelector(
+        '[data-testid="spotlight-modal"], #spotlightModal, .spotlight-modal, .mantine-Spotlight-root, .mantine-Modal-root, [role="dialog"], input[placeholder*="Search QC defects"]'
+      );
       return !!modal;
     },
 

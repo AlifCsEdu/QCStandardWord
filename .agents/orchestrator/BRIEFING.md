@@ -1,107 +1,72 @@
-# BRIEFING — 2026-08-09T13:25:25Z
+# BRIEFING — 2026-08-09T13:39:23Z
 
 ## Mission
-Execute complete visual and UX overhaul of QC Standard Wording app inspired by Linear/Vercel/Apple 2026 aesthetics, ensuring 100% build and test pass.
+Raycast Warm Stone UI redesign of the QC Standard Wording application.
 
 ## 🔒 My Identity
 - Archetype: self
 - Roles: orchestrator, user_liaison, human_reporter, successor
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator
 - Original parent: parent
-- Original parent conversation ID: 07839f0f-1b23-42cc-a05c-cfa3910ba4e7
+- Original parent conversation ID: 0f83553f-0674-476c-8b59-922b7d76fb8e
 
 ## 🔒 My Workflow
 - **Pattern**: Project Pattern
-- **Scope document**: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md
-1. **Decompose**: Survey codebase with Explorers/Spec Miners, create feature inventory and milestone breakdown.
-2. **Dispatch & Execute**:
-   - Decompose into milestones, spawn parallel sub-orchestrators or run Explorer -> Worker -> Reviewer -> Challenger -> Auditor loop per milestone.
-   - Run parallel E2E / Unit testing track.
-3. **On failure**: Retry, Replace, Skip, Redistribute, Redesign, Escalate.
-4. **Succession**: Self-succeed at spawn threshold 20.
+- **Scope document**: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\PROJECT.md
+1. **Decompose**: Survey existing codebase via 3 parallel Explorers to extract features, components, styles, and test structure into PROJECT.md.
+2. **Dispatch & Execute**: Delegate sub-orchestrators for milestones or run Explorer → Worker → Reviewer → Challenger → Auditor iteration loop per milestone. Parallel E2E Testing Track for requirement-driven testing.
+3. **On failure** (in this order): Retry → Replace → Skip → Redistribute → Redesign → Escalate.
+4. **Succession**: Self-succeed when spawn count >= 20 and active subagents completed.
 - **Work items**:
-  1. Survey & Architecture Mapping [done]
-  2. Milestone M1: Aesthetic Engine, Theme Tokens & Styling Purge [done - GATE PASSED]
-  3. Milestone M2: Sidebar, Top Header, Search Modal & Pin Manager [done - GATE PASSED]
-  4. Milestone M3: Grid/Table Views, Glassmorphic Drawer & Toasts [handed off to gen2]
-  5. Milestone M4: Performance, Build & E2E Test Suite Hardening [handed off to gen2]
-- **Current phase**: 4 (Succession Complete)
-- **Current focus**: Gen2 Successor running (255eba13-2966-4712-9788-f007aeebaa06)
+  1. Survey phase (3 parallel Explorers) [in-progress]
+  2. E2E Testing Track [pending]
+  3. Milestone Decomposition & Implementation [pending]
+- **Current phase**: 0 (Survey)
+- **Current focus**: Survey phase mapping codebase and features
 
 ## 🔒 Key Constraints
-- NEVER write, modify, or create source code files directly.
-- NEVER run build/test commands yourself — require workers to do so.
-- NEVER investigate or explore the problem at the code level — dispatch Explorers.
-- Use file-editing tools ONLY for metadata/state files (.md) in .agents/ folder.
-- All implementation changes must be verified with 100% build & test pass.
-- Forensic audit veto: integrity violations fail unconditionally.
+- Never write or edit source code directly (dispatch workers/explorers).
+- Never run build/test commands directly (require workers/reviewers/challengers to run).
+- Write to own folder `.agents/orchestrator/` only for metadata.
+- Audit is a BINARY VETO (Forensic Auditor verdict must be CLEAN).
+- Raycast Warm Stone palette (#121214 dark / #fcfcfc light, warm grey borders, muted semantic pills).
 
 ## Current Parent
-- Conversation ID: 07839f0f-1b23-42cc-a05c-cfa3910ba4e7
-- Updated: not yet
+- Conversation ID: 0f83553f-0674-476c-8b59-922b7d76fb8e
+- Updated: 2026-08-09T13:39:23Z
 
 ## Key Decisions Made
-- Milestone M1 GATE PASSED.
-- Milestone M2 GATE PASSED.
-- Cumulative spawn count reached 21 / 20. Succession executed successfully. Handoff report saved to handoff.md, heartbeat cron killed, gen2 successor spawned.
+- Initiated Project Orchestration workflow for Raycast Warm Stone UI redesign.
 
 ## Team Roster
 | Agent | Type | Work Item | Status | Conv ID |
 |-------|------|-----------|--------|---------|
-| spec_miner_survey | teamwork_preview_spec_miner | Mine ORIGINAL_REQUEST requirements | completed | 09459a1e-c05c-4c87-97d7-29e7ce2ac6fd |
-| explorer_survey_1 | teamwork_preview_explorer | Codebase & build/test survey | completed | 7978bc34-7159-4918-b7e3-84f0b060579e |
-| explorer_survey_2 | teamwork_preview_explorer | UI architecture & styling gap analysis | completed | c0a22788-8ff1-45d2-abbf-46bd1ccd43cf |
-| explorer_m1_1 | teamwork_preview_explorer | M1 CSS theme tokens analysis | completed | e0c4124c-8dc7-42d0-b72d-51b68b7a5c25 |
-| explorer_m1_2 | teamwork_preview_explorer | M1 Inline style purge analysis | completed | a1a94cf5-01c4-4ced-b789-739fc196cf5e |
-| explorer_m1_3 | teamwork_preview_explorer | M1 DOM & Test impact analysis | completed | 7c959449-fcf1-4144-84de-dd26a4200503 |
-| worker_m1 | teamwork_preview_worker | M1 Implementation | completed | 277c5685-4ad2-48e7-be5b-6d6037d42f3c |
-| reviewer_m1_1 | teamwork_preview_reviewer | M1 Code Review 1 | completed | f0b468b5-c38a-4e1a-b0a5-09fa66a73155 |
-| reviewer_m1_2 | teamwork_preview_reviewer | M1 Code Review 2 | completed | a324dd94-f240-4ba1-83d9-d025f34b8e26 |
-| challenger_m1_1 | teamwork_preview_challenger | M1 Stress & Regress Test 1 | completed | e0c4ba52-790f-4587-99ad-239d9b48c9f7 |
-| challenger_m1_2 | teamwork_preview_challenger | M1 Visual & Build Test 2 | completed | b9160a1a-fc39-4d17-a61c-cc86f5ef8a98 |
-| auditor_m1 | teamwork_preview_auditor | M1 Forensic Audit | completed | 528ca155-3889-4a36-b14c-5a68baaf7cf9 |
-| explorer_m2_1 | teamwork_preview_explorer | M2 Sidebar & Pin Manager strategy | completed | d305a663-6882-4b05-8dca-ba3cf12db253 |
-| explorer_m2_2 | teamwork_preview_explorer | M2 Header, Hero Search & Modal strategy | completed | 7158a85f-065d-41ed-bcd9-1dbf9032d612 |
-| explorer_m2_3 | teamwork_preview_explorer | M2 Test Impact & DOM Contract analysis | completed | 984d2333-38e2-4cf9-9895-c00b7792a647 |
-| worker_m2 | teamwork_preview_worker | M2 Implementation | completed | 84becab9-1d1a-4239-85cb-4b69fd7be2d4 |
-| reviewer_m2_1 | teamwork_preview_reviewer | M2 Code Review 1 | completed | 7f050eb4-6ec6-474c-b4a0-0a87e02a08bc |
-| reviewer_m2_2 | teamwork_preview_reviewer | M2 Code Review 2 | completed | 14f08328-5d17-41f7-a292-cb6cf0d0529a |
-| challenger_m2_1 | teamwork_preview_challenger | M2 Stress & Regress Test 1 | completed | 61ef56cc-0c03-4bb5-8e47-9c6d24ddd015 |
-| challenger_m2_2 | teamwork_preview_challenger | M2 Visual & Build Test 2 | completed | 10230243-0571-486a-b252-06c375042a27 |
-| auditor_m2 | teamwork_preview_auditor | M2 Forensic Audit | completed | 1d403e3b-3570-40d4-a599-9abb02b802ab |
-| explorer_m3_1 | teamwork_preview_explorer | M3 Grid & Table Card redesign analysis | completed | cae87704-8428-480e-b56b-3c642184d612 |
-| explorer_m3_2 | teamwork_preview_explorer | M3 Drawer & Toasts redesign analysis | completed | 3cd58ff7-e6e5-47c0-935e-36a7fee70af7 |
-| explorer_m3_3 | teamwork_preview_explorer | M3 Test & DOM Contract analysis | completed | 11639e95-1a2b-4362-aca1-f58f80539b8c |
-| worker_m3 | teamwork_preview_worker | M3 Grid/Table, Drawer & Toasts Implementation | completed | 8d720f43-80f9-42bc-8ea3-3c2ae1b8c9ea |
-| reviewer_m3_1 | teamwork_preview_reviewer | M3 Code & Quality Review 1 | completed | 4a3d3489-c14c-4d37-9e37-d3e1cd9bb319 |
-| reviewer_m3_2 | teamwork_preview_reviewer | M3 DOM & Contract Review 2 | completed | 4b222118-0bb7-4a1e-a09d-eb096d5bf014 |
-| challenger_m3_1 | teamwork_preview_challenger | M3 Stress & Feature Test 1 | completed | d8730a25-5b83-46a6-9d94-79dfcae54a00 |
-| challenger_m3_2 | teamwork_preview_challenger | M3 Visual & Build Test 2 | completed | 455ed47c-11af-4be0-a522-50c22fa73233 |
-| auditor_m3 | teamwork_preview_auditor | M3 Forensic Integrity Audit | completed | 5a988bb9-71f6-49a4-8621-59d104485348 |
-| worker_m4 | teamwork_preview_worker | M4 Performance, Build & Test Hardening | completed | 3435a92b-961f-46dd-b220-0f0d6b6fd059 |
-| reviewer_m4_1 | teamwork_preview_reviewer | M4 Architecture & Build Review 1 | completed | e64b18f8-0372-48aa-a880-e1144c4a1ce4 |
-| challenger_m4_1 | teamwork_preview_challenger | M4 Build & Test Challenge 1 | completed | 962b643c-8ae3-4cf1-8e62-73f81b152db6 |
-| auditor_m4 | teamwork_preview_auditor | Final Forensic Integrity Audit | completed | 3bc74335-9159-46ff-a4c6-27a83c598e45 |
+| explorer_survey_1 | teamwork_preview_explorer | UI and Styling Architecture Survey | completed | 7ce02de0-9b7d-464d-857d-f25a668a9a28 |
+| explorer_survey_2 | teamwork_preview_explorer | Features and Data Flow Survey | completed | 42a10703-1410-4ef8-a0fb-078855b6e03d |
+| explorer_survey_3 | teamwork_preview_explorer | Build and Test Infrastructure Survey | completed | 71e7255c-74da-4e2b-bce7-e164fcf3822e |
+| orch_e2e_testing | self | E2E Testing Track Orchestrator | completed | 51258f8f-ef76-4b05-b795-9f873b730235 |
+| orch_m1 | self | Milestone 1 Sub-Orchestrator | completed | 0bbef02d-1eed-4b0a-b759-e5df0a8e3939 |
+| orch_m2 | self | Milestone 2 Sub-Orchestrator (gen2) | in-progress | 1d08312c-6292-4448-a3e9-d3166e682f8c |
+| orch_remediation_perf | self | Latency Stress Performance Sub-Orchestrator | in-progress | 246504eb-c5c0-40f4-9af3-2c7b7195d4a2 |
+| orch_remediation_tropes | self | Residual Cyan/Purple Tropes Purge Sub-Orchestrator | in-progress | 00688895-f1c4-44aa-941d-a3ccbffd1c71 |
+| worker_r2_remediation | teamwork_preview_worker | Round 2 Hex Remediation Worker | completed | 7e0348a5-2617-4c4d-8252-906d7be6eb57 |
+| reviewer_r2_remediation | teamwork_preview_reviewer | Round 2 Hex Remediation Reviewer | completed | 330e826b-0408-4bf7-9de6-dc6016bfaad8 |
+| reviewer_r2_remediation_2 | teamwork_preview_reviewer | Round 2 Hex Remediation Reviewer 2 | in-progress | a1b596dc-cc33-49da-b2fb-d9a88877d34e |
+| auditor_r2_remediation | teamwork_preview_auditor | Round 2 Hex Remediation Forensic Auditor | in-progress | d8911059-0225-4323-bf0b-f7b1bef1cffa |
 
 ## Succession Status
 - Succession required: no
-- Spawn count: 13 / 20 (Gen2)
-- Pending subagents: none
-- Predecessor: Gen1 Orchestrator
-- Successor: not needed (project completed)
+- Spawn count: 12 / 20
+- Pending subagents: a1b596dc-cc33-49da-b2fb-d9a88877d34e, d8911059-0225-4323-bf0b-f7b1bef1cffa
+- Predecessor: none
+- Successor: not yet spawned
 
 ## Active Timers
-- Heartbeat cron: 255eba13-2966-4712-9788-f007aeebaa06/task-12
-- Safety timer: none
-
-## Active Timers
-- Heartbeat cron: killed
+- Heartbeat cron: task-11
 - Safety timer: none
 
 ## Artifact Index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\DISPATCH.md — Initial user dispatch
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\BRIEFING.md — Persistent briefing index
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\progress.md — Progress log & liveness heartbeat
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\PROJECT.md — Project master specification
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\GATE_STATUS.md — Milestone Gate Statuses
-- c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\handoff.md — Soft Handoff Report for Gen2 Successor
+- ORIGINAL_REQUEST.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\ORIGINAL_REQUEST.md
+- DISPATCH.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\DISPATCH.md
+- BRIEFING.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\BRIEFING.md
+- progress.md — c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\orchestrator\progress.md

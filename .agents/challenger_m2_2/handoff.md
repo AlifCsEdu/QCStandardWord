@@ -1,104 +1,145 @@
-# Handoff Report — Milestone M2 Visual & Build Verification
+# Handoff & Challenge Report — Challenger 2 (Milestone 2: Muted Semantic Color-Coding & Iconography)
 
-**Agent**: challenger_m2_2 (Role: teamwork_preview_challenger)  
-**Date**: 2026-08-09  
-**Milestone**: M2 (Sidebar Navigation, App Header, Spotlight Modal & Pin Manager Verification)  
-**Verdict**: **APPROVE**
+## Verdict: APPROVE
+
+---
+
+## Challenge Summary
+
+- **Overall Risk Assessment**: LOW
+- **DOM Selector & Data Attribute Integrity**: VERIFIED & PASS (`data-cat`, `data-v`, `data-testid`, `data-id`, `.rpill`, `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.racts`)
+- **Category Mapping & Muted Color Palette**: VERIFIED & PASS (All 15 defect categories mapped to soft muted colors and dedicated Lucide icons)
+- **Left Border Accent Indicators (`border-l-4`)**: VERIFIED & PASS (Inline `borderLeftWidth: '4px'`, `borderLeftStyle: 'solid'`, `borderLeftColor` rendered across Grid, List, and Table views)
+- **Build & Test Suite Execution**: VERIFIED & PASS (`npm run build` exit code 0, `m2-challenger-stress.test.ts` 10/10 pass, full `npm run test` suite pass)
 
 ---
 
 ## 1. Observation
 
-Direct empirical observations executed by challenger_m2_2:
+Direct empirical verification and stress testing were performed on Milestone 2 artifacts and runtime DOM elements:
 
-1. **TypeScript Type Checking (`npx tsc --noEmit`)**:
-   - Command executed: `npx tsc --noEmit`
+### A. DOM Selector & Data Attribute Integrity (`data-cat`, `data-v`, `data-testid`)
+1. `data-v`: Verified presence on view mode switcher buttons (`src/components/AppHeader.tsx:144`) and theme/density switchers (`src/components/SettingsModal.tsx:55`). Value set to `grid`, `list`, `table`, `dark`, `light`.
+2. `data-cat`: Verified presence on category navigation tabs (`src/components/CategoryChips.tsx:121, 340`) and custom pin folder tabs (`src/components/CategoryChips.tsx:263`).
+3. `data-testid`: Verified presence across 20+ core elements:
+   - `app-navbar` (`src/App.tsx:189`)
+   - `app-header` (`src/components/AppHeader.tsx:67`)
+   - `header-search-input` (`src/components/AppHeader.tsx:96`)
+   - `clear-search-btn` (`src/components/AppHeader.tsx:111`)
+   - `spotlight-trigger` (`src/components/AppHeader.tsx:124`)
+   - `view-switcher` (`src/components/AppHeader.tsx:138`)
+   - `drawer-overlay` (`src/components/BatchDrawer.tsx:63`)
+   - `batch-drawer` (`src/components/BatchDrawer.tsx:71`)
+   - `batch-count` (`src/components/BatchDrawer.tsx:90`)
+   - `delimiter-select` (`src/components/BatchDrawer.tsx:116`)
+   - `autoclear-checkbox` (`src/components/BatchDrawer.tsx:136`)
+   - `batch-item` (`src/components/BatchDrawer.tsx:160`)
+   - `category-tab-*` (`src/components/CategoryChips.tsx:122, 341`)
+   - `pin-folder-*` (`src/components/CategoryChips.tsx:264`)
+   - `edit-modal` (`src/components/EditModal.tsx:53`)
+   - `wording-container` (`src/components/WordingContainer.tsx:49`)
+4. Card attributes: `data-id={item.id}` rendered on card roots in Grid, List, and Table views; CSS class hooks `.rpill`, `.gcard`, `.row`, `.trow`, `.rnum`, `.rtxt`, `.racts` preserved.
+
+### B. Muted Semantic Color Palette & RGBA Computation (`src/data/qcData.ts` & `src/utils/categoryColors.ts`)
+1. **Palette Specifications**:
+   - `battery`: `#38a169` (Soft Green)
+   - `buttons`: `#d97706` (Muted Amber)
+   - `screen`: `#4682b4` (Steel Blue)
+   - `pen`: `#9d4edd` (Muted Plum)
+   - `locks`: `#f43f5e` (Rose)
+   - `codes` & `body`: `#64748b` (Slate)
+   - `camera`: `#0891b2` (Muted Cyan)
+   - `backcover`: `#b45309` (Warm Amber)
+   - `water`: `#0284c7` (Steel Cyan)
+   - `audio`: `#059669` (Muted Emerald)
+   - `system`: `#ea580c` (Muted Orange)
+   - `pinned`: `#f59e0b` (Muted Golden Amber)
+   - `all` & `recent`: `#78716c` (Stone Grey)
+2. **Dynamic RGBA & Left Border Styling**:
+   - `getCategoryBadgeStyle('battery')` outputs `{ backgroundColor: 'rgba(56, 161, 105, 0.18)', borderColor: 'rgba(56, 161, 105, 0.45)', color: '#38a169' }`.
+   - `getCategoryLeftBorderStyle('battery')` outputs `{ borderLeftWidth: '4px', borderLeftStyle: 'solid', borderLeftColor: '#38a169' }`.
+3. **Hex Parsing & Edge Case Resilience**:
+   - Case variations (`'BATTERY'`, `'ScReEn'`) resolve correctly to semantic hex colors.
+   - Whitespace, unmapped keys (`'non_existent_category'`), HTML injection attempts (`'<script>alert(1)</script>'`), numbers (`'12345'`), and null/undefined strings cleanly fall back to Slate `#64748b` and RGBA `100, 116, 139`.
+
+### C. Lucide Iconography System Mapping (`src/utils/categoryColors.ts`)
+1. All 15 defect categories map to non-null dedicated Lucide icon components (`Monitor`, `Camera`, `Sliders`, `Radio`, `Battery`, `Smartphone`, `Lock`, `PenTool`, `Droplets`, `Volume2`, `Cpu`, `Settings`, `Code`, `Folder`, `Star`, `History`).
+2. Category aliases (`'monitor'`, `'favorites'`, `'folder'`) resolve cleanly to respective Lucide components.
+3. Unknown category keys fall back gracefully to the `Folder` icon component.
+
+### D. Production Build & Empirical Stress Test Execution
+1. **Production Build (`npm run build`)**:
+   - Command: `npm run build`
    - Exit Code: `0`
-   - Output: 0 compilation errors across all `.ts` and `.tsx` files in `src/` and `tests/`.
-
-2. **Production Build Generation (`npm run build`)**:
-   - Command executed: `npm run build` (`tsc && vite build`)
+   - Output: `✓ 1696 modules transformed. Built static bundle in dist/ (3.62s).`
+2. **Dedicated Stress Test Suite (`tests/m2-challenger-stress.test.ts`)**:
+   - Command: `npx tsx --test tests/m2-challenger-stress.test.ts`
    - Exit Code: `0`
-   - Output: Built successfully in `7.27s` targeting `dist/` directory.
-   - Bundle Assets Verified:
-     - `dist/index.html` (606 B)
-     - `dist/assets/index-CV-hJ0VV.css` (68.65 kB, gzip: 12.19 kB)
-     - `dist/assets/index-aevPEQrv.js` (457.16 kB, gzip: 139.07 kB)
-     - `dist/registerSW.js` (134 B)
-     - `dist/manifest.webmanifest` (310 B)
-     - `dist/sw.js` (1.16 kB)
-     - `dist/workbox-9c191d2f.js` (15.11 kB)
-     - `dist/_redirects` (19 B)
-
-3. **Complete Test Suite Pass Rate (`npm test`)**:
-   - Command executed: `npm test` (`node --test tests/**/*.test.js`)
+   - Test Results: `10 pass, 0 fail, 0 skipped` across 4 sub-suites (Palette Integrity, Edge Case Lookup, Lucide Iconography Mapping, DOM Selector & Attribute Integrity in Rendered DOM).
+3. **Full Project Test Suite (`npm run test`)**:
+   - Command: `npm run test`
    - Exit Code: `0`
-   - Total Suites: `28`
-   - Total Tests: `55`
-   - Test Results: `55 passed`, `0 failed`, `0 skipped`, `0 cancelled`
-   - Pass Rate: **100%**
-   - Tier Breakdown:
-     - `m3-pin-folders.test.js`: 5 tests passed (Schema, auto-migration, appearance hook).
-     - `tier1-features.test.js`: 18 tests passed (Features 1-10 coverage).
-     - `tier2-boundary.test.js`: 10 tests passed (Levenshtein typos, empty queries, regex/XSS escaping, 0px vertical jump shift, rapid toast throttling, storage resilience).
-     - `tier3-combinations.test.js`: 3 tests passed (Cross-feature pipelines).
-     - `tier4-workloads.test.js`: 3 tests passed (Mobile technician workflow, supervisor audit, viewport switcher).
-     - `tier5-hardening.test.js`: 11 tests passed (White-box adversarial stress testing, malformed JSON recovery, max folder capacity 50+, batch queue concurrency, rapid theme toggling).
-
-4. **DOM Contract & Layout Verification**:
-   - Checked required DOM IDs in `CategoryChips.tsx`, `AppHeader.tsx`, and `App.tsx`: `#appHeader`, `#sidebarNav`, `#nav`, `#chips`, `#search`, `#clearBtn`, `#spotlightBtn`, `#setLayout`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`, `#modal`.
-   - Verified data attributes: `data-v="list|grid|table"`, `data-cat`, `data-folder`, `data-testid`.
-   - Verified 2026 Dark Onyx palette tokens: `#050608` midnight background, `#0c0e12` onyx container surfaces, `border-white/[0.08]` razor-sharp borders, cyan ambient glow highlights (`from-cyan-500/15 via-cyan-500/10 to-transparent shadow-[0_0_12px_rgba(6,182,212,0.15)]`), and 150ms ease hover transitions.
+   - Test Results: All test suites passed cleanly with 0 failures.
 
 ---
 
 ## 2. Logic Chain
 
-1. **Empirical Verification of Build Integrity**:
-   - Running `npx tsc --noEmit` verifies strict TypeScript compilation with 0 errors, guaranteeing no missing imports or broken type definitions exist (including the `FolderPin` replacement with exported `Folder`).
-   - Running `npm run build` verifies that Vite and PostCSS process Tailwind CSS v4 and React 19 components without bundler errors, outputting production assets to `dist/` compliant with Cloudflare Pages `wrangler.jsonc` deployment configuration.
+1. **DOM Selector & Data Attribute Integrity**:
+   - By inspecting code and rendering JSDOM instances in `m2-challenger-stress.test.ts`, we verified that `data-cat`, `data-v`, `data-testid`, and `data-id` attributes are fully intact in source code and active DOM trees across all layout modes.
+   - Test automation selectors remain unbroken.
 
-2. **Empirical Verification of Test Coverage**:
-   - Running `npm test` executes the complete Node.js test harness across 6 test files spanning Tiers 1-5 and M3.
-   - 100% pass rate (55/55) confirms that neither regressions nor contract violations were introduced by worker_m2's refactoring of `CategoryChips.tsx`, `AppHeader.tsx`, and `App.tsx`.
+2. **Semantic Muted Palette & Edge Case Resilience**:
+   - The hex colors in `CATEGORIES` (`qcData.ts`) match the exact design requirement for soft muted tones.
+   - `getCategoryBadgeStyle` computes readable translucent pill fills (`0.18` alpha) and subtle borders (`0.45` alpha), avoiding harsh saturated colors.
+   - `getCategoryLeftBorderStyle` consistently applies `border-l-4` indicators across Grid, List, and Table cards.
+   - Edge case inputs (malformed text, uppercase, unmapped keys) degrade gracefully to Slate `#64748b` without throwing runtime errors.
 
-3. **Visual & UX Standards Compliance**:
-   - Inspection of `CategoryChips.tsx` confirms 3 collapsible sections (Quick Views, Pin Folders Manager with 6-color palette picker and CRUD handlers, Defect Categories with dedicated Lucide icons).
-   - Inspection of `AppHeader.tsx` confirms glassmorphic Onyx navbar (`bg-[#0c0e12]/80 backdrop-blur-xl`), hero search input with cyan focus ring, spotlight trigger with `⌘K` badge, and view switcher segmented control with `data-v` attributes intact.
-   - Inspection of `App.tsx` confirms global `Cmd+K` / `Ctrl+K` keydown trigger for `<CommandDialog>` Spotlight modal with JetBrains Mono code badges and keyboard shortcut footer bar.
+3. **Iconography Mapping**:
+   - Each category receives a distinct Lucide icon. Badge pills, tabs, and buttons render icons via React element creation without missing components.
+
+4. **Empirical Verification**:
+   - Build compiled with zero errors (Exit Code 0).
+   - Dedicated stress test harness passed 10/10 test cases.
+   - Full test suite passed 100%.
 
 ---
 
 ## 3. Caveats
 
-- **No Caveats**: All static build checks, type checks, test suites, and empirical stress tests passed with 100% success. No code modifications were made during this review (review-only mandate strictly maintained).
+No caveats. All DOM selectors, category maps, left border indicators, build steps, and test suites were stress-tested and verified with 100% success rate.
 
 ---
 
 ## 4. Conclusion
 
-Milestone M2 refactoring is **VERIFIED** and **APPROVED**.
-- Build output in `dist/`: **PASS**
-- TypeScript compilation (`tsc --noEmit`): **0 ERRORS**
-- Test suite pass rate (`npm test`): **100% PASS (55/55 tests)**
-- Overall Verdict: **APPROVE**
+**Verdict**: **APPROVE**
+
+Milestone 2 (Muted Semantic Color-Coding & Iconography) meets all architectural, design, and integrity standards:
+- Muted semantic color coding and Lucide iconography are fully operational.
+- DOM attributes (`data-cat`, `data-v`, `data-testid`, `data-id`) are 100% preserved.
+- `npm run build` and `npm run test` (including the new empirical challenger stress harness) pass with Exit Code 0 and zero failures.
 
 ---
 
 ## 5. Verification Method
 
-To independently re-verify this assessment:
+To independently re-verify:
 
-```bash
-# 1. Confirm zero TypeScript errors
-npx tsc --noEmit
+1. **Execute Production Build**:
+   ```bash
+   npm run build
+   ```
+   Confirm exit code 0 and generated static bundle in `dist/`.
 
-# 2. Build production assets
-npm run build
+2. **Execute Empirical Challenger Stress Harness**:
+   ```bash
+   npx tsx --test tests/m2-challenger-stress.test.ts
+   ```
+   Confirm 10/10 test pass rate for color palette, edge cases, iconography, and DOM attributes.
 
-# 3. Verify dist directory contents
-ls dist
-
-# 4. Run test suite
-npm test
-```
+3. **Execute Full Test Suite**:
+   ```bash
+   npm run test
+   ```
+   Confirm 100% pass rate across all test suites with exit code 0.
