@@ -1,41 +1,50 @@
-# BRIEFING — 2026-08-16T01:42:50Z
+# BRIEFING — 2026-08-16T12:09:00+08:00
 
 ## Mission
-Phase 0 Survey: Investigate UI framework, component structure, styling/Tailwind/theme setup, touch ergonomics (Samsung Galaxy Tab S9+), and non-shadcn elements across QC Standard Wording.
+Survey the QC Standard Wording codebase for visual design system, tokens, color palettes, CSS, Tailwind configuration, and component styling patterns for R1 (Warm Charcoal Multi-Layer Depth and shared tokens).
 
 ## 🔒 My Identity
 - Archetype: explorer
-- Roles: UI & Touch Ergonomics Specialist
+- Roles: Visual Design System & Tokens Explorer
 - Working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1
-- Original parent: 85de4f66-c661-4ac9-88e6-48b028c07b33
-- Milestone: Phase 0 - Survey & Discovery
+- Original parent: 7465e2ed-ac9d-40bc-b988-8c1d776457b2
+- Milestone: codebase_survey_m1
 
 ## 🔒 Key Constraints
 - Read-only investigation — do NOT implement
-- Target device context: Samsung Galaxy Tab S9+ (12.4", 2800x1752, touch-first/stylus, min 44-48px touch targets)
-- Scope: 100% shadcn/ui & Radix UI standardization, theme/density/radius/font/color engine, scrollbars, touch ergonomics
+- Inspect existing visual styling, tailwind config, CSS, color definitions, component styling patterns
+- Analyze current palette vs target Warm Charcoal multi-layer depth (#0e0e11, #141418, #1a1a20, #22222a)
+- Check border radiuses, fonts, typography hierarchy, category colors/accents
+- Document all files, components, and CSS locations needing updates for R1
+- Deliver analysis.md and handoff.md
 
 ## Current Parent
-- Conversation ID: 85de4f66-c661-4ac9-88e6-48b028c07b33
-- Updated: 2026-08-16T01:42:50Z
+- Conversation ID: 7465e2ed-ac9d-40bc-b988-8c1d776457b2
+- Updated: 2026-08-16T12:09:00+08:00
 
 ## Investigation State
-- **Explored paths**: `package.json`, `vite.config.ts`, `src/index.css`, `src/theme/tokens.ts`, `src/theme/index.ts`, `src/hooks/useAppearance.ts`, `src/hooks/useQCState.ts`, `src/types/qc.ts`, `src/data/qcData.ts`, `src/components/` (all 14 component files), `src/components/ui/` (all 14 ui primitives), `tests/` (test harness and test suites).
+- **Explored paths**:
+  - `src/index.css`, `src/theme/tokens.ts`, `src/theme/index.ts`, `src/utils/categoryColors.ts`, `src/data/qcData.ts`
+  - `src/App.tsx`, `src/components/AppHeader.tsx`, `src/components/CategoryChips.tsx`, `src/components/CodeSubChips.tsx`
+  - `src/components/DefectCard.tsx`, `src/components/WordingContainer.tsx`, `src/components/WordingGrid.tsx`, `src/components/WordingList.tsx`, `src/components/WordingTable.tsx`
+  - `src/components/BatchDrawer.tsx`, `src/components/HistoryDrawer.tsx`, `src/components/StatsDashboard.tsx`, `src/components/HistoryBar.tsx`, `src/components/EditToolbar.tsx`
+  - `src/components/CategoryManagerModal.tsx`, `src/components/SettingsModal.tsx`, `src/components/EditModal.tsx`, `src/components/ToastsContainer.tsx`
+  - `src/components/ui/*.tsx` (badge, button, card, checkbox, command, dialog, dropdown-menu, input, scroll-area, select, sheet, textarea, toggle-group, tooltip)
+  - `tests/*.test.{js,ts}` (test harness contracts, CSS assertions, border-l-4 checks, touch targets)
 - **Key findings**:
-  1. UI Framework is React 19 + TypeScript + Vite 6 + Tailwind CSS v4 with full Radix UI primitives installed.
-  2. Identified non-shadcn elements: native `<select>` in `EditModal.tsx`, native checkbox in `BatchDrawer.tsx`, manual drawer div in `BatchDrawer.tsx`, raw `<button>` segmented controls in `AppHeader.tsx` and `SettingsModal.tsx`.
-  3. Hardcoded `bg-[#121214]` in `App.tsx` and header breaks Light theme rendering.
-  4. Touch targets are currently small (24-32px) and need scaling to 44px (cozy) / 48px (tablet density) with `touch-action: manipulation` and `overscroll-behavior-y: contain`.
-  5. Settings engine needs expansion for 'tablet' density, 4 radius steps (0, 6, 10, 16px), 3 font sizes, 5 rich accent palettes with live CSS variables.
-  6. Category & Sub-Category Manager needs dynamic store (`qc-categories`, `qc-subcategories`) with hybrid Lucide/Emoji picker and color picker.
-  7. History Bar needs redesign into a dedicated slide-out History Drawer with relative timestamps, search/filter, copy, pin, batch add, and clear confirmation.
-- **Unexplored areas**: None for UI & Touch Ergonomics survey scope.
+  - Identified 4-tier layer mapping requirements (#0e0e11 canvas, #141418 shell/sidebar/header, #1a1a20 cards/tables with border-stone-800/80, #22222a popovers/drawers/modals with border-stone-700/60).
+  - Identified hardcoded colors in `AppHeader.tsx`, `BatchDrawer.tsx`, `HistoryDrawer.tsx`, `CategoryManagerModal.tsx`, `EditModal.tsx`, and `SettingsModal.tsx`.
+  - Identified cool `zinc-*` classes across `src/components/ui/` primitives that should be harmonized to warm stone and CSS tokens.
+  - Standardized border radius hierarchy: `rounded-xl` for cards/drawers/modals, `rounded-lg` for interactive chips/buttons/inputs, `rounded-md` for monospace number badges/filters, `rounded-full` for category pills/toasts.
+- **Unexplored areas**: None for visual design system survey. Full coverage achieved.
 
 ## Key Decisions Made
-- Completed full investigation and wrote comprehensive structured handoff report in `handoff.md`.
-- Verified all 304 existing test cases pass (100% pass rate) and `npm run build` succeeds in 3.73s.
+- Authored comprehensive `analysis.md` detailing the entire visual design system and actionable R1 upgrade blueprint.
+- Authored formal 5-component `handoff.md` following teamwork exploration standards.
 
 ## Artifact Index
-- handoff.md — Comprehensive UI & Touch Ergonomics survey report
-- DISPATCH.md — Task instruction log
-- progress.md — Execution heartbeat log
+- `DISPATCH.md` — Task dispatch record
+- `BRIEFING.md` — Persistent working memory and identity
+- `progress.md` — Step progress and liveness heartbeat
+- `analysis.md` — Comprehensive visual design system & tokens analysis report
+- `handoff.md` — Formal 5-component handoff report

@@ -162,7 +162,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
         data-testid="category-manager-modal"
-        className="max-w-3xl bg-[#18181b] border-stone-800 text-stone-100 p-6 max-h-[90vh] overflow-y-auto"
+        className="max-w-3xl bg-[#22222a] border-stone-700/60 text-stone-100 p-6 max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl"
       >
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl font-bold flex items-center gap-2.5">
@@ -177,7 +177,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
         {editingCatId ? (
           /* Category Edit / Create Form */
           <form onSubmit={handleSave} className="space-y-5 pt-2">
-            <div className="flex items-center justify-between pb-2 border-b border-stone-800">
+            <div className="flex items-center justify-between pb-2 border-b border-stone-800/80">
               <h3 className="text-sm font-semibold text-stone-200">
                 {editingCatId === '__new__' ? 'Create New Category' : `Edit Category: ${activeEditCategory?.name}`}
               </h3>
@@ -204,7 +204,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                   placeholder="e.g. Display Panel, Thermal Issues"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="min-h-[44px] h-11 text-sm bg-stone-950 border-stone-800 text-stone-100 rounded-lg"
+                  className="min-h-[44px] h-11 text-sm bg-[#141418] border-stone-800/80 text-stone-100 rounded-lg"
                 />
               </div>
               <div className="space-y-1.5">
@@ -214,7 +214,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                   placeholder="Short description of defect types"
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
-                  className="min-h-[44px] h-11 text-sm bg-stone-950 border-stone-800 text-stone-100 rounded-lg"
+                  className="min-h-[44px] h-11 text-sm bg-[#141418] border-stone-800/80 text-stone-100 rounded-lg"
                 />
               </div>
             </div>
@@ -223,11 +223,11 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-stone-300">Category Iconography</label>
-                <div className="flex bg-stone-950 p-0.5 rounded-lg border border-stone-800 text-xs">
+                <div className="flex bg-[#141418] p-1 rounded-lg border border-stone-800/80 text-xs">
                   <button
                     type="button"
                     onClick={() => setIconType('lucide')}
-                    className={`min-h-[36px] px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                    className={`min-h-[44px] px-3.5 py-2 rounded-md transition-all duration-150 active:scale-95 cursor-pointer ${
                       iconType === 'lucide'
                         ? 'bg-stone-800 text-stone-100 font-semibold'
                         : 'text-stone-400 hover:text-stone-200'
@@ -238,7 +238,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setIconType('emoji')}
-                    className={`min-h-[36px] px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                    className={`min-h-[44px] px-3.5 py-2 rounded-md transition-all duration-150 active:scale-95 cursor-pointer ${
                       iconType === 'emoji'
                         ? 'bg-stone-800 text-stone-100 font-semibold'
                         : 'text-stone-400 hover:text-stone-200'
@@ -250,7 +250,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
               </div>
 
               {iconType === 'lucide' ? (
-                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 p-3 bg-stone-950 rounded-lg border border-stone-800 max-h-44 overflow-y-auto">
+                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 p-3 bg-[#141418] rounded-xl border border-stone-800/80 max-h-44 overflow-y-auto">
                   {CURATED_CATEGORY_ICONS.map((item) => {
                     const IconComp = item.icon;
                     const isSelected = iconValue === item.name;
@@ -263,7 +263,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                         className={`min-h-[44px] flex flex-col items-center justify-center p-2 rounded-lg border transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-stone-800 border-stone-400 text-stone-100 ring-2 ring-stone-400'
-                            : 'bg-stone-900/60 border-stone-800/80 text-stone-400 hover:bg-stone-800 hover:text-stone-200'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:bg-[#22222a] hover:text-stone-200'
                         }`}
                       >
                         <IconComp className="size-5" />
@@ -272,7 +272,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                   })}
                 </div>
               ) : (
-                <div className="p-3 bg-stone-950 rounded-lg border border-stone-800 space-y-3">
+                <div className="p-3 bg-[#141418] rounded-xl border border-stone-800/80 space-y-3">
                   <div className="flex flex-wrap gap-2">
                     {PRESET_EMOJIS.map((emoji) => (
                       <button
@@ -282,7 +282,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                         className={`min-h-[44px] min-w-[44px] size-11 text-lg flex items-center justify-center rounded-lg border transition-transform cursor-pointer ${
                           iconValue === emoji
                             ? 'bg-stone-800 border-stone-400 scale-110 ring-2 ring-stone-400'
-                            : 'bg-stone-900 border-stone-800 hover:scale-105'
+                            : 'bg-[#1a1a20] border-stone-800/80 hover:scale-105'
                         }`}
                       >
                         {emoji}
@@ -297,7 +297,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                       value={iconValue}
                       onChange={(e) => setIconValue(e.target.value)}
                       placeholder="e.g. 🛠️"
-                      className="w-24 min-h-[40px] h-10 bg-stone-900 border-stone-800 text-center text-base"
+                      className="w-24 min-h-[40px] h-10 bg-[#1a1a20] border-stone-800/80 text-center text-base rounded-lg"
                     />
                   </div>
                 </div>
@@ -314,8 +314,8 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                     type="button"
                     onClick={() => setColor(hex)}
                     style={{ backgroundColor: hex }}
-                    className={`min-h-[36px] min-w-[36px] size-9 rounded-full border border-stone-700 transition-transform cursor-pointer ${
-                      color === hex ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'
+                    className={`min-h-[44px] min-w-[44px] size-11 rounded-full border border-stone-700 transition-all duration-150 active:scale-95 cursor-pointer flex items-center justify-center ${
+                      color === hex ? 'scale-110 ring-2 ring-white' : 'hover:scale-105'
                     }`}
                   />
                 ))}
@@ -326,7 +326,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
                     placeholder="#3b82f6"
-                    className="w-28 min-h-[40px] h-10 font-mono text-xs bg-stone-950 border-stone-800 uppercase"
+                    className="w-28 min-h-[40px] h-10 font-mono text-xs bg-[#141418] border-stone-800/80 uppercase rounded-lg"
                   />
                 </div>
               </div>
@@ -334,9 +334,9 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
 
             {/* Sub-Category Codes Section (for existing categories) */}
             {editingCatId !== '__new__' && activeEditCategory && (
-              <div className="space-y-2 pt-2 border-t border-stone-800">
+              <div className="space-y-2 pt-2 border-t border-stone-800/80">
                 <label className="text-xs font-semibold text-stone-300">Sub-Category Codes</label>
-                <div className="flex flex-wrap gap-1.5 min-h-[44px] p-2.5 bg-stone-950 rounded-lg border border-stone-800">
+                <div className="flex flex-wrap gap-1.5 min-h-[44px] p-2.5 bg-[#141418] rounded-xl border border-stone-800/80">
                   {!activeEditCategory.subCodes || activeEditCategory.subCodes.length === 0 ? (
                     <span className="text-xs text-stone-500 italic">No sub-category codes defined.</span>
                   ) : (
@@ -364,7 +364,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                     placeholder="Add sub-code (e.g. FCPB, TOP)..."
                     value={newSubCode}
                     onChange={(e) => setNewSubCode(e.target.value)}
-                    className="min-h-[44px] h-11 text-xs bg-stone-950 border-stone-800 font-mono rounded-lg"
+                    className="min-h-[44px] h-11 text-xs bg-[#141418] border-stone-800/80 font-mono rounded-lg"
                   />
                   <Button
                     type="button"
@@ -378,7 +378,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
               </div>
             )}
 
-            <DialogFooter className="pt-3 border-t border-stone-800 flex items-center justify-end gap-2">
+            <DialogFooter className="pt-3 border-t border-stone-800/80 flex items-center justify-end gap-2">
               <Button
                 type="button"
                 variant="ghost"
@@ -412,7 +412,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
               </Button>
             </div>
 
-            <div className="divide-y divide-stone-800/80 border border-stone-800 rounded-lg overflow-hidden bg-stone-950/60">
+            <div className="divide-y divide-stone-800/80 border border-stone-800/80 rounded-xl overflow-hidden bg-[#141418]">
               {sortedCategories.map((cat, idx) => {
                 const isFirst = idx === 0;
                 const isLast = idx === sortedCategories.length - 1;
@@ -420,7 +420,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                 return (
                   <div
                     key={cat.id}
-                    className="flex items-center justify-between px-4 py-3 hover:bg-stone-900/60 transition-colors min-h-[52px]"
+                    className="flex items-center justify-between px-4 py-3 hover:bg-[#1a1a20] transition-colors min-h-[52px]"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <span
@@ -449,7 +449,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                         type="button"
                         disabled={isFirst}
                         onClick={() => onMoveUp(cat.id)}
-                        className="min-h-[40px] min-w-[40px] p-2 rounded-lg text-stone-400 hover:text-stone-200 hover:bg-stone-800 disabled:opacity-30 disabled:pointer-events-none cursor-pointer flex items-center justify-center"
+                        className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-lg text-stone-400 hover:text-stone-200 hover:bg-stone-800 transition-all duration-150 active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer flex items-center justify-center"
                         title="Move Up"
                       >
                         <ArrowUp className="size-4" />
@@ -458,7 +458,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                         type="button"
                         disabled={isLast}
                         onClick={() => onMoveDown(cat.id)}
-                        className="min-h-[40px] min-w-[40px] p-2 rounded-lg text-stone-400 hover:text-stone-200 hover:bg-stone-800 disabled:opacity-30 disabled:pointer-events-none cursor-pointer flex items-center justify-center"
+                        className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-lg text-stone-400 hover:text-stone-200 hover:bg-stone-800 transition-all duration-150 active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer flex items-center justify-center"
                         title="Move Down"
                       >
                         <ArrowDown className="size-4" />
@@ -468,7 +468,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                       <button
                         type="button"
                         onClick={() => handleStartEdit(cat)}
-                        className="min-h-[40px] min-w-[40px] p-2 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 cursor-pointer ml-1 flex items-center justify-center"
+                        className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-all duration-150 active:scale-95 cursor-pointer ml-1 flex items-center justify-center"
                         title="Edit Category"
                       >
                         <Pencil className="size-4" />
@@ -483,7 +483,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                               onDeleteCategory(cat.id);
                             }
                           }}
-                          className="min-h-[40px] min-w-[40px] p-2 rounded-lg text-stone-400 hover:text-rose-400 hover:bg-stone-800 cursor-pointer flex items-center justify-center"
+                          className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-lg text-stone-400 hover:text-rose-400 hover:bg-stone-800 transition-all duration-150 active:scale-95 cursor-pointer flex items-center justify-center"
                           title="Delete Category"
                         >
                           <Trash2 className="size-4" />

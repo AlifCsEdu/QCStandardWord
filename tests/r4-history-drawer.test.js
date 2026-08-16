@@ -153,4 +153,124 @@ describe('R4: Dedicated Rich History Panel / Inspection Log Drawer', () => {
       assert.ok(copied && copied.includes('\n'), 'Batch copy should format queue with newline delimiter');
     });
   });
+
+  // =========================================================================
+  // 5. Smart Auto-Sessions Grouping & In-Drawer Category Filters (R2)
+  // =========================================================================
+  describe('5. Smart Auto-Sessions Grouping & Drawer Actions (R2)', () => {
+    it('R4-5.1: should render history entries grouped into session cards with dynamic headers', async () => {
+      const now = Date.now();
+      const historyEntries = [
+        { id: 'h1', text: 'Screen touch unresponsive', itemNumber: 101, category: 'screen', timestamp: now - 2 * 60000 },
+        { id: 'h2', text: 'Battery drain rapid', itemNumber: 201, category: 'battery', timestamp: now - 5 * 60000 },
+        { id: 'h3', text: 'Camera lens scratch', itemNumber: 301, category: 'camera', timestamp: now - 90 * 60000 },
+      ];
+
+      const app = createAppInstance({
+        initialStorage: {
+          'qc-history-entries': JSON.stringify(historyEntries),
+        }
+      });
+      await waitAsync(30);
+
+      await app.openHistoryDrawer();
+      await waitAsync(50);
+
+      const sessionGroups = app.document.querySelectorAll('[data-testid="history-session-group"]');
+      assert.ok(sessionGroups.length >= 2, 'Should create at least 2 distinct session group cards');
+
+      // First session is Current Session
+      const firstSessionHeader = sessionGroups[0].textContent;
+      assert.ok(firstSessionHeader?.includes('Current Session'), 'First session should be titled Current Session');
+
+      // Second session is earlier session
+      const secondSessionHeader = sessionGroups[1].textContent;
+      assert.ok(secondSessionHeader?.includes('Session — ') || secondSessionHeader?.includes('Yesterday'), 'Second session has time-based title');
+    });
+
+    it('R4-5.2: should copy all entries in a session when "Copy All" session button is clicked', async () => {
+      const now = Date.now();
+      const historyEntries = [
+        { id: 'h1', text: 'Defect Session A1', itemNumber: 101, category: 'screen', timestamp: now },
+        { id: 'h2', text: 'Defect Session A2', itemNumber: 102, category: 'screen', timestamp: now - 1000 },
+      ];
+
+      const app = createAppInstance({
+        initialStorage: {
+          'qc-history-entries': JSON.stringify(historyEntries),
+        }
+      });
+      await waitAsync(30);
+
+      await app.openHistoryDrawer();
+      await waitAsync(50);
+
+      const copySessionBtn = app.document.querySelector('[data-testid="copy-session-btn"]');
+      assert.ok(copySessionBtn, 'Copy session button must exist in session header');
+
+      copySessionBtn.click();
+      await waitAsync(50);
+
+      const copied = app.getCopiedText();
+      assert.ok(copied?.includes('Defect Session A1') && copied?.includes('Defect Session A2'), 'Should copy all session items separated by newline');
+    });
+
+    it('R4-5.3: should add entire session to batch queue when "+ Batch" session button is clicked', async () => {
+      const now = Date.now();
+      const historyEntries = [
+        { id: 'h1', text: 'Session Batch Item 1', itemNumber: 101, category: 'screen', timestamp: now },
+        { id: 'h2', text: 'Session Batch Item 2', itemNumber: 102, category: 'battery', timestamp: now - 2000 },
+      ];
+
+      const app = createAppInstance({
+        initialStorage: {
+          'qc-history-entries': JSON.stringify(historyEntries),
+          'qc-batch': JSON.stringify([]),
+        }
+      });
+      await waitAsync(30);
+
+      await app.openHistoryDrawer();
+      await waitAsync(50);
+
+      const addSessionBatchBtn = app.document.querySelector('[data-testid="add-session-batch-btn"]');
+      assert.ok(addSessionBatchBtn, 'Add session to batch button must exist');
+
+      addSessionBatchBtn.click();
+      await waitAsync(50);
+
+      assert.equal(app.getBatchCount(), 2, 'Batch count should be 2 after adding session to batch');
+      const storedBatch = app.getStorageJSON('qc-batch');
+      assert.equal(storedBatch?.length, 2, 'LocalStorage qc-batch must contain 2 items');
+    });
+
+    it('R4-5.4: in-drawer category filter chips filter session items in real time', async () => {
+      const now = Date.now();
+      const historyEntries = [
+        { id: 'h1', text: 'Screen defect item', itemNumber: 101, category: 'screen', timestamp: now },
+        { id: 'h2', text: 'Battery defect item', itemNumber: 201, category: 'battery', timestamp: now - 1000 },
+      ];
+
+      const app = createAppInstance({
+        initialStorage: {
+          'qc-history-entries': JSON.stringify(historyEntries),
+        }
+      });
+      await waitAsync(30);
+
+      await app.openHistoryDrawer();
+      await waitAsync(50);
+
+      // Click "screen" category chip in drawer
+      const screenChip = app.document.querySelector('#hcatchips [data-cat="screen"], [data-testid="history-cat-chip-screen"]');
+      assert.ok(screenChip, 'Screen category chip must exist in drawer filter bar');
+
+      screenChip.click();
+      await waitAsync(50);
+
+      const drawerEntries = app.document.querySelectorAll('#histlist [data-testid="history-entry"]');
+      assert.equal(drawerEntries.length, 1, 'Only 1 screen entry should be displayed in drawer');
+      assert.ok(drawerEntries[0].textContent.includes('Screen defect item'), 'Rendered entry must match filtered category');
+    });
+  });
 });

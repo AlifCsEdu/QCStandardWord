@@ -79,7 +79,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         className={`settings-modal-container ${isOpen ? 'block' : 'hidden'}`}
       >
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-          <DialogContent className="bg-stone-900 border-stone-800 text-stone-100 max-w-xl p-5 sm:p-6 max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-[#22222a] bg-stone-900 border-stone-700/60 text-stone-100 max-w-xl p-5 sm:p-6 max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl">
             <DialogHeader className="space-y-1">
               <DialogTitle className="text-base sm:text-lg font-bold text-stone-100 flex items-center gap-2">
                 <Sparkles className="size-4.5 text-stone-400" />
@@ -109,10 +109,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         type="button"
                         data-theme={id}
                         onClick={() => onSetTheme && onSetTheme(id as ThemeMode)}
-                        className={`flex items-center justify-center gap-2 min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex items-center justify-center gap-2 min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <IconComp className="size-3.5" />
@@ -142,10 +142,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         data-v={id}
                         data-value={id}
                         onClick={() => onSetLayout(id as LayoutMode)}
-                        className={`flex items-center justify-center gap-2 min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all capitalize cursor-pointer ${
+                        className={`flex items-center justify-center gap-2 min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 capitalize cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <IconComp className="size-3.5" />
@@ -181,10 +181,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         type="button"
                         data-density={id}
                         onClick={() => onSetDensity(id as DensityMode)}
-                        className={`flex flex-col items-center justify-center min-h-[48px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex flex-col items-center justify-center min-h-[48px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <div className="flex items-center gap-1.5">
@@ -220,10 +220,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         type="button"
                         data-radius={alias}
                         onClick={() => onSetRadius(alias as RadiusOption)}
-                        className={`flex items-center justify-center min-h-[44px] py-2 px-2 rounded-lg text-xs font-semibold border transition-all text-center cursor-pointer ${
+                        className={`flex items-center justify-center min-h-[44px] py-2 px-2 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 text-center cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <span>{label}</span>
@@ -266,10 +266,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         data-textsize={alias}
                         data-fontsize={alias}
                         onClick={() => onSetTextSize(alias as TextSizeOption)}
-                        className={`flex items-center justify-center min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex items-center justify-center min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <span>{label}</span>
@@ -297,10 +297,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         type="button"
                         data-accent={id}
                         onClick={() => onSetAccent(id)}
-                        className={`flex items-center gap-2 min-h-[44px] py-2 px-2.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex items-center gap-2 min-h-[44px] py-2 px-2.5 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold ring-1 ring-stone-500 shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <span
@@ -333,10 +333,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         type="button"
                         data-motion={id}
                         onClick={() => onSetMotion(id as MotionMode)}
-                        className={`flex items-center justify-center min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex items-center justify-center min-h-[44px] py-2 px-3 rounded-lg text-xs font-semibold border transition-all duration-150 active:scale-95 cursor-pointer ${
                           isActive
                             ? 'bg-stone-800 border-stone-600 text-stone-100 font-bold shadow-xs'
-                            : 'bg-stone-900 border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                            : 'bg-[#1a1a20] border-stone-800/80 text-stone-400 hover:text-stone-200 hover:bg-[#141418]'
                         }`}
                       >
                         <span>{label}</span>
@@ -347,12 +347,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
             </div>
 
-            <DialogFooter className="pt-3 border-t border-stone-800">
+            <DialogFooter className="pt-3 border-t border-stone-700/60">
               <Button
                 id="setdone"
                 data-testid="settings-close-btn"
                 onClick={onClose}
-                className="w-full sm:w-auto min-h-[44px] bg-stone-100 text-stone-900 font-bold hover:bg-white px-8 rounded-lg cursor-pointer transition-all"
+                className="w-full sm:w-auto min-h-[44px] bg-stone-100 text-stone-900 font-bold hover:bg-white px-8 rounded-lg cursor-pointer transition-all duration-150 active:scale-95"
               >
                 Done
               </Button>

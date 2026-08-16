@@ -134,7 +134,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                       if (onSelectFolder) onSelectFolder(null);
                       onSelectCategory(item.id);
                     }}
-                    className={`chip-btn group flex items-center justify-between w-full min-h-[44px] px-3 py-2.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-150 ease-in-out cursor-pointer ${
+                    className={`chip-btn group flex items-center justify-between w-full min-h-[44px] px-3 py-2.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-150 ease-in-out cursor-pointer active:scale-95 ${
                       isActive
                         ? 'bg-stone-800 text-stone-100 font-semibold border-l-4 border-stone-400 shadow-xs'
                         : 'text-stone-400 hover:bg-stone-800/50 hover:text-stone-100 border-l-4 border-transparent'
@@ -175,7 +175,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
 
             <button
               onClick={() => setIsCreatingFolder((prev) => !prev)}
-              className="min-h-[40px] min-w-[40px] p-2 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors cursor-pointer flex items-center justify-center"
+              className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-all duration-150 active:scale-95 cursor-pointer flex items-center justify-center"
               title="Create New Pin Folder"
             >
               <FolderPlus className="size-4" />
@@ -184,7 +184,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
 
           {/* Inline Folder Creation Form */}
           {isCreatingFolder && (
-            <form onSubmit={handleCreateSubmit} className="p-3 my-1 bg-stone-900 rounded-lg border border-stone-800 space-y-2.5">
+            <form onSubmit={handleCreateSubmit} className="p-3 my-1 bg-[#1a1a20] rounded-xl border border-stone-800/80 space-y-2.5">
               <div className="text-xs font-semibold text-stone-300">Create Pin Folder</div>
               <Input
                 type="text"
@@ -192,7 +192,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 autoFocus
-                className="min-h-[40px] h-10 text-xs bg-stone-950 border-stone-800 text-stone-100 placeholder:text-stone-500 focus:border-stone-700 rounded-lg"
+                className="min-h-[40px] h-10 text-xs bg-[#141418] border-stone-800/80 text-stone-100 placeholder:text-stone-500 focus:border-stone-700 rounded-lg"
               />
               <div className="flex items-center gap-2 pt-1">
                 <span className="text-[11px] text-stone-400">Color:</span>
@@ -209,10 +209,10 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
               <div className="flex items-center justify-end gap-2 pt-1">
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => setIsCreatingFolder(false)}
-                  className="min-h-[36px] h-9 px-3 text-xs text-stone-400 hover:text-stone-200 rounded-lg"
+                  className="min-h-[36px] h-9 px-3 text-xs bg-[#141418] border-stone-800/80 text-stone-400 hover:text-stone-200 rounded-lg"
                 >
                   Cancel
                 </Button>
@@ -220,19 +220,21 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                   type="submit"
                   size="sm"
                   disabled={!newFolderName.trim()}
-                  className="min-h-[36px] h-9 px-4 text-xs bg-stone-100 hover:bg-white text-stone-900 font-semibold cursor-pointer rounded-lg"
+                  className="min-h-[36px] h-9 px-3 text-xs bg-stone-100 text-stone-900 font-semibold hover:bg-white rounded-lg"
                 >
-                  Create
+                  Save
                 </Button>
               </div>
             </form>
           )}
 
-          {/* Folder Item List */}
+          {/* Folder Chips List */}
           {foldersOpen && (
             <div className="space-y-0.5 pt-0.5">
-              {folders.length === 0 ? (
-                <div className="px-3 py-2 text-xs text-stone-400 italic">No custom pin folders created.</div>
+              {folders.length === 0 && !isCreatingFolder ? (
+                <div className="text-[11px] text-stone-400 px-3 py-2 italic font-mono">
+                  No pin folders created yet.
+                </div>
               ) : (
                 folders.map((folder) => {
                   const isFolderActive = activeFolderId === folder.id;
@@ -243,22 +245,22 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                       <form
                         key={folder.id}
                         onSubmit={(e) => handleSaveRename(folder.id, e)}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-stone-900 rounded-lg border border-stone-800"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#1a1a20] rounded-lg border border-stone-800/80"
                       >
                         <Input
                           type="text"
                           value={editingFolderName}
                           onChange={(e) => setEditingFolderName(e.target.value)}
                           autoFocus
-                          className="min-h-[36px] h-9 text-xs bg-stone-950 border-stone-800 text-stone-100 focus:border-stone-700 flex-1 rounded-lg"
+                          className="min-h-[36px] h-9 text-xs bg-[#141418] border-stone-800/80 text-stone-100 focus:border-stone-700 flex-1 rounded-lg"
                         />
-                        <button type="submit" className="min-h-[36px] min-w-[36px] p-2 text-stone-200 hover:text-white cursor-pointer flex items-center justify-center">
+                        <button type="submit" className="min-h-[44px] min-w-[44px] size-11 p-2 text-stone-200 hover:text-white active:scale-95 cursor-pointer flex items-center justify-center">
                           <Check className="size-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => setEditingFolderId(null)}
-                          className="min-h-[36px] min-w-[36px] p-2 text-stone-400 hover:text-stone-200 cursor-pointer flex items-center justify-center"
+                          className="min-h-[44px] min-w-[44px] size-11 p-2 text-stone-400 hover:text-stone-200 active:scale-95 cursor-pointer flex items-center justify-center"
                         >
                           <X className="size-4" />
                         </button>
@@ -275,7 +277,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                         if (onSelectFolder) onSelectFolder(folder.id);
                         onSelectCategory('pinned');
                       }}
-                      className={`chip-btn group flex items-center justify-between w-full min-h-[44px] px-3 py-2.5 text-xs font-medium rounded-lg transition-all duration-150 ease-in-out cursor-pointer border-l-4 ${
+                      className={`chip-btn group flex items-center justify-between w-full min-h-[44px] px-3 py-2.5 text-xs font-medium rounded-lg transition-all duration-150 ease-in-out cursor-pointer border-l-4 active:scale-95 ${
                         isFolderActive
                           ? 'bg-stone-800 text-stone-100 font-semibold shadow-xs'
                           : 'text-stone-400 hover:bg-stone-800/50 hover:text-stone-100 border-transparent'
@@ -297,7 +299,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                             role="button"
                             tabIndex={0}
                             onClick={(e) => handleStartRename(folder, e)}
-                            className="min-h-[36px] min-w-[36px] p-2 rounded-md text-stone-400 hover:text-stone-200 hover:bg-stone-800 transition-colors cursor-pointer flex items-center justify-center"
+                            className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-md text-stone-400 hover:text-stone-200 hover:bg-stone-800 transition-all duration-150 active:scale-95 cursor-pointer flex items-center justify-center"
                             title="Rename folder"
                           >
                             <Pencil className="size-3.5" />
@@ -306,7 +308,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                             role="button"
                             tabIndex={0}
                             onClick={(e) => handleDelete(folder.id, e)}
-                            className="min-h-[36px] min-w-[36px] p-2 rounded-md text-stone-400 hover:text-rose-400 hover:bg-stone-800 transition-colors cursor-pointer flex items-center justify-center"
+                            className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-md text-stone-400 hover:text-rose-400 hover:bg-stone-800 transition-all duration-150 active:scale-95 cursor-pointer flex items-center justify-center"
                             title="Delete folder"
                           >
                             <Trash2 className="size-3.5" />
@@ -341,7 +343,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
               <button
                 onClick={onOpenCategoryManager}
                 data-testid="open-category-manager-btn"
-                className="min-h-[40px] min-w-[40px] p-2 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors cursor-pointer flex items-center justify-center"
+                className="min-h-[44px] min-w-[44px] size-11 p-2 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-all duration-150 active:scale-95 cursor-pointer flex items-center justify-center"
                 title="Manage Categories"
               >
                 <Sliders className="size-4" />
@@ -365,12 +367,12 @@ export const CategoryChips: React.FC<CategoryChipsProps> = React.memo(({
                       if (onSelectFolder) onSelectFolder(null);
                       onSelectCategory(cat.id);
                     }}
-                    className={`chip-btn group flex items-center justify-between w-full min-h-[44px] sm:min-h-[48px] px-3 py-2.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-150 ease-in-out cursor-pointer border-l-4 ${
+                    className={`chip-btn group flex items-center justify-between w-full min-h-[44px] sm:min-h-[48px] px-3 py-2.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-150 ease-in-out cursor-pointer border-l-4 active:scale-95 ${
                       isActive
-                        ? 'bg-stone-800 text-stone-100 font-semibold border-stone-400 shadow-xs'
+                        ? 'bg-stone-800 text-stone-100 font-semibold shadow-xs'
                         : 'text-stone-400 hover:bg-stone-800/50 hover:text-stone-100 border-transparent'
                     }`}
-                    style={isActive ? undefined : borderStyle}
+                    style={borderStyle}
                   >
                     <div className="flex items-center gap-2.5 min-w-0 truncate">
                       {renderCategoryIcon(cat, {

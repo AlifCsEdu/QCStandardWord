@@ -13,6 +13,13 @@ import type { DelimiterKey } from '../types/qc.ts';
 import { Button } from './ui/button.tsx';
 import { Textarea } from './ui/textarea.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog.tsx';
+import { BASE_ITEMS } from '../data/qcData.ts';
+import { getCategoryBadgeStyle, getCategoryLeftBorderStyle } from '../utils/categoryColors.ts';
+
+const getItemCategory = (text: string): string | undefined => {
+  const match = BASE_ITEMS.find((item) => item.t.trim().toLowerCase() === text.trim().toLowerCase());
+  return match?.c;
+};
 
 interface BatchDrawerProps {
   isOpen: boolean;
@@ -106,12 +113,12 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
         data-testid="batch-drawer"
         className={`batch-drawer ${
           isOpen ? 'open translate-x-0' : 'translate-x-full'
-        } fixed top-0 right-0 w-[420px] max-w-[92vw] h-full bg-[#18181b] border-l border-stone-800 z-[999] flex flex-col p-4 sm:p-5 gap-4 box-border overflow-hidden shadow-2xl transition-transform duration-300 ease-out touch-manipulation`}
+        } fixed top-0 right-0 w-[420px] max-w-[92vw] h-full bg-[#22222a] border-l border-stone-700/60 z-[999] flex flex-col p-4 sm:p-5 gap-4 box-border overflow-hidden shadow-2xl transition-transform duration-300 ease-out touch-manipulation`}
       >
         {/* Top Header Controls Bar */}
-        <div className="flex justify-between items-center border-b border-stone-800 pb-3.5 shrink-0 min-h-[48px]">
+        <div className="flex justify-between items-center border-b border-stone-700/60 pb-3.5 shrink-0 min-h-[48px]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-stone-800/80 border border-stone-700/60 text-stone-300">
+            <div className="p-2 rounded-lg bg-[#141418] border border-stone-700/60 text-stone-300">
               <IconLayers className="size-4.5" />
             </div>
             <div className="flex items-center gap-2">
@@ -120,7 +127,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               </span>
               <span
                 id="bbcount"
-                className="bg-stone-800 text-stone-300 border border-stone-700 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold"
+                className="bg-[#141418] text-stone-300 border border-stone-700/80 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold"
               >
                 {batchQueue.length}
               </span>
@@ -139,14 +146,14 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
             size="icon"
             onClick={onClose}
             aria-label="Close batch drawer"
-            className="text-stone-400 hover:text-stone-100 hover:bg-stone-800 min-h-[44px] min-w-[44px] size-11 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
+            className="text-stone-400 hover:text-stone-100 hover:bg-[#1a1a20] min-h-[44px] min-w-[44px] size-11 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
           >
             <IconX className="size-5" />
           </Button>
         </div>
 
         {/* Settings Section: Delimiter & Auto-clear */}
-        <div className="p-3.5 rounded-xl border border-stone-800 bg-stone-950/80 flex flex-col gap-3.5 shadow-inner shrink-0">
+        <div className="p-3.5 rounded-xl border border-stone-800/80 bg-[#141418] flex flex-col gap-3.5 shadow-inner shrink-0">
           {/* Segmented Delimiter Control */}
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center">
@@ -159,7 +166,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
             </div>
 
             {/* Sleek Segmented Control Tabs */}
-            <div className="grid grid-cols-6 gap-1 bg-stone-900 border border-stone-800 p-1 rounded-lg">
+            <div className="grid grid-cols-6 gap-1 bg-[#1a1a20] border border-stone-800/80 p-1 rounded-lg">
               {DELIMITER_OPTIONS.map((opt) => {
                 const isActive = delimiter === opt.key;
                 return (
@@ -171,7 +178,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
                     className={`min-h-[44px] py-2 px-1 rounded-md text-xs font-mono text-center flex flex-col items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer select-none ${
                       isActive
                         ? 'bg-stone-800 text-stone-100 font-bold border border-stone-700 shadow-xs'
-                        : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50 border border-transparent'
+                        : 'text-stone-400 hover:text-stone-200 hover:bg-[#141418] border border-transparent'
                     }`}
                   >
                     <span className="text-xs leading-none">{opt.display}</span>
@@ -217,7 +224,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               type="checkbox"
               checked={autoclear}
               onChange={(e) => onSetAutoclear(e.target.checked)}
-              className="size-5 rounded border-stone-700 bg-stone-900 accent-stone-300 cursor-pointer focus:ring-stone-500/30 transition-colors"
+              className="size-5 rounded border-stone-700 bg-[#1a1a20] accent-stone-300 cursor-pointer focus:ring-stone-500/30 transition-colors"
             />
           </div>
         </div>
@@ -228,8 +235,8 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
           className="flex-1 overflow-y-auto flex flex-col gap-2.5 min-h-[160px] pr-0.5 touch-scroll"
         >
           {batchQueue.length === 0 ? (
-            <div className="p-8 text-center border border-dashed border-stone-800 rounded-xl text-stone-500 text-xs flex flex-col items-center justify-center gap-2 my-auto">
-              <div className="p-3 rounded-full bg-stone-800/50 border border-stone-800 text-stone-400">
+            <div className="p-8 text-center border border-dashed border-stone-800/80 rounded-xl text-stone-500 text-xs flex flex-col items-center justify-center gap-2 my-auto">
+              <div className="p-3 rounded-full bg-[#141418] border border-stone-800/80 text-stone-400">
                 <Sparkles className="size-5" />
               </div>
               <p className="font-semibold text-stone-300 text-sm">Batch Queue Empty</p>
@@ -238,94 +245,108 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               </p>
             </div>
           ) : (
-            batchQueue.map((itemText, idx) => (
-              <div
-                key={idx}
-                data-bi={idx}
-                data-testid="batch-item"
-                className="bitem group p-3 rounded-xl border border-stone-800 bg-stone-950 hover:border-stone-700 flex items-center justify-between gap-2.5 transition-all duration-150 shadow-xs min-h-[52px]"
-              >
-                <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                  <span className="font-mono text-[11px] font-semibold text-stone-400 w-4 text-right shrink-0">
-                    {idx + 1}.
-                  </span>
-                  <span
-                    className="bt flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium text-stone-200 group-hover:text-stone-100 select-text"
-                    data-testid="batch-item-text"
-                    title={itemText}
-                  >
-                    {itemText}
-                  </span>
+            batchQueue.map((itemText, idx) => {
+              const category = getItemCategory(itemText);
+              const borderLeftStyle = category ? getCategoryLeftBorderStyle(category) : undefined;
+
+              return (
+                <div
+                  key={idx}
+                  data-bi={idx}
+                  data-testid="batch-item"
+                  className={`bitem group p-3 rounded-xl border border-stone-800/80 bg-[#1a1a20] hover:border-stone-700/80 flex items-center justify-between gap-2.5 transition-all duration-150 shadow-xs min-h-[52px] ${category ? 'border-l-4' : ''}`}
+                  style={borderLeftStyle}
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span className="font-mono text-[11px] font-semibold text-stone-400 w-4 text-right shrink-0">
+                      {idx + 1}.
+                    </span>
+                    {category && (
+                      <span
+                        className="rpill uppercase text-[9px] font-bold px-1.5 py-0.2 rounded-full border shrink-0 inline-flex items-center"
+                        style={getCategoryBadgeStyle(category)}
+                      >
+                        {category}
+                      </span>
+                    )}
+                    <span
+                      className="bt flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium text-stone-200 group-hover:text-stone-100 select-text"
+                      data-testid="batch-item-text"
+                      title={itemText}
+                    >
+                      {itemText}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {/* Reorder Up Button */}
+                    <button
+                      type="button"
+                      className="bup min-h-[44px] min-w-[44px] size-11 p-2.5 rounded-lg border border-stone-700/80 text-xs font-bold transition-all duration-150 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-90 text-stone-300 bg-[#141418] hover:bg-[#22222a] hover:border-stone-600 hover:text-stone-100 cursor-pointer"
+                      data-mvup={idx}
+                      data-mup={idx}
+                      data-up={idx}
+                      data-act="moveup"
+                      data-testid={`move-up-${idx}`}
+                      disabled={idx === 0}
+                      onClick={() => handleMoveUp?.(idx)}
+                      title="Move Up"
+                      aria-label={`Move item ${idx + 1} up`}
+                    >
+                      <ArrowUp className="size-4" />
+                    </button>
+
+                    {/* Reorder Down Button */}
+                    <button
+                      type="button"
+                      className="bdn min-h-[44px] min-w-[44px] size-11 p-2.5 rounded-lg border border-stone-700/80 text-xs font-bold transition-all duration-150 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-90 text-stone-300 bg-[#141418] hover:bg-[#22222a] hover:border-stone-600 hover:text-stone-100 cursor-pointer"
+                      data-mvdn={idx}
+                      data-mdown={idx}
+                      data-down={idx}
+                      data-act="movedown"
+                      data-testid={`move-down-${idx}`}
+                      disabled={idx === batchQueue.length - 1}
+                      onClick={() => handleMoveDown?.(idx)}
+                      title="Move Down"
+                      aria-label={`Move item ${idx + 1} down`}
+                    >
+                      <ArrowDown className="size-4" />
+                    </button>
+
+                    {/* Single Item Copy Button */}
+                    <button
+                      type="button"
+                      data-bc={idx}
+                      className="bcopy-item min-h-[44px] border border-stone-700/80 bg-[#141418] hover:bg-[#22222a] hover:text-stone-100 text-stone-300 px-3.5 py-2 rounded-lg text-xs font-mono font-semibold transition-all duration-150 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                      onClick={() => handleCopySingle(itemText, idx)}
+                      title="Copy single item"
+                      aria-label={`Copy item: ${itemText}`}
+                    >
+                      <IconCopy className="size-3.5" />
+                      <span>{copiedItemIndex === idx ? 'Copied' : 'Copy'}</span>
+                    </button>
+
+                    {/* Remove Item Button */}
+                    <button
+                      type="button"
+                      data-rm={idx}
+                      data-testid={`remove-batch-item-${idx}`}
+                      className="brm-item min-h-[44px] min-w-[44px] size-11 border border-rose-900/60 bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 hover:text-rose-300 p-2.5 rounded-lg text-xs font-semibold transition-all duration-150 active:scale-90 cursor-pointer flex items-center justify-center"
+                      onClick={() => onRemoveItem(idx)}
+                      title="Remove item"
+                      aria-label={`Remove item: ${itemText}`}
+                    >
+                      <IconX className="size-4" />
+                    </button>
+                  </div>
                 </div>
-
-                <div className="flex items-center gap-1.5 shrink-0">
-                  {/* Reorder Up Button */}
-                  <button
-                    type="button"
-                    className="bup min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] p-2.5 rounded-lg border border-stone-700 text-xs font-bold transition-all duration-150 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-90 text-stone-300 bg-stone-800 hover:bg-stone-700 hover:border-stone-600 hover:text-stone-100 cursor-pointer"
-                    data-mvup={idx}
-                    data-mup={idx}
-                    data-up={idx}
-                    data-act="moveup"
-                    data-testid={`move-up-${idx}`}
-                    disabled={idx === 0}
-                    onClick={() => handleMoveUp?.(idx)}
-                    title="Move Up"
-                    aria-label={`Move item ${idx + 1} up`}
-                  >
-                    <ArrowUp className="size-4" />
-                  </button>
-
-                  {/* Reorder Down Button */}
-                  <button
-                    type="button"
-                    className="bdn min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] p-2.5 rounded-lg border border-stone-700 text-xs font-bold transition-all duration-150 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-90 text-stone-300 bg-stone-800 hover:bg-stone-700 hover:border-stone-600 hover:text-stone-100 cursor-pointer"
-                    data-mvdn={idx}
-                    data-mdown={idx}
-                    data-down={idx}
-                    data-act="movedown"
-                    data-testid={`move-down-${idx}`}
-                    disabled={idx === batchQueue.length - 1}
-                    onClick={() => handleMoveDown?.(idx)}
-                    title="Move Down"
-                    aria-label={`Move item ${idx + 1} down`}
-                  >
-                    <ArrowDown className="size-4" />
-                  </button>
-
-                  {/* Single Item Copy Button */}
-                  <button
-                    type="button"
-                    data-bc={idx}
-                    className="bcopy-item min-h-[40px] sm:min-h-[44px] border border-stone-700 bg-stone-800 hover:bg-stone-700 hover:text-stone-100 text-stone-300 px-3 py-2 rounded-lg text-xs font-mono font-semibold transition-all duration-150 active:scale-95 cursor-pointer flex items-center gap-1.5"
-                    onClick={() => handleCopySingle(itemText, idx)}
-                    title="Copy single item"
-                    aria-label={`Copy item: ${itemText}`}
-                  >
-                    <IconCopy className="size-3.5" />
-                    <span>{copiedItemIndex === idx ? 'Copied' : 'Copy'}</span>
-                  </button>
-
-                  {/* Remove Item Button */}
-                  <button
-                    type="button"
-                    data-rm={idx}
-                    data-testid={`remove-batch-item-${idx}`}
-                    className="brm-item min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] border border-rose-900/60 bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 hover:text-rose-300 p-2.5 rounded-lg text-xs font-semibold transition-all duration-150 active:scale-90 cursor-pointer flex items-center justify-center"
-                    onClick={() => onRemoveItem(idx)}
-                    title="Remove item"
-                    aria-label={`Remove item: ${itemText}`}
-                  >
-                    <IconX className="size-4" />
-                  </button>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
         {/* Footer Action Buttons */}
-        <div className="flex flex-col gap-2.5 border-t border-stone-800 pt-3.5 shrink-0">
+        <div className="flex flex-col gap-2.5 border-t border-stone-700/60 pt-3.5 shrink-0">
           {/* Prominent High-Contrast Copy All Button */}
           <Button
             id="bcopy"
@@ -360,7 +381,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               variant="outline"
               size="sm"
               onClick={() => setPasteModalOpen(true)}
-              className="flex-1 bg-stone-800 border border-stone-700 text-stone-200 hover:bg-stone-700 hover:text-stone-100 transition-all duration-150 active:scale-95 min-h-[44px] h-11 rounded-lg flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer"
+              className="flex-1 bg-[#1a1a20] border border-stone-700/80 text-stone-200 hover:bg-[#141418] hover:text-stone-100 transition-all duration-150 active:scale-95 min-h-[44px] h-11 rounded-lg flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer"
             >
               <IconFileImport className="size-4" />
               Bulk Paste
@@ -371,7 +392,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
 
       {/* Bulk Paste Dialog */}
       <Dialog open={pasteModalOpen} onOpenChange={setPasteModalOpen}>
-        <DialogContent className="bg-[#18181b] border border-stone-800 text-stone-100 max-w-md shadow-2xl">
+        <DialogContent className="bg-[#22222a] border border-stone-700/60 text-stone-100 max-w-md shadow-2xl rounded-xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-stone-100 flex items-center gap-2">
               <IconFileImport className="size-4 text-stone-300" />
@@ -385,7 +406,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
               onChange={(e) => setPasteText(e.target.value)}
               placeholder="Paste defect lines (one per line)..."
               rows={6}
-              className="w-full bg-stone-950 border border-stone-800 text-stone-100 text-sm focus-visible:ring-stone-600 font-mono rounded-lg p-3"
+              className="w-full bg-[#141418] border border-stone-800/80 text-stone-100 text-sm focus-visible:ring-stone-600 font-mono rounded-lg p-3"
             />
           </div>
 
@@ -393,7 +414,7 @@ export const BatchDrawer: React.FC<BatchDrawerProps> = ({
             <Button
               variant="outline"
               onClick={() => setPasteModalOpen(false)}
-              className="min-h-[44px] h-11 px-4 bg-stone-800 border-stone-700 text-stone-300 hover:bg-stone-700 cursor-pointer rounded-lg"
+              className="min-h-[44px] h-11 px-4 bg-[#141418] border-stone-700/80 text-stone-300 hover:bg-[#1a1a20] cursor-pointer rounded-lg"
             >
               Cancel
             </Button>

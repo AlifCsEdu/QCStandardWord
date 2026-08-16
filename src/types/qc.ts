@@ -93,6 +93,16 @@ export interface HistoryEntry {
   source?: 'single' | 'batch';
 }
 
+export interface HistorySession {
+  id: string;
+  title: string;
+  subtitle: string;
+  startTime: number;
+  endTime: number;
+  isCurrentSession: boolean;
+  entries: HistoryEntry[];
+}
+
 export interface ToastNotice {
   id: string;
   msg: string;

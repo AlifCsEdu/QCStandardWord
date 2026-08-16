@@ -70,7 +70,7 @@ export function getToastIcon(msg: string, warn?: boolean): React.ReactElement {
     return React.createElement(Upload, { size: 18, className: 'toast-icon-svg text-stone-300' });
   }
   if (lower.includes('reset')) {
-    return React.createElement(Refresh, { size: 18, className: 'toast-icon-svg text-zinc-400' });
+    return React.createElement(Refresh, { size: 18, className: 'toast-icon-svg text-stone-400' });
   }
 
   return React.createElement(Check, { size: 18, className: 'toast-icon-svg text-stone-200' });

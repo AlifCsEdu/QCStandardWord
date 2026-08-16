@@ -10,43 +10,51 @@
   --color-stone-card-light: #ffffff;
   --color-warm-border-dark: #27272a;
   --color-warm-border-light: #e4e4e7;
+  --color-canvas-dark: #0e0e11;
+  --color-surface-dark: #141418;
+  --color-card-dark: #1a1a20;
+  --color-popover-dark: #22222a;
+  --color-border-warm: rgba(41, 37, 36, 0.8);
+  --color-border-popover: rgba(68, 64, 60, 0.6);
 }
 
 @layer base {
   :root,
   [data-theme='dark'],
   .dark {
-    --background: #121214;
+    --background: #0e0e11;
     --foreground: #f4f4f5;
-    --card: #18181b;
+    --card: #1a1a20;
     --card-foreground: #f4f4f5;
-    --popover: #18181b;
+    --popover: #22222a;
     --popover-foreground: #f4f4f5;
     --primary: #e4e4e7;
-    --primary-foreground: #18181b;
-    --secondary: #27272a;
+    --primary-foreground: #141418;
+    --secondary: #1a1a20;
     --secondary-foreground: #f4f4f5;
-    --muted: #27272a;
+    --muted: #1a1a20;
     --muted-foreground: #a1a1aa;
-    --accent: #27272a;
+    --accent: #22222a;
     --accent-foreground: #f4f4f5;
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
-    --border: #27272a;
-    --input: #27272a;
+    --border: rgba(41, 37, 36, 0.8);
+    --input: rgba(41, 37, 36, 0.8);
     --ring: #71717a;
     --radius: 0.5rem;
 
-    /* Custom variables mapped to Raycast Warm Stone (#121214) & Card Charcoal (#18181b) */
-    --bg-deep-slate: #121214;
-    --container-charcoal: #18181b;
-    --border-contrast: #27272a;
+    /* Custom variables mapped to Warm Charcoal Multi-Layer Depth (#0e0e11, #141418, #1a1a20, #22222a) */
+    --bg-deep-slate: #0e0e11;
+    --container-charcoal: #141418;
+    --card-charcoal: #1a1a20;
+    --popover-charcoal: #22222a;
+    --border-contrast: rgba(41, 37, 36, 0.8);
     --accent-stone: #d4d4d8;
     --accent-sky: #a1a1aa;
     --text-primary: #f4f4f5;
     --text-secondary: #a1a1aa;
     --drawer-backdrop-bg: rgba(0, 0, 0, 0.6);
-    --header-bg: #121214;
+    --header-bg: #141418;
   }
 
   [data-theme='light'] {
@@ -364,8 +372,8 @@ body {
   gap: 12px;
   padding: 12px 18px;
   border-radius: 9999px;
-  background: #18181b;
-  border: 1px solid var(--border-contrast);
+  background: #22222a;
+  border: 1px solid rgba(68, 64, 60, 0.6);
   color: var(--text-primary);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   font-size: 0.875rem;
@@ -519,7 +527,7 @@ body {
 
 #batchDrawer,
 .batch-drawer {
-  background: #18181b;
+  background: #22222a;
 }
 
 /* Batch drawer tactile micro-interactions */
@@ -559,17 +567,17 @@ body {
 /* CSS Variables for Defect Items */
 :root,
 [data-theme='dark'] {
-  --defect-card-bg: #18181b;
-  --defect-card-bg-hover: #27272a;
+  --defect-card-bg: #1a1a20;
+  --defect-card-bg-hover: #22222a;
   --defect-card-bg-pinned: rgba(245, 159, 0, 0.08);
-  --defect-card-border: #27272a;
-  --defect-card-border-hover: #3f3f46;
+  --defect-card-border: rgba(41, 37, 36, 0.8);
+  --defect-card-border-hover: rgba(68, 64, 60, 0.8);
   --defect-card-border-pinned: rgba(245, 159, 0, 0.4);
   --defect-card-glow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
   --defect-rnum-color: #a1a1aa;
   --defect-rtxt-color: #f4f4f5;
-  --defect-act-btn-bg: #27272a;
-  --defect-act-btn-border: #3f3f46;
+  --defect-act-btn-bg: #141418;
+  --defect-act-btn-border: rgba(68, 64, 60, 0.8);
   --defect-act-btn-color: #a1a1aa;
 }
 
@@ -605,12 +613,14 @@ body {
 .gcard:hover {
   transform: translateY(-2px);
   border-color: var(--defect-card-border-hover);
+  background-color: var(--defect-card-bg-hover);
   box-shadow: var(--defect-card-glow-hover);
 }
 
 .row:hover {
   transform: translateY(-1px);
   border-color: var(--defect-card-border-hover);
+  background-color: var(--defect-card-bg-hover);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -618,6 +628,10 @@ body {
   border-color: var(--defect-card-border-hover);
   background-color: var(--defect-card-bg-hover);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.gcard:active, .row:active, .trow:active {
+  transform: scale(0.99);
 }
 
 /* Typography Hierarchy */

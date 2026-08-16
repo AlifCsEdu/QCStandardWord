@@ -10,11 +10,11 @@ const badgeVariants = cva(
         default:
           'border-stone-700 bg-stone-800 text-stone-200 hover:bg-stone-700',
         secondary:
-          'border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700',
+          'border-stone-700 bg-[#1a1a20] text-stone-300 hover:bg-[#22222a]',
         destructive:
           'border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25',
         outline:
-          'border-zinc-700 text-zinc-300 hover:bg-zinc-800',
+          'border-stone-800/80 text-stone-300 hover:bg-[#1a1a20]',
       },
     },
     defaultVariants: {

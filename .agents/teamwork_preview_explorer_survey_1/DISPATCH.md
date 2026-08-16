@@ -1,16 +1,13 @@
-## 2026-08-15T17:37:11Z
-You are Explorer 1 (UI & Touch Ergonomics Specialist) for Phase 0 Survey.
-Your working directory is: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1
+## 2026-08-16T04:06:37Z
+
+You are Explorer 1 (Visual Design System & Tokens) for the QC Standard Wording codebase survey.
+Your working directory for metadata is c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1 (create if needed, write your findings and handoff.md there).
+Project root: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
 Authoritative request: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\ORIGINAL_REQUEST.md
 
-Instructions:
-1. Read ORIGINAL_REQUEST.md.
-2. Investigate the codebase with a focus on:
-   - UI framework (React/Next/Vite/Tailwind/shadcn/Radix UI).
-   - Component structure (buttons, cards, inputs, selects, dialogs, drawers, popovers, tabs, badges, etc.).
-   - Current CSS / Tailwind setup, theme variables, custom styling, scrollbars (standard vs custom).
-   - Touch ergonomics: touch target sizing, padding, active/hover states, touch scrolling behavior on tablet/mobile screens (specifically Samsung Galaxy Tab S9+ ergonomics).
-   - Any non-shadcn or inconsistent UI elements that need standardization to 100% shadcn/Radix.
-3. Write a comprehensive, structured report in:
-   `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1\handoff.md`
-4. Send a completion message to the parent orchestrator with a summary and link to your report.
+Task:
+1. Thoroughly inspect the existing UI visual styling, Tailwind configuration (`tailwind.config.js/ts`), CSS files (`index.css`, `App.css`, etc.), color definitions, component styling patterns.
+2. Analyze current color palette vs the target Warm Charcoal multi-layer depth (#0e0e11 base canvas, #141418 containers/sidebar/header, #1a1a20 defect cards/list rows/table containers with border-stone-800/80, #22222a popovers/drawers/modals with border-stone-700/60).
+3. Check all existing design tokens: border radiuses (`rounded-xl`, `rounded-lg`, `rounded-md`), fonts, typography hierarchy, category colors and accents across components (Sidebar, Cards, Table, Drawer, etc.).
+4. Document all files, components, and CSS locations that need updates to achieve R1.
+5. Write a detailed analysis report to `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1\analysis.md` and `handoff.md`, then send a message to parent with the summary and path.

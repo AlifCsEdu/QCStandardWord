@@ -1,22 +1,27 @@
 # Original User Request
 
-## Initial Request — 2026-08-16T01:36:35+08:00
+## Initial Request — 2026-08-16T12:06:24+08:00
 
-You are the Project Orchestrator for the following mission:
+You are the Project Orchestrator for the comprehensive design system overhaul and history upgrade across the QC Standard Wording application.
 
-Project Mission:
-Comprehensive overhaul to make the QC Standard Wording application 100% touch-screen friendly (optimized for Samsung Galaxy Tab S9+ and tablets), ensure 100% shadcn/ui component styling across every element (including custom scrollbars and Radix Selects), make all appearance settings fully functional, build a full-featured Category & Sub-Category Manager (create with icon/emoji/color, reorder, edit), and redesign the History section into a dedicated, rich inspection log drawer.
+Working directory for your metadata: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_orchestrator_1
+Project root: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
+Authoritative request: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\ORIGINAL_REQUEST.md
 
-Workspace: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording
-Authoritative user request: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\ORIGINAL_REQUEST.md
-Your working directory: c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_orchestrator_1
+Key Requirements:
+1. R1. Cohesive Visual Language & Unified Surface Architecture:
+   - Warm Charcoal Multi-Layer Depth (#0e0e11 base canvas, #141418 containers/sidebar/header, #1a1a20 defect cards/list rows/table containers with border-stone-800/80, #22222a popovers/drawers/modals with border-stone-700/60).
+   - Shared design tokens: rounded-xl for cards/drawers, rounded-lg for interactive chips, rounded-md for badges, uniform font scaling, aligned margins.
+   - Harmonious category accents flowing across sidebar, cards, table rows, history session items, batch drawers.
+2. R2. Smart Auto-Sessions History System:
+   - Time-based auto-sessions grouping copied defect items (e.g. Current Session, Session — HH:MM, Earlier Today, Yesterday) based on activity timestamps.
+   - Category badges, icons, and left accent border with category colors matching the app.
+   - Category filter and search within History drawer.
+   - Session actions: "Copy All in Session", "Add Session to Batch Queue", per-item re-copy/pin actions.
+3. R3. Component Polish & Tablet Fluidity:
+   - Seamless integration across AppHeader, Sidebar, Defect Grid/List/Table, History Drawer, Batch Drawer, Category Manager, and Settings Modal.
+   - Smooth tactile micro-interactions and Samsung Tab S9+ touch responsiveness.
+4. R4. Test Suite & Build Verification:
+   - Maintain 100% test pass rate across all existing and new test suites with clean production build (`npm run build` and `npm run test`).
 
-Requirements to fulfill:
-1. R1. Samsung Tab S9+ Touch Ergonomics & 100% shadcn Styling (min 44-48px touch targets, comfortable finger padding, smooth touch scrolling, Radix UI / shadcn primitives throughout, custom sleek scrollbars).
-2. R2. 100% Functional Settings Engine (Theme: Dark/Light/Auto, Density: Compact/Cozy/Tablet, Radius: 0/6/10/16px, Font Size: Small 13px/Normal 14px/Large 16px, Accent Colors: Warm Amber/Sage Emerald/Slate Stone/Rose Red/Ocean Blue, Reduced Motion toggle - all live and persisted in localStorage).
-3. R3. Advanced Category & Sub-Category Manager with Edit Mode (Create & Edit categories with hybrid icon selector [curated Lucide OR custom emoji], color picker, position placement; Reorder & Organize with localStorage persistence; Sub-Category Editor to add/edit/remove sub-code chips).
-4. R4. Rich History Panel / Drawer Redesign (Dedicated slide-out Inspection History Drawer with relative timestamps, search & filter, one-click copy, pin to folder, "Add all to batch queue", clear history with confirmation).
-5. R5. Test Suite & Build Verification (100% test pass rate across existing and new test suites with clean production build `npm run build` and `npm run test`).
-
-Maintain `progress.md` and `plan.md` in your working directory.
-When all requirements and acceptance criteria are completely implemented and verified, send a message declaring completion/victory so an independent victory audit can be conducted.
+Please initialize your BRIEFING.md, plan.md, and progress.md, dispatch specialists to inspect, implement, and verify all requirements, and report completion upon full test passing and build verification.

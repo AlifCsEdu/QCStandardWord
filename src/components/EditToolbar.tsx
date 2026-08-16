@@ -58,7 +58,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = React.memo(({
       id="editstrip"
       className={`editstrip-container ${
         editMode ? 'flex' : 'hidden'
-      } items-center justify-between px-5 py-2.5 bg-card border-b border-border flex-wrap gap-2 touch-manipulation`}
+      } items-center justify-between px-5 py-2.5 bg-[#141418] border-b border-stone-800/80 flex-wrap gap-2 touch-manipulation`}
     >
       <div className="flex items-center gap-2.5">
         <span className="text-sm font-bold text-foreground">
@@ -67,7 +67,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = React.memo(({
         <button
           id="addBtn"
           onClick={onOpenAddModal}
-          className="min-h-[44px] bg-stone-700 hover:bg-stone-600 text-stone-100 border border-stone-600 px-4 py-2 rounded-lg font-semibold text-xs cursor-pointer transition-colors shadow-xs"
+          className="min-h-[44px] bg-stone-700 hover:bg-stone-600 text-stone-100 border border-stone-600 px-4 py-2 rounded-lg font-semibold text-xs cursor-pointer transition-all duration-150 active:scale-95 shadow-xs"
         >
           + Add Wording
         </button>
@@ -77,7 +77,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = React.memo(({
         <button
           id="exportBtn"
           onClick={onExport}
-          className="min-h-[44px] bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+          className="min-h-[44px] bg-[#1a1a20] hover:bg-[#22222a] text-stone-200 border border-stone-700/80 px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all duration-150 active:scale-95"
         >
           Export JSON
         </button>
@@ -85,7 +85,7 @@ export const EditToolbar: React.FC<EditToolbarProps> = React.memo(({
         <button
           id="importBtn"
           onClick={handleImportButtonClick}
-          className="min-h-[44px] bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+          className="min-h-[44px] bg-[#1a1a20] hover:bg-[#22222a] text-stone-200 border border-stone-700/80 px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all duration-150 active:scale-95"
         >
           Import JSON
         </button>
@@ -100,10 +100,10 @@ export const EditToolbar: React.FC<EditToolbarProps> = React.memo(({
 
         <button
           id="resetBtn"
-          className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all duration-150 border ${
+          className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all duration-150 active:scale-95 border ${
             armedReset
               ? 'arm bg-rose-600 hover:bg-rose-500 border-rose-500 text-white animate-pulse'
-              : 'bg-stone-800 hover:bg-stone-700 border-stone-700 text-rose-400'
+              : 'bg-[#1a1a20] hover:bg-[#22222a] border-stone-700/80 text-rose-400'
           }`}
           onClick={handleResetClick}
         >

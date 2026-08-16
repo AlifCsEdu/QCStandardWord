@@ -12,7 +12,7 @@ export interface DefectCardProps {
   isApprox?: boolean;
   highlightedText?: string;
   editMode: boolean;
-  onCopyItem: (text: string) => void;
+  onCopyItem: (text: string, meta?: { itemNumber?: number; category?: string }) => void;
   onTogglePin: (id: string | number) => void;
   onAddToBatch: (text: string) => void;
   onOpenEdit: (item: QCItem) => void;
@@ -58,13 +58,13 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
   const copiedTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleCopy = React.useCallback(() => {
-    onCopyItem(item.t);
+    onCopyItem(item.t, { itemNumber: item.n, category: item.c });
     if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
     setCopied(true);
     copiedTimerRef.current = setTimeout(() => {
       setCopied(false);
     }, 1200);
-  }, [item.t, onCopyItem]);
+  }, [item.t, item.n, item.c, onCopyItem]);
 
   React.useEffect(() => {
     return () => {
@@ -93,10 +93,10 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
           <DropdownMenuTrigger asChild>
             <button
               data-act="pin"
-              className={`pin-btn min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] ${
+              className={`pin-btn min-h-[44px] min-w-[44px] size-11 ${
                 isPinned
                   ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30 hover:border-amber-400'
-                  : 'text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
+                  : 'text-stone-400 hover:text-amber-300 bg-[#141418] border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
               } p-2.5 rounded-lg border text-sm flex items-center justify-center gap-1 active:scale-90 transition-all duration-150 cursor-pointer`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -108,8 +108,8 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
             </button>
           </DropdownMenuTrigger>
           {dropdownOpen && (
-            <DropdownMenuContent className="bg-[#18181b] border-stone-800 text-stone-100 min-w-[160px] shadow-xl">
-              <div className="px-2 py-1.5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-1 border-b border-stone-800">
+            <DropdownMenuContent className="bg-[#22222a] border-stone-700/60 text-stone-100 min-w-[160px] shadow-xl rounded-xl">
+              <div className="px-2 py-1.5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-1 border-b border-stone-700/60">
                 <Folder className="size-3 text-stone-400" />
                 <span>Pin to Folders</span>
               </div>
@@ -122,7 +122,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
                       onTogglePinToFolder(item.id, folder.id);
                       setDropdownOpen(false);
                     }}
-                    className="flex items-center justify-between text-xs cursor-pointer hover:bg-stone-800 focus:bg-stone-800 min-h-[36px] py-2"
+                    className="flex items-center justify-between text-xs cursor-pointer hover:bg-[#1a1a20] focus:bg-[#1a1a20] min-h-[44px] py-2 rounded-lg"
                   >
                     <span className="flex items-center gap-1.5">
                       <span className="size-2 rounded-full" style={{ backgroundColor: folder.color || '#a1a1aa' }} />
@@ -138,10 +138,10 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
       ) : (
         <button
           data-act="pin"
-          className={`pin-btn min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] ${
+          className={`pin-btn min-h-[44px] min-w-[44px] size-11 ${
             isPinned
               ? 'pinned text-amber-400 font-bold bg-amber-500/20 border-amber-500/40 hover:bg-amber-500/30 hover:border-amber-400'
-              : 'text-stone-400 hover:text-amber-300 bg-stone-800/80 border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
+              : 'text-stone-400 hover:text-amber-300 bg-[#141418] border-stone-700 hover:bg-amber-500/10 hover:border-amber-400/50'
           } p-2.5 rounded-lg border text-sm flex items-center justify-center active:scale-90 transition-all duration-150 cursor-pointer`}
           onClick={(e) => {
             e.stopPropagation();
@@ -155,7 +155,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
 
       <button
         data-act="add"
-        className="add-batch-btn min-h-[40px] sm:min-h-[44px] px-3.5 py-2 bg-stone-800/90 border border-stone-700 text-stone-200 hover:bg-stone-700 hover:border-stone-500 hover:text-stone-100 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-lg flex items-center gap-1 shadow-xs cursor-pointer"
+        className="add-batch-btn min-h-[44px] px-3.5 py-2 bg-[#141418] border border-stone-700/80 text-stone-200 hover:bg-[#22222a] hover:border-stone-500 hover:text-stone-100 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-lg flex items-center gap-1 shadow-xs cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
           onAddToBatch(item.t);
@@ -169,7 +169,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
         <>
           <button
             data-act="edit"
-            className="edit-item-btn min-h-[40px] sm:min-h-[44px] px-3 py-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-lg flex items-center gap-1 cursor-pointer"
+            className="edit-item-btn min-h-[44px] px-3 py-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-lg flex items-center gap-1 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onOpenEdit(item);
@@ -180,7 +180,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
           </button>
           <button
             data-act="del"
-            className="del-item-btn min-h-[40px] sm:min-h-[44px] px-3 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-lg flex items-center gap-1 cursor-pointer"
+            className="del-item-btn min-h-[44px] px-3 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 active:scale-95 transition-all duration-150 font-semibold text-xs rounded-lg flex items-center gap-1 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onDeleteItem(item);
@@ -214,7 +214,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
       >
         <div className="flex justify-between items-center mb-2.5">
           <div className="flex items-center gap-2">
-            <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
+            <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded-md border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
               #{item.n}
             </span>
             {copied && renderCopiedBadge()}
@@ -243,7 +243,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
         onClick={handleCopy}
       >
         <div className="flex items-center gap-2 sm:col-span-1 shrink-0">
-          <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
+          <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded-md border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
             #{item.n}
           </span>
         </div>
@@ -272,7 +272,7 @@ export const DefectCard: React.FC<DefectCardProps> = React.memo(({
       onClick={handleCopy}
     >
       <div className="flex items-center gap-3.5 flex-1 min-w-0">
-        <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
+        <span className="rnum font-mono text-[11px] font-bold text-stone-300 bg-stone-800/80 px-2 py-0.5 rounded-md border border-stone-700/80 group-hover:text-stone-100 group-hover:border-stone-500 transition-all shrink-0">
           #{item.n}
         </span>
         <div className="rtxt font-sans text-sm font-semibold tracking-tight text-foreground group-hover:text-foreground flex-1 leading-relaxed transition-colors">

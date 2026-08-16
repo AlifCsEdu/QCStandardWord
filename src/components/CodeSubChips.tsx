@@ -31,7 +31,7 @@ export const CodeSubChips: React.FC<CodeSubChipsProps> = React.memo(({
       data-testid="code-sub-chips"
       className={`subchips-container ${
         isVisible ? 'flex' : 'hidden'
-      } flex-wrap gap-2 p-2.5 bg-stone-900/80 border border-stone-800 rounded-lg mx-2.5 my-2 shadow-xs select-none overflow-x-auto touch-manipulation`}
+      } flex-wrap gap-2 p-2.5 bg-[#141418] border border-stone-800/80 rounded-xl mx-2.5 my-2 shadow-xs select-none overflow-x-auto touch-manipulation`}
     >
       {subCodes.map((sub) => {
         const isActive = selectedSubCategory === sub;
@@ -41,10 +41,10 @@ export const CodeSubChips: React.FC<CodeSubChipsProps> = React.memo(({
             data-sub={sub}
             data-testid={`sub-chip-${sub}`}
             onClick={() => onSelectSubCategory(sub)}
-            className={`subchip-btn min-h-[40px] ${
+            className={`subchip-btn min-h-[44px] ${
               isActive
-                ? 'active bg-stone-700 text-stone-100 border-stone-600 font-bold shadow-xs'
-                : 'bg-stone-800/80 text-stone-400 border-stone-700/80 hover:bg-stone-700/80 hover:text-stone-200 font-medium'
+                ? 'active bg-[#22222a] text-stone-100 border-stone-700/80 font-bold shadow-xs'
+                : 'bg-[#1a1a20] text-stone-400 border-stone-800/80 hover:bg-[#22222a] hover:text-stone-200 font-medium'
             } px-3.5 py-2 rounded-lg border text-xs cursor-pointer whitespace-nowrap font-mono transition-all duration-150 active:scale-95`}
           >
             {sub}

@@ -68,7 +68,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
     <header
       id="appHeader"
       data-testid="app-header"
-      className="app-header sticky top-0 z-40 w-full border-b border-border bg-[#121214] px-4 sm:px-5 py-2.5 flex items-center justify-between gap-3 sm:gap-4 flex-wrap min-h-[64px] box-border text-foreground shadow-xs select-none touch-manipulation"
+      className="app-header sticky top-0 z-40 w-full border-b border-stone-800/80 bg-stone-900 bg-[#141418] px-4 sm:px-5 py-2.5 flex items-center justify-between gap-3 sm:gap-4 flex-wrap min-h-[64px] box-border text-foreground shadow-xs select-none touch-manipulation"
     >
       {/* 1. Left Column: Mobile Hamburger + Brand Logo Mark + Title + Version */}
       <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
@@ -77,21 +77,21 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="ghost"
             size="icon"
             onClick={onToggleMobile}
-            className="sm:hidden min-h-[44px] min-w-[44px] size-11 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-lg"
+            className="sm:hidden min-h-[44px] min-w-[44px] size-11 flex items-center justify-center text-stone-400 hover:text-stone-100 hover:bg-[#1a1a20] rounded-lg active:scale-95"
             aria-label="Toggle navigation"
           >
             <Menu className="size-5" />
           </Button>
         )}
         <div className="flex items-center gap-2.5">
-          <div className="size-8 rounded-lg bg-card border border-border flex items-center justify-center text-foreground shadow-xs">
-            <ShieldCheck className="size-4.5 text-muted-foreground" />
+          <div className="size-8 rounded-lg bg-[#1a1a20] border border-stone-800/80 flex items-center justify-center text-foreground shadow-xs">
+            <ShieldCheck className="size-4.5 text-stone-400" />
           </div>
           <div className="flex items-center gap-2">
             <h1 className="m-0 text-base sm:text-lg font-bold text-foreground tracking-tight whitespace-nowrap">
               QC Standard Wording
             </h1>
-            <span className="text-[11px] font-mono font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground border border-border">
+            <span className="text-[11px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#1a1a20] text-stone-400 border border-stone-800/80">
               v2.0
             </span>
           </div>
@@ -113,13 +113,13 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               }
             }}
             placeholder="Search QC defects (e.g. FCPB, battery, display, crease)..."
-            className="w-full pr-10 min-h-[44px] h-11 bg-muted/60 border-input text-foreground text-xs sm:text-sm placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring transition-all duration-150 rounded-lg px-3.5"
+            className="w-full pr-10 min-h-[44px] h-11 bg-[#1a1a20]/90 border-stone-800/80 text-foreground text-xs sm:text-sm placeholder:text-stone-500 focus-visible:ring-1 focus-visible:ring-stone-500 focus-visible:border-stone-600 transition-all duration-150 rounded-lg px-3.5"
           />
           {hasQuery && (
             <button
               id="clearBtn"
               data-testid="clear-search-btn"
-              className={`clear-btn ${hasQuery ? 'show' : ''} absolute right-1.5 top-1/2 -translate-y-1/2 min-h-[40px] min-w-[40px] size-10 flex items-center justify-center text-muted-foreground hover:text-foreground bg-transparent border-0 cursor-pointer p-1 transition-colors rounded-md`}
+              className={`clear-btn ${hasQuery ? 'show' : ''} absolute right-1 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] size-11 flex items-center justify-center text-stone-400 hover:text-stone-100 bg-transparent border-0 cursor-pointer p-1 transition-all duration-150 active:scale-95 rounded-md`}
               onClick={onClearSearch}
               title="Clear search"
             >
@@ -132,13 +132,13 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         <Button
           id="spotlightBtn"
           data-testid="spotlight-trigger"
-          className="spotlight-btn bg-muted/60 border border-input text-foreground hover:bg-accent text-xs gap-1.5 whitespace-nowrap min-h-[44px] h-11 px-3.5 sm:px-4 transition-all rounded-lg shrink-0 cursor-pointer"
+          className="spotlight-btn bg-[#1a1a20] border border-stone-800/80 text-foreground hover:bg-[#22222a] text-xs gap-1.5 whitespace-nowrap min-h-[44px] h-11 px-3.5 sm:px-4 transition-all rounded-lg shrink-0 cursor-pointer"
           variant="outline"
           onClick={onOpenSpotlight}
           title="Quick Search (Cmd+K / Ctrl+K)"
         >
-          <Search className="size-3.5 text-muted-foreground" />
-          <span className="font-mono text-[10px] tracking-tight bg-muted text-muted-foreground border border-border px-1.5 py-0.5 rounded-md font-semibold">
+          <Search className="size-3.5 text-stone-400" />
+          <span className="font-mono text-[10px] tracking-tight bg-[#141418] text-stone-400 border border-stone-700/80 px-1.5 py-0.5 rounded-md font-semibold">
             ⌘K
           </span>
         </Button>
@@ -150,7 +150,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           <div
             id="setLayout"
             data-testid="view-switcher"
-            className="inline-flex rounded-lg bg-muted/60 p-1 border border-border"
+            className="inline-flex rounded-lg bg-[#1a1a20]/90 p-1 border border-stone-800/80"
           >
             {(['list', 'grid', 'table'] as LayoutMode[]).map((mode) => {
               const IconComp = mode === 'list' ? List : mode === 'grid' ? LayoutGrid : TableIcon;
@@ -161,10 +161,10 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   data-v={mode}
                   data-value={mode}
                   onClick={() => onSetLayout(mode)}
-                  className={`min-h-[40px] sm:min-h-[44px] px-3 sm:px-3.5 py-2 text-xs rounded-md transition-all duration-150 border-0 cursor-pointer capitalize flex items-center gap-1.5 ${
+                  className={`min-h-[40px] sm:min-h-[44px] px-3 sm:px-3.5 py-2 text-xs rounded-md transition-all duration-150 border-0 cursor-pointer capitalize flex items-center gap-1.5 active:scale-95 ${
                     isActive
                       ? 'bg-stone-800 text-stone-100 border border-stone-700/80 font-semibold shadow-xs'
-                      : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted font-medium'
+                      : 'bg-transparent text-stone-400 hover:text-stone-100 hover:bg-stone-800/50 font-medium'
                   }`}
                 >
                   <IconComp className="size-3.5" />
@@ -181,13 +181,13 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="sm"
             onClick={onOpenFolderManager}
-            className="bg-card border-border text-foreground hover:bg-accent gap-1.5 min-h-[44px] h-11 px-3 text-xs rounded-lg cursor-pointer"
+            className="bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-foreground gap-1.5 min-h-[44px] h-11 px-3 text-xs rounded-lg cursor-pointer"
             title="Manage Pin Folders"
           >
-            <Folder className="size-3.5 text-muted-foreground" />
+            <Folder className="size-3.5 text-stone-400" />
             <span className="hidden md:inline">Folders</span>
             {folderCount !== undefined && (
-              <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.2 rounded-full font-bold border border-border font-mono">
+              <span className="text-[10px] bg-[#141418] text-stone-400 px-1.5 py-0.2 rounded-full font-bold border border-stone-700/80 font-mono">
                 {folderCount}
               </span>
             )}
@@ -202,13 +202,13 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="sm"
             onClick={onOpenHistory}
-            className="bg-card border-border text-foreground hover:bg-accent gap-1.5 min-h-[44px] h-11 px-3.5 text-xs font-semibold rounded-lg cursor-pointer"
+            className="bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-foreground gap-1.5 min-h-[44px] h-11 px-3.5 text-xs font-semibold rounded-lg cursor-pointer"
             title="Open Inspection History"
           >
-            <History className="size-3.5 text-muted-foreground" />
+            <History className="size-3.5 text-stone-400" />
             <span className="hidden lg:inline">History</span>
             {historyCount !== undefined && (
-              <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.2 rounded-full font-bold border border-border font-mono">
+              <span className="text-[10px] bg-[#141418] text-stone-400 px-1.5 py-0.2 rounded-full font-bold border border-stone-700/80 font-mono">
                 {historyCount}
               </span>
             )}
@@ -222,8 +222,8 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           variant={editMode ? 'default' : 'outline'}
           className={`edit-btn ${
             editMode
-              ? 'on bg-foreground text-background font-bold hover:bg-foreground/90 shadow-xs'
-              : 'bg-card border-border text-foreground hover:bg-accent'
+              ? 'on bg-stone-100 text-stone-900 font-bold hover:bg-white shadow-xs'
+              : 'bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-foreground'
           } min-h-[44px] h-11 px-3.5 text-xs font-semibold rounded-lg cursor-pointer`}
           onClick={onToggleEditMode}
           title="Toggle Edit Mode"
@@ -237,7 +237,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           data-testid="batch-btn"
           size="sm"
           variant="outline"
-          className="batch-btn bg-card border-border text-foreground hover:bg-accent min-h-[44px] h-11 px-3.5 sm:px-4 text-xs font-semibold gap-1.5 sm:gap-2 rounded-lg cursor-pointer"
+          className="batch-btn bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-foreground min-h-[44px] h-11 px-3.5 sm:px-4 text-xs font-semibold gap-1.5 sm:gap-2 rounded-lg cursor-pointer"
           onClick={onOpenBatchDrawer}
           title="Open Batch Drawer"
         >
@@ -245,7 +245,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           <span className="sm:hidden">Batch</span>
           <span
             id="bcount"
-            className="bcount bg-muted text-foreground border border-border px-1.5 sm:px-2 py-0.5 rounded-full text-[11px] font-bold font-mono"
+            className="bcount bg-[#141418] text-stone-200 border border-stone-700/80 px-1.5 sm:px-2 py-0.5 rounded-full text-[11px] font-bold font-mono"
           >
             {batchCount}
           </span>
@@ -257,11 +257,11 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           data-testid="settings-btn"
           size="sm"
           variant="outline"
-          className="set-btn settings-btn bg-card border-border text-foreground hover:bg-accent min-h-[44px] h-11 px-3.5 text-xs font-semibold gap-1.5 rounded-lg cursor-pointer"
+          className="set-btn settings-btn bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-foreground min-h-[44px] h-11 px-3.5 text-xs font-semibold gap-1.5 rounded-lg cursor-pointer"
           onClick={onOpenSettings}
           title="Appearance & Layout Settings"
         >
-          <Settings className="size-3.5 text-muted-foreground" />
+          <Settings className="size-3.5 text-stone-400" />
           <span className="hidden lg:inline">Settings</span>
         </Button>
 
@@ -271,7 +271,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           data-testid="download-offline-btn"
           size="sm"
           variant="outline"
-          className="dl-btn bg-card border-border text-muted-foreground hover:text-foreground hover:bg-accent min-h-[44px] h-11 px-3.5 text-xs font-medium gap-1.5 rounded-lg cursor-pointer"
+          className="dl-btn bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-stone-400 hover:text-stone-100 min-h-[44px] h-11 px-3.5 text-xs font-medium gap-1.5 rounded-lg cursor-pointer"
           onClick={() => {
             if (typeof document === 'undefined') return;
             const html = document.documentElement.outerHTML;
@@ -285,7 +285,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           }}
           title="Download Offline Copy"
         >
-          <Download className="size-3.5 text-muted-foreground" />
+          <Download className="size-3.5 text-stone-400" />
           <span className="hidden xl:inline">Offline Copy</span>
         </Button>
 
@@ -295,7 +295,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           data-testid="theme-toggle"
           size="sm"
           variant="outline"
-          className="theme-btn bg-card border-border text-muted-foreground hover:text-foreground hover:bg-accent min-h-[44px] h-11 px-3.5 text-xs font-medium gap-1.5 rounded-lg cursor-pointer"
+          className="theme-btn bg-[#1a1a20] hover:bg-[#22222a] border-stone-800/80 text-stone-400 hover:text-stone-100 min-h-[44px] h-11 px-3.5 text-xs font-medium gap-1.5 rounded-lg cursor-pointer"
           onClick={onToggleTheme}
           title="Toggle Dark/Light Theme"
         >
@@ -306,7 +306,7 @@ export const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </>
           ) : (
             <>
-              <Moon className="size-3.5 text-muted-foreground" />
+              <Moon className="size-3.5 text-stone-400" />
               <span className="hidden sm:inline">Dark</span>
             </>
           )}

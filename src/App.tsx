@@ -124,6 +124,8 @@ export const AppContent: React.FC = () => {
     clearHistoryEntries,
     addAllHistoryToBatch,
     copyHistoryEntry,
+    copySessionAll,
+    addSessionToBatch,
     pinHistoryEntryToFolder,
     toasts,
     removeToast,
@@ -244,7 +246,7 @@ export const AppContent: React.FC = () => {
         <aside
           data-testid="app-navbar"
           id="sidebarNav"
-          className={`sidebar-nav fixed sm:sticky top-[64px] h-[calc(100vh-64px)] w-[270px] bg-background border-r border-border overflow-y-auto z-30 transition-transform duration-200 touch-scroll ${
+          className={`sidebar-nav fixed sm:sticky top-[64px] h-[calc(100vh-64px)] w-[270px] bg-[#141418] border-r border-stone-800/80 overflow-y-auto z-30 transition-transform duration-200 touch-scroll ${
             mobileOpened ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
           }`}
         >
@@ -383,6 +385,8 @@ export const AppContent: React.FC = () => {
             onClose={() => setHistoryDrawerOpen(false)}
             historyEntries={historyEntries}
             onCopyEntry={copyHistoryEntry}
+            onCopySessionAll={copySessionAll}
+            onAddSessionToBatch={addSessionToBatch}
             onClearHistory={clearHistoryEntries}
             onAddToBatch={addToBatch}
             onAddAllToBatch={addAllHistoryToBatch}

@@ -4,13 +4,13 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils.ts';
 
 const toggleVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-zinc-800 hover:text-zinc-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stone-400 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-stone-800 data-[state=on]:text-stone-100 data-[state=on]:border-stone-700 cursor-pointer',
+  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors hover:bg-[#22222a] hover:text-stone-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stone-400 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-stone-800 data-[state=on]:text-stone-100 data-[state=on]:border-stone-700 cursor-pointer',
   {
     variants: {
       variant: {
         default: 'bg-transparent',
         outline:
-          'border border-zinc-800 bg-transparent hover:bg-zinc-800 hover:text-zinc-100',
+          'border border-stone-700/80 bg-transparent hover:bg-[#22222a] hover:text-stone-100',
       },
       size: {
         default: 'h-9 px-3',

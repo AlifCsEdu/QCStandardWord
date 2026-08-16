@@ -6,6 +6,7 @@ import type {
   CustomPinFolder,
   DelimiterKey,
   HistoryEntry,
+  HistorySession,
   QCItem,
   SearchResult,
   SubCategoryCode,
@@ -566,11 +567,20 @@ export function useQCState() {
     ) => {
       if (!text.trim()) return;
       const cleanText = text.trim();
+
+      // Look up metadata from activeItems if missing
+      const matched = (!meta?.itemNumber || !meta?.category)
+        ? activeItems.find((i) => i.t.trim().toLowerCase() === cleanText.toLowerCase())
+        : null;
+
+      const itemNumber = typeof meta?.itemNumber === 'number' ? meta.itemNumber : matched?.n;
+      const category = meta?.category || matched?.c;
+
       const newEntry: HistoryEntry = {
         id: 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
         text: cleanText,
-        itemNumber: meta?.itemNumber,
-        category: meta?.category,
+        itemNumber,
+        category,
         timestamp: Date.now(),
         source: meta?.source || 'single',
       };
@@ -591,7 +601,7 @@ export function useQCState() {
         return next;
       });
     },
-    []
+    [activeItems]
   );
 
   const pushRecent = useCallback(
@@ -632,6 +642,33 @@ export function useQCState() {
       addToast(`Copied: "${text.substring(0, 35)}${text.length > 35 ? '...' : ''}"`);
     },
     [pushHistoryEntry, addToast]
+  );
+
+  const copySessionAll = useCallback(
+    async (session: HistorySession) => {
+      if (!session || !session.entries || session.entries.length === 0) return;
+      const texts = session.entries.map((e) => e.text);
+      const joined = texts.join('\n');
+      await copyToClipboard(joined);
+      triggerVibrate(25);
+      addToast(`Copied ${texts.length} defect${texts.length === 1 ? '' : 's'} from session`);
+    },
+    [addToast]
+  );
+
+  const addSessionToBatch = useCallback(
+    (session: HistorySession) => {
+      if (!session || !session.entries || session.entries.length === 0) return;
+      const texts = session.entries.map((e) => e.text);
+      setBatchQueue((prev) => {
+        const next = [...prev, ...texts];
+        safeStorageSet('qc-batch', next);
+        return next;
+      });
+      triggerVibrate(20);
+      addToast(`Added ${texts.length} session items to batch queue`);
+    },
+    [addToast]
   );
 
   const pinHistoryEntryToFolder = useCallback(
@@ -1014,6 +1051,8 @@ export function useQCState() {
     clearHistoryEntries,
     addAllHistoryToBatch,
     copyHistoryEntry,
+    copySessionAll,
+    addSessionToBatch,
     pinHistoryEntryToFolder,
     historyDrawerOpen,
     setHistoryDrawerOpen,

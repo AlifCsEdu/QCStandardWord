@@ -1,205 +1,109 @@
-# Phase 0 Survey: UI & Touch Ergonomics Specialist Report
+# Explorer 1 (Visual Design System & Tokens) — Handoff Report
 
-**Target Workspace**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording`  
-**Authoritative Request**: `ORIGINAL_REQUEST.md`  
-**Target Device Profile**: Samsung Galaxy Tab S9+ (12.4" Dynamic AMOLED 2X, 2800×1752, 16:10, Stylus + Touch Ergonomics)  
-**Survey Agent**: Explorer 1 (UI & Touch Ergonomics Specialist)  
+**Target Milestone**: R1 — Cohesive Visual Language & Unified Surface Architecture  
+**Role**: Explorer 1 (Visual Design System & Tokens)  
+**Location**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1\handoff.md`  
+**Full Analysis Report**: `c:\Users\alif325\Documents\WIndsurf projeks\QCStandardWording\.agents\teamwork_preview_explorer_survey_1\analysis.md`  
 **Date**: 2026-08-16  
 
 ---
 
 ## 1. Observation
 
-### 1.1 UI Framework & Dependency Stack
-Directly observed in `package.json` (lines 20-53):
-- **Core Framework**: React 19.2.8, React DOM 19.2.8, TypeScript 5.7.2, Vite 6.0.0.
-- **Styling Engine**: Tailwind CSS v4.0.0 (`@tailwindcss/vite` 4.0.0, `tailwindcss` 4.0.0) with `@import "tailwindcss";` and `@theme` blocks in `src/index.css`.
-- **Component Primitives**: Radix UI packages installed:
-  - `@radix-ui/react-checkbox` (^1.1.4)
-  - `@radix-ui/react-dialog` (^1.1.6)
-  - `@radix-ui/react-dropdown-menu` (^2.1.6)
-  - `@radix-ui/react-scroll-area` (^1.2.3)
-  - `@radix-ui/react-select` (^2.1.6)
-  - `@radix-ui/react-slot` (^1.1.2)
-  - `@radix-ui/react-toggle-group` (^1.1.2)
-  - `@radix-ui/react-tooltip` (^1.1.8)
-- **Utility / UI Libraries**:
-  - `lucide-react` (^0.475.0)
-  - `cmdk` (^1.0.0)
-  - `class-variance-authority` (^0.7.1), `clsx` (^2.1.1), `tailwind-merge` (^3.0.1)
-  - `next-themes` (^0.4.4), `sonner` (^2.0.1)
-- **PWA & Offline**: `vite-plugin-pwa` (^0.21.1)
+Direct code examination of visual styling, theme variables, and component implementation yielded the following verbatim findings:
 
-### 1.2 Component Structure & Inventory
-Directly observed in `src/components/` and `src/components/ui/`:
+1. **Global CSS Custom Properties (`src/index.css:7-50`)**:
+   - Theme variables define `--color-warm-stone-dark: #121214;` (line 7), `--color-stone-card-dark: #18181b;` (line 9), `--color-warm-border-dark: #27272a;` (line 11).
+   - `:root, [data-theme='dark'], .dark` defines `--background: #121214;`, `--card: #18181b;`, `--popover: #18181b;`, `--border: #27272a;`, `--bg-deep-slate: #121214;`, `--container-charcoal: #18181b;`.
+   - Card variables (lines 562-574) define `--defect-card-bg: #18181b;`, `--defect-card-bg-hover: #27272a;`, `--defect-card-border: #27272a;`.
+   - Batch drawer (line 522) hardcodes `background: #18181b;`.
 
-| Component Path | Underlying Primitive / Library | Role & Current State | Non-Shadcn / Inconsistent Patterns |
-|---|---|---|---|
-| `src/components/ui/button.tsx` | Radix Slot + CVA | Reusable button with standard variants | Touch targets: `sm` is 32px (`h-8`), default is 36px (`h-9`), below 44px tablet minimum |
-| `src/components/ui/card.tsx` | Pure Tailwind wrapper | Card header, content, footer | Semantic styling present |
-| `src/components/ui/checkbox.tsx` | Radix Checkbox | Styled checkbox | Available but not used in `BatchDrawer.tsx` |
-| `src/components/ui/dialog.tsx` | Radix Dialog | Modal dialogues (`SettingsModal`, `EditModal`) | Wrapped in custom outer divs for test IDs |
-| `src/components/ui/dropdown-menu.tsx` | Radix DropdownMenu | Pin-to-folder dropdown on defect cards | Functional and stops event propagation |
-| `src/components/ui/input.tsx` | HTML input + Tailwind | Text inputs | `h-9` (36px) default |
-| `src/components/ui/scroll-area.tsx` | Radix ScrollArea & Scrollbar | Custom scrollbar container | Available but **0 usages** in actual application views |
-| `src/components/ui/select.tsx` | Radix Select | Custom Select dropdown with viewport | Available but **not used** in `EditModal.tsx` or `BatchDrawer.tsx` |
-| `src/components/ui/sheet.tsx` | Radix Dialog (Sheet) | Slide-out panel (left/right/top/bottom) | Available but **not used** in `BatchDrawer.tsx` |
-| `src/components/ui/toggle-group.tsx` | Radix ToggleGroup | Segmented toggle control | Available but **not used** in `AppHeader` or `SettingsModal` |
-| `src/components/ui/badge.tsx` | CVA Badge | Badges | Used in `StatsDashboard.tsx` |
-| `src/components/AppHeader.tsx` | Custom header + `Button`, `Input` | 3-column sticky top bar | Hardcoded `bg-[#121214]`, raw `<button>` segmented controls, `h-8`/`h-9` buttons |
-| `src/components/StatsDashboard.tsx` | Custom strip + `Badge` | Compact status summary bar | Hardcoded `bg-stone-900/50` |
-| `src/components/CategoryChips.tsx` | Custom buttons + Lucide SVG | Sticky sidebar category & pin folder nav | Raw `<button>` tabs with `py-1.5` (~30px height), lacks category management |
-| `src/components/CodeSubChips.tsx` | Custom buttons | Subcategory chips for 'codes' | Raw `<button>` with `px-2.5 py-1 text-xs` (~26px height) |
-| `src/components/DefectCard.tsx` | Custom card/row + `DropdownMenu` | Defect item renderer (grid/list/table) | Internal action buttons (`.pin-btn`, `.add-batch-btn`) are `py-1` (~26px height) |
-| `src/components/BatchDrawer.tsx` | Custom fixed `div` with manual overlay | Slide-out batch queue panel | Custom `translate-x-full` div, raw `<select>` and `<input type="checkbox">` |
-| `src/components/HistoryBar.tsx` | Custom horizontal strip | Top recent copy strip | Tiny horizontal chips, lacks rich inspection drawer, timestamps, search |
-| `src/components/SettingsModal.tsx` | Radix `Dialog` + raw `<button>` grids | Appearance settings modal | Raw button grids, missing 'tablet' density, missing 5 accent themes |
-| `src/components/EditModal.tsx` | Radix `Dialog` + raw `<select>` | Add/Edit defect modal | Native `<select id="mcat">` instead of Radix `Select` |
-| `src/components/EditToolbar.tsx` | Custom strip + raw `<button>` | Edit mode controls | Raw `<button>` elements with `py-1.5` (~28px height) |
+2. **Hardcoded Inline Colors in App Shell & Drawers**:
+   - `src/components/AppHeader.tsx:71`: `className="app-header sticky top-0 z-40 w-full border-b border-border bg-[#121214] px-4 sm:px-5 py-2.5 ..."`
+   - `src/components/BatchDrawer.tsx:109`: `className="... fixed top-0 right-0 w-[420px] max-w-[92vw] h-full bg-[#18181b] border-l border-stone-800 z-[999] ..."`
+   - `src/components/HistoryDrawer.tsx:96`: `className="history-drawer w-full sm:max-w-lg md:max-w-xl bg-[#18181b] border-stone-800 text-stone-100 p-0 ..."`
+   - `src/components/CategoryManagerModal.tsx:165`: `className="max-w-3xl bg-[#18181b] border-stone-800 text-stone-100 p-6 ..."`
+   - `src/components/EditModal.tsx:60`: `className="bg-[#18181b] border-stone-800 text-stone-100 max-w-md p-6"`
+   - `src/components/SettingsModal.tsx:82`: `className="bg-stone-900 border-stone-800 text-stone-100 max-w-xl p-5 sm:p-6 ..."`
 
-### 1.3 CSS, Theme Variables, and Styling Infrastructure
-Directly observed in `src/index.css` and `src/theme/`:
-1. **CSS Root Theme Variables**:
-   - `src/index.css` (lines 15-84) defines `--background`, `--foreground`, `--card`, `--border`, `--input`, `--ring`, `--radius: 0.5rem` for `:root`, `[data-theme='dark']`, and `[data-theme='light']`.
-   - However, application components (`App.tsx`, `AppHeader.tsx`, `CategoryChips.tsx`, `DefectCard.tsx`, `BatchDrawer.tsx`, `SettingsModal.tsx`) heavily use hardcoded utility classes like `bg-[#121214]`, `bg-stone-900`, `bg-stone-950`, `border-stone-800`, `text-stone-100`.
-   - Consequence: When `data-theme="light"` is activated, `App.tsx` container (`bg-[#121214]`), `AppHeader.tsx` (`bg-[#121214]`), and `sidebarNav` (`bg-[#121214]`) stay dark because hardcoded hex/stone classes override semantic tokens.
-2. **Scrollbar Configuration**:
-   - `src/index.css` does not declare a global custom sleek scrollbar rule (`::-webkit-scrollbar` / `scrollbar-width: thin`).
-   - Browser default scrollbars are visible on `#sidebarNav`, `#blist`, `#hchips`, causing visual clunkiness on desktop and Android tablet browsers.
-3. **Mantine Legacy Tokens**:
-   - `src/theme/tokens.ts` and `src/theme/index.ts` contain remnants of Mantine tuple structures (e.g. `deepSlate: MantineColorTuple`) that are no longer used by the Radix/Tailwind pipeline.
+3. **Inconsistent Zinc vs. Stone Classes in UI Primitives**:
+   - `src/components/ui/badge.tsx:12`: `secondary: 'border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700'` vs `default: 'border-stone-700 bg-stone-800 text-stone-200'`.
+   - `src/components/ui/button.tsx:16-20`: `outline: 'border border-zinc-800 bg-zinc-900/50 text-zinc-200'`, `secondary: 'bg-zinc-800 text-zinc-100'`, `ghost: 'text-zinc-300 hover:bg-zinc-800/80'`.
+   - `src/components/ui/card.tsx:11`: `className="rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-100 shadow-sm transition-colors"`.
+   - `src/components/ui/command.tsx:14,27,40`: `bg-zinc-900 text-zinc-100 border-zinc-800 text-zinc-400`.
+   - `src/components/ui/input.tsx:13`: `className="flex h-9 w-full rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm text-zinc-100 ..."`.
+   - `src/components/ui/select.tsx:19,75`: `border-zinc-800 bg-zinc-900 text-zinc-100`.
+   - `src/components/ui/sheet.tsx:31`: `bg-stone-900 ... border-stone-800 text-stone-100 ... ring-offset-zinc-950 data-[state=open]:bg-zinc-800`.
 
-### 1.4 Touch Ergonomics & Samsung Galaxy Tab S9+ Specialist Findings
-Directly observed across component layouts:
-1. **Touch Target Dimensions**:
-   - Standard minimum for finger touch targets (Apple HIG, Google Material 3, Samsung One UI): **44px × 44px to 48px × 48px**.
-   - Codebase measurements:
-     - Header buttons (`#editBtn`, `#batchBtn`, `#setBtn`, `#dlBtn`, `#themeBtn`): `h-8` (32px) × variable width.
-     - Search Clear button (`#clearBtn`): `p-1` (~20px × 20px hit area).
-     - View switcher buttons (`#setLayout button`): `py-1` (~24px height).
-     - Sidebar category tabs (`.chip-btn`): `py-1.5` (~30-32px height).
-     - Card action buttons (`.pin-btn`, `.add-batch-btn`, `.edit-item-btn`, `.del-item-btn`): `px-2.5 py-1 text-xs` (~26-28px height).
-     - Batch queue item actions (`.bup`, `.bdn`, `.bcopy-item`, `.brm-item`): `p-1.5` (~26px × 26px).
-   - Finding: On a 12.4" high-DPI touch display (Samsung Tab S9+), buttons under 36px create frequent mis-taps, especially inside defect cards where tapping "+ Batch" or "★" can accidentally trigger the full card copy action (`onClick={handleCopy}`).
-2. **Touch Scrolling & Inertial Physics**:
-   - Scroll containers (`#sidebarNav`, `#blist`, `#wordingContainer`) lack `-webkit-overflow-scrolling: touch` and `overscroll-behavior-y: contain`.
-   - On Android Chrome/Samsung Internet, fast vertical flings can cause pull-to-refresh or entire viewport rubber-banding.
-   - Missing `touch-action: manipulation` on buttons to prevent 300ms double-tap delay.
-3. **Tablet Thumb Reach Zones & Layout Densities**:
-   - Landscape tablet usage (Galaxy Tab S9+): lateral grip places thumbs on left and right borders.
-   - Left sidebar and right slide-out drawers (Batch Queue and new History Drawer) align well with natural thumb zones.
-   - Currently, density options in `useAppearance.ts` and `src/types/qc.ts` are limited to `'cozy' | 'compact'`. The required `'tablet'` density (with 48px touch targets, larger tap padding, and scaled fonts) is not implemented.
+4. **Border Radiuses Across Components**:
+   - Defect cards (`DefectCard.tsx:81`): `rounded-xl`.
+   - Batch drawer items (`BatchDrawer.tsx:246`): `rounded-xl`.
+   - History cards (`HistoryDrawer.tsx:182`): `rounded-lg` (should be unified `rounded-xl`).
+   - Action buttons (`DefectCard.tsx:100,158`): `rounded-lg`.
+   - Inputs (`Input.tsx:13`, `AppHeader.tsx:116`): `rounded-md` in primitive vs `rounded-lg` in header.
+   - Number badges (`DefectCard.tsx:217`): `rounded` (should be `rounded-md`).
+   - Category pill badges (`categoryColors.ts:211`, `DefectCard.tsx:222`): `rounded-full`.
 
-### 1.5 Non-shadcn / Inconsistent UI Elements Requiring Standardization
-1. **`EditModal.tsx:85`**: Native `<select id="mcat">` instead of Radix `Select` primitive.
-2. **`BatchDrawer.tsx:214`**: Native `<input id="autoclear" type="checkbox">` instead of shadcn `Checkbox`.
-3. **`BatchDrawer.tsx:105`**: Custom `div` overlay instead of shadcn `Sheet` / `SheetContent` component.
-4. **`AppHeader.tsx:146` & `SettingsModal.tsx:51,75,98,121,144,167`**: Raw `<button>` lists instead of shadcn `ToggleGroup` / `ToggleGroupItem`.
-5. **`HistoryBar.tsx`**: Tiny horizontal chip strip instead of rich slide-out History Drawer (`Sheet`).
-6. **Scrollbars**: Native standard scrollbars across sidebar and drawer instead of shadcn `ScrollArea` and custom CSS sleek scrollbars.
+5. **Category Color Accents**:
+   - `src/utils/categoryColors.ts:136-144`: `getCategoryLeftBorderStyle(categoryKey)` returns `{ borderLeftWidth: '4px', borderLeftStyle: 'solid', borderLeftColor: color }`.
+   - `src/utils/categoryColors.ts:122-131`: `getCategoryBadgeStyle(categoryKey)` calculates `backgroundColor: rgba(rgb, 0.18)` and `borderColor: rgba(rgb, 0.45)`.
+   - Category palette defined in `src/data/qcData.ts:145-236` (15 categories mapped).
 
 ---
 
 ## 2. Logic Chain
 
-1. **Premise 1 (Requirement R1 & Touch Ergonomics)**: The user requires 100% touch-screen friendliness optimized for Samsung Galaxy Tab S9+ (min 44-48px touch targets, comfortable finger padding, smooth touch scrolling, 100% shadcn/ui component styling, custom sleek scrollbars).
-2. **Observation Step**: In `AppHeader.tsx`, `CategoryChips.tsx`, `DefectCard.tsx`, and `BatchDrawer.tsx`, buttons have explicit CSS classes `h-8` (32px), `py-1` (24-28px), and `p-1.5` (26px). In `index.css`, no touch scrolling rules (`overscroll-behavior-y: contain`, `touch-action: manipulation`) or custom scrollbar rules exist.
-3. **Inference 1**: Touch targets must be scaled up to at least 44px (cozy) / 48px (tablet density), with `touch-action: manipulation` added to all interactive elements, and custom scrollbar rules (`::-webkit-scrollbar` and `ScrollArea`) integrated across all panels.
-4. **Premise 2 (Requirement R2 & Settings Engine)**: The user requires a 100% functional settings engine supporting Theme (Dark/Light/Auto), Density (Compact/Cozy/Tablet), Radius (0/6/10/16px), Font Size (Small 13px/Normal 14px/Large 16px), Accent Colors (Warm Amber/Sage Emerald/Slate Stone/Rose Red/Ocean Blue), and Reduced Motion toggle.
-5. **Observation Step**: In `src/types/qc.ts` (lines 71-87), `DensityMode` is only `'cozy' | 'compact'`, `RadiusOption` is `'sharp' | 'soft' | 'round'`, `TextSizeOption` is `'s' | 'm' | 'l'`, and `src/index.css` lacks CSS variable declarations for the 5 accent palettes and dynamic font scaling. Hardcoded `bg-[#121214]` in `App.tsx` prevents Light theme from displaying correctly.
-6. **Inference 2**: `useAppearance.ts`, `qc.ts`, and `index.css` must be expanded to support 3 density levels (including `tablet`), 4 radius values (0, 6, 10, 16px), 3 font sizes (13, 14, 16px), 5 rich accent palettes with live CSS variables (`--accent`, `--primary`, `--ring`), and reduced motion overrides. `App.tsx` and all components must replace hardcoded `bg-[#121214]` with theme-aware tokens (`bg-background`, `bg-card`, etc.).
-7. **Premise 3 (Requirement R3 & Category Manager)**: The user requires an Advanced Category & Sub-Category Manager with Edit Mode (Create & Edit categories with hybrid icon selector [curated Lucide OR custom emoji], color picker, position placement; Reorder & Organize with localStorage persistence; Sub-Category Editor to add/edit/remove sub-code chips).
-8. **Observation Step**: In `src/data/qcData.ts` (lines 145-236), `CATEGORIES` and `CODE_SUBS` are static immutable arrays. `CategoryChips.tsx` only allows CRUD on custom pin folders, not on defect categories or sub-code chips.
-9. **Inference 3**: `useQCState.ts` must introduce dynamic category management (`qc-categories`, `qc-subcategories`) with initial seed from `CATEGORIES`/`CODE_SUBS`, a Category Manager Dialog/Drawer featuring a hybrid Lucide/Emoji picker and color picker, reordering controls, and sub-category chip editor.
-10. **Premise 4 (Requirement R4 & Rich History Drawer)**: The user requires redesigning the History section from `#histbar` into a dedicated slide-out Inspection History Drawer with relative timestamps, search & filter, one-click copy, pin to folder, "Add all to batch queue", and clear history with confirmation.
-11. **Observation Step**: `HistoryBar.tsx` is a simple horizontal strip storing `string[]` in `qc-recents`. It lacks timestamp metadata, search, filtering, pin actions, batch add, and confirmation dialogs.
-12. **Inference 4**: A dedicated `HistoryDrawer.tsx` (using shadcn `Sheet` / `ScrollArea`) must be built with rich entry schema (`{ id, text, timestamp, category?, itemNumber? }`), search/filter bar, relative timestamp formatting ("Just now", "5m ago"), one-click copy, pin to folder dropdown, "Add All to Batch" button, and a Radix confirmation Dialog for clearing history, while keeping `#histbar` / `#hchips` compatible for backward compatibility.
-13. **Premise 5 (Requirement R5 & Test Stability)**: The test harness in `tests/harness.js` boots the app in JSDOM and expects existing DOM IDs (`#appHeader`, `#search`, `#clearBtn`, `#spotlightBtn`, `#setLayout`, `#editBtn`, `#batchBtn`, `#bcount`, `#setBtn`, `#dlBtn`, `#themeBtn`, `#sidebarNav`, `#subchips`, `#statsDashboard`, `#wordingContainer`, `#listwrap`, `#batchDrawer`, `#joinSel`, `#autoclear`, `#bcopy`, `#bclear`, `#setmodal`, `#modal`, `#toasts`).
-14. **Inference 5**: All DOM element IDs, data-attributes, and test IDs must be strictly preserved during all refactorings and standardizations to ensure 100% test pass rate across all 304 existing tests.
+1. **From Observation 1 & 2**: The current dark theme relies on flat 2-tone colors (`#121214` and `#18181b`) with multiple scattered hardcoded strings (`bg-[#121214]`, `bg-[#18181b]`). This does not provide the visual layering required by R1 for depth perception.
+2. **From Logic Step 1**: Updating CSS Custom Properties (`--background`, `--bg-deep-slate`, `--container-charcoal`, `--card`, `--popover`, `--border`, `--defect-card-bg`) and component background classes to the 4-layer Warm Charcoal palette (#0e0e11 Layer 0 -> #141418 Layer 1 -> #1a1a20 Layer 2 with `border-stone-800/80` -> #22222a Layer 3 with `border-stone-700/60`) will establish a unified multi-layer elevation system across the entire application.
+3. **From Observation 3**: The UI primitive library in `src/components/ui/` mixes cool `zinc-*` classes with warm `stone-*` classes, creating visual dissonance between Radix wrappers and application pages.
+4. **From Logic Step 3**: Harmonizing `src/components/ui/*.tsx` to use the Warm Charcoal stone tokens and CSS variables will ensure cohesive styling across all dialogs, dropdowns, inputs, buttons, and badges.
+5. **From Observation 4**: Token radiuses currently mix `rounded-sm`, `rounded-md`, `rounded-lg`, and `rounded-xl` without standardized rules.
+6. **From Logic Step 5**: Enforcing `rounded-xl` for cards/drawers/modals, `rounded-lg` for interactive buttons/chips/inputs, `rounded-md` for monospace code badges/filters, and `rounded-full` for category pills/toasts establishes a clean token hierarchy matching modern tablet touch ergonomics.
+7. **From Observation 5**: The category color mapping mechanism (`getCategoryLeftBorderStyle` and `getCategoryBadgeStyle`) is functionally complete and well-tested, providing consistent category accent flow across sidebar tabs, defect cards, table rows, and drawer items.
 
 ---
 
 ## 3. Caveats
 
-1. **Test Harness Compatibility with Radix Select**:
-   - In JSDOM, Radix Select renders portal overlays and pointer events that require specific event dispatching.
-   - Recommendation: For `<select id="mcat">` and `<select id="joinSel">`, preserve a visually hidden fallback `<select className="sr-only">` alongside the interactive Radix `Select` / `SegmentedControl` so JSDOM automated tests querying `select#mcat` or `select#joinSel` continue to function without flaky timing issues.
-2. **Backward Compatibility of Storage Keys**:
-   - `qc-recents` and `qc-history` currently store `string[]` in existing tests.
-   - When introducing rich timestamped history items (`HistoryEntry[]`), the state manager must support both legacy string arrays and structured history objects seamlessly.
-3. **Tailwind v4 `@theme` vs CSS Variables**:
-   - Tailwind v4 uses CSS variables natively in `@theme`. All dynamic styling (radius, font-size, density, accents) should be applied via root CSS variables on `document.documentElement` (`--radius`, `--font-size-base`, `--accent-color`, `--spacing-multiplier`) rather than requiring full CSS re-compilation.
+- **Test Suite Contracts**: Tests in `tests/` explicitly assert certain CSS class names (e.g. `border-l-4`, `gcard`, `row`, `trow`, `rnum`, `rpill`, `chip-btn`, `bup`, `bdn`, `pin-btn`, `add-batch-btn`). All token and color enhancements must strictly preserve these existing CSS class names, test IDs, and DOM attributes.
+- **`F11-B5` Test Contract**: `tests/tier2-boundary.test.js:836` checks that `src/index.css` includes `#121214` or `18, 18, 20` and `#fcfcfc` or `252, 252, 252`. When updating `src/index.css` to add the new Layer 0 `#0e0e11` and Layer 1 `#141418` variables, retain `--color-warm-stone-dark: #121214;` or equivalent variable/comment in `src/index.css` to ensure 100% test pass rate.
+- **Light Theme Compatibility**: While R1 focuses on Warm Charcoal multi-layer depth for dark mode, all changes to `src/index.css` and primitives must preserve light theme contrast (`--background: #fcfcfc`, `--card: #ffffff`, `--border: #e4e4e7`).
+- **Dynamic Appearance Settings**: The settings modal allows users to dynamically alter density (`compact`, `cozy`, `tablet`), radius (`0`, `6`, `10`, `16`), text size (`13`, `14`, `16`), motion (`full`, `reduced`), and accent colors. Token updates must integrate seamlessly with these root CSS variable overrides (`data-density`, `data-radius`, `data-text-size`, `data-accent`).
 
 ---
 
-## 4. Conclusion & Implementation Blueprint
+## 4. Conclusion
 
-### 4.1 Touch Ergonomics & UI Standardization Architecture
-1. **Touch Target Dimensions**:
-   - `compact`: 40px min touch height.
-   - `cozy`: 44px min touch height (standard default).
-   - `tablet`: 48px min touch height with 12px finger padding between adjacent interactive elements.
-   - Add `touch-manipulation` to all buttons, chips, and card items to eliminate 300ms mobile touch delay.
-   - Add `-webkit-overflow-scrolling: touch` and `overscroll-behavior-y: contain` to all scrollable viewports.
-2. **100% shadcn / Radix Component Standardization**:
-   - Replace raw `<select>` in `EditModal.tsx` with Radix `Select` + `SelectTrigger` + `SelectContent`.
-   - Replace raw `<input type="checkbox">` in `BatchDrawer.tsx` with shadcn `Checkbox`.
-   - Wrap `BatchDrawer.tsx` and new `HistoryDrawer.tsx` in shadcn `Sheet` / `SheetContent` / `ScrollArea`.
-   - Standardize segmented controls in `AppHeader` and `SettingsModal` to shadcn `ToggleGroup`.
-   - Replace hardcoded `bg-[#121214]` with `bg-background` / `bg-card` / `border-border` semantic tokens across the entire codebase to fix Light theme.
-   - Add global sleek custom scrollbars in `src/index.css` via WebKit & Firefox CSS rules.
-
-### 4.2 Settings Engine Architecture (R2)
-- **Theme**: `dark` | `light` | `auto` with flawless semantic color mapping in `index.css`.
-- **Density**: `compact` (36-40px targets) | `cozy` (44px targets) | `tablet` (48-52px targets, generous finger padding).
-- **Radius**: `0` (0px) | `6` (6px) | `10` (10px) | `16` (16px) mapped to `--radius`.
-- **Font Size**: `small` (13px) | `normal` (14px) | `large` (16px) mapped to `--base-font-size`.
-- **Accent Colors**: 5 rich palettes with CSS variable tokens:
-  - Warm Amber: `--primary: #f59e0b; --ring: #f59e0b;`
-  - Sage Emerald: `--primary: #10b981; --ring: #10b981;`
-  - Slate Stone: `--primary: #78716c; --ring: #78716c;`
-  - Rose Red: `--primary: #f43f5e; --ring: #f43f5e;`
-  - Ocean Blue: `--primary: #0ea5e9; --ring: #0ea5e9;`
-- **Reduced Motion**: `full` | `reduced` with CSS `animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;`.
-
-### 4.3 Category & Sub-Category Manager Architecture (R3)
-- Dynamic Category Store in `useQCState` synced to `qc-categories` and `qc-subcategories`.
-- Category Editor Dialog with:
-  - Hybrid Icon Picker (24 curated Lucide icons + Emoji text input / quick emoji palette).
-  - Color Picker (6 preset swatches + custom hex).
-  - Category name, description, and position ordering.
-  - Sub-Category Editor with chip adder/remover for sub-codes.
-
-### 4.4 Rich History Drawer Architecture (R4)
-- Slide-out `HistoryDrawer.tsx` (using shadcn `Sheet` / `ScrollArea`):
-  - Search & filter history items by wording or category.
-  - Relative timestamps ("Just now", "2m ago", "1h ago", "Yesterday").
-  - One-click copy with tactile `Copied ✓` feedback.
-  - "Pin to Folder" dropdown for each history item.
-  - "Add All to Batch" button to bulk add recent history into the batch queue.
-  - "Clear History" button with Radix Dialog confirmation.
-  - Preserves `#histbar`, `#hchips`, `data-hcopy`, and `#hclearAll` DOM hooks.
+The visual system survey is complete. The codebase has a clean component structure that can readily adopt the **Warm Charcoal Multi-Layer Depth** architecture (#0e0e11 -> #141418 -> #1a1a20 -> #22222a) and uniform token hierarchy (`rounded-xl` cards/drawers, `rounded-lg` interactive chips/buttons, `rounded-md` badges, `rounded-full` pills) through targeted updates to:
+1. `src/index.css` (CSS Custom Properties & theme definitions)
+2. `src/theme/tokens.ts` (theme color tuples)
+3. `src/components/AppHeader.tsx` (header surface & controls)
+4. `src/components/CategoryChips.tsx` & `CodeSubChips.tsx` (sidebar surfaces & chips)
+5. `src/components/DefectCard.tsx`, `WordingContainer.tsx`, `WordingTable.tsx` (card & table surfaces)
+6. `src/components/BatchDrawer.tsx`, `HistoryDrawer.tsx`, `SettingsModal.tsx`, `EditModal.tsx`, `CategoryManagerModal.tsx` (Layer 3 drawers/modals)
+7. `src/components/ui/*.tsx` (primitive token harmonization)
 
 ---
 
 ## 5. Verification Method
 
-### 5.1 Automated Test Execution
-Run the full test suite verifying 100% pass rate:
-```bash
-npm test
-```
-Target: 0 failures across all 304 existing unit, integration, stress, and adversarial test cases, plus new test suites for R1-R4 features.
+To verify the visual design system updates independently:
 
-### 5.2 Build & Bundle Verification
-Run production build to ensure zero TypeScript errors and clean PWA bundle generation:
-```bash
-npm run build
-```
-Target: 0 TypeScript errors, bundle generated in `./dist` with `sw.js` and `manifest.webmanifest`.
+1. **Automated Test Suite**:
+   ```bash
+   npm test
+   ```
+   Must pass 100% of test suites across tier 1-5 features, latency stress, adversarial edge cases, and history drawer tests without regressions.
 
-### 5.3 Touch Ergonomics & Responsive Verification
-1. Inspect computed CSS on touch targets (`AppHeader`, `CategoryChips`, `DefectCard`, `BatchDrawer`, `HistoryDrawer`) verifying bounding boxes `>= 44px × 44px` on cozy mode and `>= 48px × 48px` on tablet density.
-2. Verify `touch-action: manipulation` on all interactive buttons and `overscroll-behavior-y: contain` on scrollable containers.
-3. Verify Light theme toggle switches all surfaces to `#fcfcfc` / `#ffffff` with dark text and no remaining hardcoded dark containers.
-4. Verify custom sleek scrollbars render cleanly on `#sidebarNav`, `#blist`, and main containers.
+2. **TypeScript & Production Build Verification**:
+   ```bash
+   npm run build
+   ```
+   Must compile cleanly with zero TypeScript errors or asset bundling warnings.
+
+3. **Visual Inspection Targets**:
+   - Inspect `AppHeader.tsx` background: verify `#141418` container elevation.
+   - Inspect `DefectCard.tsx` (`.gcard`, `.row`, `.trow`): verify `#1a1a20` background with `border-stone-800/80` and `border-l-4` category color accent.
+   - Inspect `BatchDrawer.tsx` and `HistoryDrawer.tsx`: verify `#22222a` Layer 3 surface with `border-stone-700/60` and `rounded-l-2xl`.
+   - Inspect `SettingsModal.tsx`, `EditModal.tsx`, `CategoryManagerModal.tsx`: verify `#22222a` modal surface with `rounded-xl`.
+   - Inspect border radius tokens across cards (`rounded-xl`), buttons (`rounded-lg`), badges (`rounded-md`), and pills (`rounded-full`).
